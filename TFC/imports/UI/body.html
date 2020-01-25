@@ -1,14 +1,21 @@
 <body>
-  <header style="position: absolute; top: 0; left: 0; width: 100%; background-color: green;">
+    <header style="position: absolute; top: 0; left: 0; width: 100%; background-color: green;">
       <!-- Elements de l'en-tête -->
       <h1 style="text-align: center;">ECOTOPIA</h1>
-  </header>
-  <footer style="position: absolute; bottom: 0; left: 0; width: 100%; background-color: grey;">
-      <!-- Elements de bas de page-->
-      <ul style="list-style-type: none;">
-          <li style="height: 100%; width: 33%; display: inline-block;">Mentions légales</li>
-          <li style="height: 100%; width: 33%; display: inline-block;">Cookies Policy & Data Privacy etc...</li>
-          <li style="height: 100%; width: 33%; display: inline-block;">Qui sommes nous ?</li>
-      </ul>
-  </footer>
+    </header>
+
+
+    <button id="home">Home</button>
+    <button id="utilisateur">Utilisateur</button>
+
+    {{> Template.dynamic template=currentPage}}
+
+    <footer style="position: absolute; bottom: 0; left: 0; width: 100%; background-color: grey;">
+        <!-- Elements de bas de page-->
+        <ul style="list-style-type: none;">
+            <li style="height: 100%; width: 33%; display: inline-block;">Mentions légales</li>
+            <li style="height: 100%; width: 33%; display: inline-block;">Cookies Policy & Data Privacy etc...</li>
+            <li style="height: 100%; width: 33%; display: inline-block;">Qui sommes nous ?</li>
+        </ul>
+    </footer>
 </body>
