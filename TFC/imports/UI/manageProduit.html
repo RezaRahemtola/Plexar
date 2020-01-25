@@ -14,11 +14,11 @@
     <br>
     <h3>Produits dans la database :</h3>
     {{#each afficherProduits}}
-        {{> unProduit}}
+        {{> displayProduit}}
     {{/each}}
 </template>
 
-<template name="unProduit">
+<template name="displayProduit">
     <p>
         ID : {{_id}}  Nom : {{nom}}  Description : {{description}}
         <br>
