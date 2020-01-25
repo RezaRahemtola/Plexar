@@ -22,3 +22,9 @@ Template.addProduit.events({
         });
     }
 });
+
+Template.addProduit.helpers({
+    afficherProduits: function(){
+            return Produits.find({}, {});
+    }
+});

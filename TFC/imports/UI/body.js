@@ -32,9 +32,3 @@ Template.body.events({
         Session.set('page', 'addProduit');
     }
 });
-
-Template.addProduit.helpers({
-    afficherProduits: function(){
-            return Produits.find({}, {});
-    }
-});
