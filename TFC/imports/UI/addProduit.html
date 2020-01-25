@@ -1,0 +1,18 @@
+<template name="addProduit">
+    <form id="newProduit">
+        <input name="nom" type="text" placeholder="Nom du produit"/>
+        <input name="description" type="textarea" placeholder="Description du produit"/>
+        <button id="submitProduit">Ajouter le produit !</button>
+    </form>
+
+    {{#each afficherProduits}}
+        {{> unProduit}}
+    {{/each}}
+</template>
+
+<template name="unProduit">
+    <p>
+        ID : {{_id}}  Nom : {{nom}}  Description : {{description}}
+        <br>
+    </p>
+</template>

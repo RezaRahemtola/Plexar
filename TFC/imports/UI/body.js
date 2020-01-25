@@ -8,6 +8,7 @@ import './body.html';
 // JS Imports
 import './utilisateur.js';
 import './home.js';
+import './addProduit.js';
 
 //Imports pour les bases de données
 import { Produits } from '../bdd/produits.js';
@@ -21,10 +22,19 @@ Template.body.helpers({
 });
 
 Template.body.events({
-  'click #home' (event){
-    Session.set('page', 'home');
-  },
-  'click #utilisateur' (event){
-    Session.set('page', 'utilisateur');
-  }
+    'click #home' (event){
+        Session.set('page', 'home');
+    },
+    'click #utilisateur' (event){
+        Session.set('page', 'utilisateur');
+    },
+    'click #addProduit' (event){
+        Session.set('page', 'addProduit');
+    }
+});
+
+Template.addProduit.helpers({
+    afficherProduits: function(){
+            return Produits.find({}, {});
+    }
 });
