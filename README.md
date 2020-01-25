@@ -5,3 +5,4 @@ Pour faire fonctionner la Web App, lancer les commandes suivantes après avoir c
 
 meteor add session
 meteor add accounts-ui accounts-password
+meteor npm install jquery
