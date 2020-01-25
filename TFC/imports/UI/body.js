@@ -6,4 +6,4 @@ import { Template } from 'meteor/templating';
 import './body.html';
 
 //Imports pour les bases de données
-import { Annonces } from '../bdd/annonce.js';
+import { Produits } from '../bdd/produits.js';

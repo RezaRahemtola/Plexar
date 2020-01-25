@@ -1,7 +1,10 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 
-// JS imoorts
+// Accounts import
+import '../imports/config/accounts-config.js';
+
+// JS import
 import '../imports/UI/body.js';
 
 // HTML import
