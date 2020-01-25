@@ -8,7 +8,7 @@ import './body.html';
 // JS Imports
 import './utilisateur.js';
 import './home.js';
-import './addProduit.js';
+import './manageProduit.js';
 
 //Imports pour les bases de données
 import { Produits } from '../bdd/produits.js';
@@ -28,7 +28,7 @@ Template.body.events({
     'click #utilisateur' (event){
         Session.set('page', 'utilisateur');
     },
-    'click #addProduit' (event){
-        Session.set('page', 'addProduit');
+    'click #manageProduit' (event){
+        Session.set('page', 'manageProduit');
     }
 });

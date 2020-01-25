@@ -6,10 +6,10 @@ import { Template } from 'meteor/templating';
 import { Produits } from '../bdd/produits.js';
 
 // HTML imports
-import './addProduit.html';
+import './manageProduit.html';
 
-Template.addProduit.events({
-    'click #submitProduit'(event){
+Template.manageProduit.events({
+    'click #submitAdd'(event){
         event.preventDefault();
         var form = new FormData(document.getElementById('newProduit'));
         var nomProduit = form.get('nom');
@@ -20,10 +20,18 @@ Template.addProduit.events({
             nom: nomProduit,
             description: descriptionProduit,
         });
+    },
+    'click #submitDelete'(event){
+        event.preventDefault();
+        var form = new FormData(document.getElementById('deleteProduit'));
+        var IDproduit = form.get('ID');
+
+        //Supprime la ligne de la database
+        Produits.remove(IDproduit);
     }
 });
 
-Template.addProduit.helpers({
+Template.manageProduit.helpers({
     afficherProduits: function(){
             return Produits.find({}, {});
     }
