@@ -33,6 +33,6 @@ Template.manageProduit.events({
 
 Template.manageProduit.helpers({
     displayAllProduits: function(){
-            return Produits.find({}, {});
+        return Produits.find({}, {});
     }
 });

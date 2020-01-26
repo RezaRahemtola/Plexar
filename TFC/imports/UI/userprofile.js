@@ -3,7 +3,22 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 // HTML imports
-import './utilisateur.html';
+import './userprofile.html';
+
+Template.userprofile.events({
+    'click .register' (event){
+        event.preventDefault();
+        Session.set('page', 'register');
+    },
+    'click .login' (event){
+        event.preventDefault();
+        Session.set('page', 'login');
+    },
+    'click .logout' (event){
+        event.preventDefault();
+        Meteor.logout();  // Log out the user
+    }
+});
 
 Template.register.events({
     'submit form'(event){
@@ -13,13 +28,13 @@ Template.register.events({
         var email = form.get('email');
         var password = form.get('password');
 
-        // Creationg the new user
+        // Creating the new user
         Accounts.createUser({
             username: username,
             email: email,
             password: password
         });
-        Session.set('page', 'user');
+        Session.set('page', 'userprofile');  // Send the new user to userprofile page
     }
 });
 
@@ -30,19 +45,6 @@ Template.login.events({
         var email = form.get('email');
         var password = form.get('password');
         Meteor.loginWithPassword(email, password);
-        Session.set('page', 'user');
-    }
-});
-
-Template.user.events({
-    'click .register' (event){
-        Session.set('page', 'register');
-    },
-    'click .logout' (event){
-        event.preventDefault();
-        Meteor.logout();
-    },
-    'click .login' (event){
-        Session.set('page', 'login');
+        Session.set('page', 'userprofile');  // Send the logged user to userprofile page
     }
 });
