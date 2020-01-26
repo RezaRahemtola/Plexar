@@ -2,16 +2,15 @@
     <h1 style="text-align: right;">Utilisateur</h1>
     {{#if currentUser}}
         <!-- Displayed when the user is logged in-->
-        <a href="#" class="logout" style="color: red; text-decoration: none;">Déconnexion</a>
+        <button class="logout" style="color: red">Déconnexion</button>
         <button class="info">Magasins favoris</button>
         <button class="comp">Magasins ajoutés</button>
         <button class="info">Produits favoris</button>
-        <button class="comp">Editer le profil</button>
+        <button class="editProfile">Editer le profil</button>
     {{else}}
         <!-- Displayed when the user is NOT logged in-->
-        <a href="#" class="register" style="color: red; text-decoration: none;">Inscription</a>
-        <br>
-        <a href="#" class="login" style="color: red; text-decoration: none;">Connexion</a>
+        <button class="register" style="color: red;">Inscription</button>
+        <button class="login" style="color: red;">Connexion</button>
     {{/if}}
 </template>
 
@@ -46,4 +45,22 @@
         <br><br>
         <button type="submit">Connexion</button>
     </form>
+    <button class="forgotPassword">Mot de passe oublié</button>
+</template>
+
+
+
+<template name="forgotPassword">
+    <h2>Mot de passe oublié</h2>
+    <form id="forgotPassword">
+        <label for="email">Email:</label>
+        <input type="email" name="email">
+        <br><br>
+        <button type="submit">Réinitialiser le mot de passe</button>
+    </form>
+</template>
+
+
+<template name="editProfile">
+    <h2>Editer le profil</h2>
 </template>
