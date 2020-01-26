@@ -9,19 +9,19 @@ import { Produits } from '../bdd/produits.js';
 import './manageProduit.html';
 
 Template.manageProduit.events({
-    'click #submitAdd'(event){
+    'click #addProduct'(event){
         event.preventDefault();
         var form = new FormData(document.getElementById('newProduit'));
-        var nomProduit = form.get('nom');
-        var descriptionProduit = form.get('description');
+        var productName = form.get('productName');
+        var productDescription = form.get('productDescription');
 
         // Inserting informations in the database
         Produits.insert({
-            nom: nomProduit,
-            description: descriptionProduit,
+            nom: productName,
+            description: productDescription,
         });
     },
-    'click #submitDelete'(event){
+    'click #deleteProduct'(event){
         event.preventDefault();
         var form = new FormData(document.getElementById('deleteProduit'));
         var IDproduit = form.get('ID');

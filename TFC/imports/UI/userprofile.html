@@ -20,13 +20,13 @@
     <h2>Inscription</h2>
     <form id="register">
         <label for="username">Nom d'utilisateur:</label>
-        <input type="text" name="username"/>
+        <input type="text" name="username" required/>
         <br><br>
         <label for="email">Email:</label>
-        <input type="email" name="email">
+        <input type="email" name="email" required>
         <br><br>
         <label for="password">Mot de passe:</label>
-        <input type="password" name="password">
+        <input type="password" name="password" required>
         <br><br>
         <button type="submit">S'inscrire</button>
     </form>
@@ -38,10 +38,10 @@
     <h2>Connexion</h2>
     <form id="login">
         <label for="email">Email:</label>
-        <input type="email" name="email">
+        <input type="email" name="email" required>
         <br><br>
         <label for="password">Mot de passe:</label>
-        <input type="password" name="password">
+        <input type="password" name="password" required>
         <br><br>
         <button type="submit">Connexion</button>
     </form>
@@ -54,7 +54,7 @@
     <h2>Mot de passe oublié</h2>
     <form id="forgotPassword">
         <label for="email">Email:</label>
-        <input type="email" name="email">
+        <input type="email" name="email" required>
         <br><br>
         <button type="submit">Réinitialiser le mot de passe</button>
     </form>
