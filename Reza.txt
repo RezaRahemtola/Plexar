@@ -1,0 +1,5 @@
+Pour avoir username du current user :
+Meteor.user().username
+
+Pour avoir email du current user :
+Meteor.user().emails[0].address

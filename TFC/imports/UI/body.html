@@ -1,12 +1,14 @@
 <body>
-    <header style="position: absolute; top: 0; left: 0; width: 100%; background-color: green;">
-      <!-- Elements de l'en-tête -->
-      <h1 style="text-align: center;">ECOTOPIA</h1>
+    <header style="position: fixed; top: 0; left: 0; width: 100%; background-color: green;">
+        <!-- Elements de l'en-tête -->
+        <h1 style="text-align: center;">ECOTOPIA</h1>
+        <div id="userContainer" style="position: absolute; top: 0; right: 0;">
+            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" id="user" style="height: 50px;"/>
+        </div>
     </header>
 
 
     <button id="home">Home</button>
-    <button id="utilisateur">Utilisateur</button>
     <button id="manageProduit">Gérer Produit</button>
     {{> loginButtons}} <!-- Ajoute le bouton de connexion utilisateur -->
     <br><br>
