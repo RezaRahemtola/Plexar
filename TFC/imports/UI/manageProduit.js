@@ -1,11 +1,11 @@
-//import utile
+// Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-//import de la database
+// Database import
 import { Produits } from '../bdd/produits.js';
 
-// HTML imports
+// HTML import
 import './manageProduit.html';
 
 Template.manageProduit.events({
@@ -15,7 +15,7 @@ Template.manageProduit.events({
         var nomProduit = form.get('nom');
         var descriptionProduit = form.get('description');
 
-        // Insertion des informations dans la database
+        // Inserting informations in the database
         Produits.insert({
             nom: nomProduit,
             description: descriptionProduit,
@@ -26,13 +26,13 @@ Template.manageProduit.events({
         var form = new FormData(document.getElementById('deleteProduit'));
         var IDproduit = form.get('ID');
 
-        //Supprime la ligne de la database
+        // Delete corresponding line in the database
         Produits.remove(IDproduit);
     }
 });
 
 Template.manageProduit.helpers({
-    afficherProduits: function(){
+    displayAllProduits: function(){
             return Produits.find({}, {});
     }
 });
