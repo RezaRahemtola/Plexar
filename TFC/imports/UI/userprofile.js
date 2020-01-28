@@ -6,24 +6,33 @@ import { Template } from 'meteor/templating';
 import { Utilisateurs } from '../bdd/utilisateurs.js';
 
 // HTML imports
-import './userprofile.html';
+import './userProfile.html';
 
-Template.userprofile.events({
+Session.set('userPage', '');  // Set the page to default
+
+Template.userProfile.helpers({
+    currentUserStatus: function(userPage){
+        return Session.get('userPage');
+  }
+});
+
+Template.userProfile.events({
     'click .register' (event){
         event.preventDefault();
-        Session.set('page', 'register');
+        Session.set('userPage', 'register');
     },
     'click .login' (event){
         event.preventDefault();
-        Session.set('page', 'login');
+        Session.set('userPage', 'login');
     },
     'click .logout' (event){
         event.preventDefault();
+        Session.set('userPage', '');  // Set the page to default
         Meteor.logout();  // Log out the user
     },
     'click .editProfile' (event){
         event.preventDefault();
-        Session.set('page', 'editProfile');
+        Session.set('userPage', 'editProfile');
     }
 });
 
@@ -45,7 +54,7 @@ Template.register.events({
                     console.log(error.reason); // Output error if registration fails
                 } else{
                     // TODO: Define things to complete in Utilisateurs (db collums order)
-                    Session.set('page', 'userprofile');  // Send the new user to userprofile page
+                    Session.set('userPage', '');  // Send the new user to userprofile page
                 }
             });
     }
@@ -61,13 +70,13 @@ Template.login.events({
             if(error){
                 console.log(error.reason);
             } else{
-                Session.set('page', 'userprofile');  // Send the logged user to userprofile page
+                Session.set('userPage', '');  // Send the logged user to userprofile page
             }
         });
     },
     'click .forgotPassword' (event){
         event.preventDefault();
-        Session.set('page', 'forgotPassword');
+        Session.set('userPage', 'forgotPassword');
     }
 });
 
@@ -81,8 +90,20 @@ Template.forgotPassword.events({
                 console.log(error.reason);
             } else{
                 console.log("Email envoyé avec succès")
-                Session.set('page', 'userprofile');  // Send the logged user to userprofile page
+                Session.set('userPage', '');  // Send the logged user to userprofile page
             }
         });
+    }
+});
+
+Template.editProfile.events({
+    'submit form' (event){
+        event.preventDefault();
+        var form = new FormData(document.getElementById('editProfile'));
+        var firstName = form.get('firstName');
+        var lastName = form.get('lastName');
+        var email = form.get('email');
+        // TODO:  Insert informations of the form in the Utilisateurs database
+        Session.set('userPage', '');
     }
 });

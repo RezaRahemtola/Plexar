@@ -9,3 +9,6 @@ Accounts.sendVerificationEmail(userId)
 
 
 Ajouter le support de l'envoi d'email
+
+Pour bloquer la modification via la console (a faire avant lancement en ligne):
+meteor remove insecure

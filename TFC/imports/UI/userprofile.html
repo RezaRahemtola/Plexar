@@ -1,4 +1,4 @@
-<template name="userprofile">
+<template name="userProfile">
     <h1 style="text-align: right;">Utilisateur</h1>
     {{#if currentUser}}
         <!-- Displayed when the user is logged in-->
@@ -12,6 +12,7 @@
         <button class="register" style="color: red;">Inscription</button>
         <button class="login" style="color: red;">Connexion</button>
     {{/if}}
+    {{> Template.dynamic template=currentUserStatus}} <!-- Affichage du template dynamique -->
 </template>
 
 
@@ -28,7 +29,7 @@
         <label for="password">Mot de passe:</label>
         <input type="password" name="password" required>
         <br><br>
-        <button type="submit">S'inscrire</button>
+        <button type="submit">Valider</button>
     </form>
 </template>
 
@@ -43,7 +44,7 @@
         <label for="password">Mot de passe:</label>
         <input type="password" name="password" required>
         <br><br>
-        <button type="submit">Connexion</button>
+        <button type="submit">Valider</button>
     </form>
     <button class="forgotPassword">Mot de passe oublié</button>
 </template>
@@ -63,4 +64,16 @@
 
 <template name="editProfile">
     <h2>Editer le profil</h2>
+    <form id="editProfile">
+        <label for="firstName">Prénom:</label>
+        <input type="text" name="firstName">
+        <br><br>
+        <label for="lastName">Nom:</label>
+        <input type="text" name="lastName">
+        <br><br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+        <br><br>
+        <button type="submit">Valider</button>
+    </form>
 </template>

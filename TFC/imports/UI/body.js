@@ -8,7 +8,7 @@ import './body.html';
 // JS Imports
 import './home.js';
 import './manageProduit.js';
-import './userprofile.js';
+import './userProfile.js';
 
 Session.set('page', 'home');
 
@@ -23,8 +23,8 @@ Template.body.events({
     'click #home' (event){
         Session.set('page', 'home');
     },
-    'click #userprofile' (event){
-        Session.set('page', 'userprofile');
+    'click #userProfile' (event){
+        Session.set('page', 'userProfile');
     },
     'click #manageProduit' (event){
         Session.set('page', 'manageProduit');
