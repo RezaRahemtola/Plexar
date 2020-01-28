@@ -11,8 +11,8 @@ import './userProfile.html';
 Session.set('userPage', '');  // Set the page to default
 
 Template.userProfile.helpers({
-    currentUserStatus: function(userPage){
-        return Session.get('userPage');
+    currentUserPage: function(userPage){
+        return Session.get('userPage');  // Return current page on user profile
   }
 });
 
@@ -89,21 +89,46 @@ Template.forgotPassword.events({
             if(error){
                 console.log(error.reason);
             } else{
-                console.log("Email envoyé avec succès")
+                console.log("Email envoyé avec succès");  // Success message
                 Session.set('userPage', '');  // Send the logged user to userprofile page
             }
         });
     }
 });
 
+
 Template.editProfile.events({
     'submit form' (event){
         event.preventDefault();
-        var form = new FormData(document.getElementById('editProfile'));
-        var firstName = form.get('firstName');
-        var lastName = form.get('lastName');
-        var email = form.get('email');
+        var form = new FormData(document.getElementById('editProfile'));  // Catch the form element
+        var firstName = form.get('firstName');  // Saving inputs in variables
+        var lastName = form.get('lastName');  // Saving inputs in variables
+        var email = form.get('email');  // Saving inputs in variables
+        if(document.getElementById('advancedEdition').style.display == 'inherit'){  // Advanced options are displayed, so they should have been filled
+            var oldPassword = form.get('oldPassword');  // Saving inputs in variables
+            var newPassword = form.get('newPassword');  // Saving inputs in variables
+            Accounts.changePassword(oldPassword, newPassword, function(error){  // Callback function which can raise an error
+                if(error){
+                    console.log(error.reason);
+                } else{
+                    console.log("Le mot de passe a été modifié avec succès");  // Success message
+                }
+            });
+        }
+
         // TODO:  Insert informations of the form in the Utilisateurs database
         Session.set('userPage', '');
+    },
+    'click #showAdvancedEdition'(event){
+        event.preventDefault();
+        if(document.getElementById('advancedEdition').style.display == 'none'){  // Advanced options are hidden
+            document.getElementById('advancedEdition').style.display = 'inherit';  // Display advanced options
+            document.getElementById('oldPassword').required = true;  // Set the passwords inputs as required
+            document.getElementById('newPassword').required = true;  // Set the passwords inputs as required
+        } else{  // Advenced options are displayed
+            document.getElementById('advancedEdition').style.display = 'none';  // Hide advenced options
+            document.getElementById('oldPassword').required = false;  // Passwords inputs are no longer required
+            document.getElementById('newPassword').required = false;  // Passwords inputs are no longer required
+        }
     }
 });
