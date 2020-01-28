@@ -96,6 +96,10 @@ Template.forgotPassword.events({
     }
 });
 
+Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
+    document.getElementById('username').value = Meteor.user().username;  // Auto fill username with current value
+    document.getElementById('email').value = Meteor.user().emails[0].address;  // Auto fill email with current value
+});
 
 Template.editProfile.events({
     'submit form' (event){
