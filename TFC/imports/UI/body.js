@@ -11,6 +11,7 @@ import './manageProduit.js';
 import './userProfile.js';
 
 Session.set('page', 'home');  // Site loads with home page
+Session.set('formErrorMessage', null);  // No forms error for the moment
 
 
 Template.body.helpers({

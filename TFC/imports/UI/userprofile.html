@@ -29,7 +29,13 @@
         <label for="password">Mot de passe:</label>
         <input type="password" name="password" required>
         <br><br>
+        <label for="confirmPassword">Confirmer le mot de passe:</label>
+        <input type="password" name="confirmPassword" id="confirmPassword" required>
+        <br><br>
         <button type="submit">Valider</button>
+        {{#if formErrorMessage}}
+            {{formErrorMessage}}
+        {{/if}}
     </form>
 </template>
 
@@ -47,6 +53,9 @@
         <button type="submit">Valider</button>
     </form>
     <button class="forgotPassword">Mot de passe oublié</button>
+    {{#if formErrorMessage}}
+        {{formErrorMessage}}
+    {{/if}}
 </template>
 
 
@@ -86,7 +95,13 @@
             <label for="newPassword">Nouveau mot de passe:</label>
             <input type="password" name="newPassword" id="newPassword">
             <br><br>
+            <label for="confirmNewPassword">Confirmer le mot de passe:</label>
+            <input type="password" name="confirmNewPassword" id="confirmNewPassword">
+            <br><br>
         </div>
         <button type="submit">Valider</button>
+        {{#if formErrorMessage}}
+            {{formErrorMessage}}
+        {{/if}}
     </form>
 </template>
