@@ -55,7 +55,11 @@ Template.register.events({
         var password = form.get('password');
         var confirmPassword = form.get('confirmPassword');
 
-        if(areValidPasswords(password, confirmPassword)){
+        if(!(areValidPasswords(password, confirmPassword))){
+            // Error in passwords fields
+            document.getElementById('password').classList.add("error");
+            document.getElementById('confirmPassword').classList.add("error");
+        } else{
             // Creating the new user
             Accounts.createUser({
                 username: username,
@@ -70,6 +74,7 @@ Template.register.events({
                         Session.set('formErrorMessage', null);  // Reseting formErrorMessage
                         Session.set('userPage', '');  // Send the new user to default userprofile page
                     }
+
                 }
             );
         }
@@ -144,10 +149,15 @@ Template.editProfile.events({
             var oldPassword = form.get('oldPassword');  // Saving inputs in variables
             var newPassword = form.get('newPassword');  // Saving inputs in variables
             var confirmNewPassword = form.get('confirmNewPassword');  // Saving inputs in variables
-            if(areValidPasswords(newPassword, confirmNewPassword)){
+            if(!(areValidPasswords(newPassword, confirmNewPassword))){
+                // Error in passwords fields
+                document.getElementById('password').classList.add("error");
+                document.getElementById('confirmPassword').classList.add("error");
+            } else{
+                // No error
                 Accounts.changePassword(oldPassword, newPassword, function(error){  // Callback function which can raise an error
                     if(error){
-                        Session.set('formErrorMessage', error.reason);
+                        Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
                     } else{
                         console.log("Le mot de passe a été modifié avec succès");  // Success message
                         Session.set('formErrorMessage', null);  // Reseting formErrorMessage
@@ -155,6 +165,7 @@ Template.editProfile.events({
                     }
                 });
             }
+
         }
     },
     'click #showAdvancedEdition'(event){
