@@ -6,10 +6,16 @@ import { Accounts } from 'meteor/accounts-base';
 // Database import
 import { Utilisateurs } from '../../bdd/utilisateurs.js';
 
-// HTML imports
+// HTML import
 import './login.html';
+
+// Form validation functions import
 import './formValidation.js';
 
+
+Template.login.onRendered(function(){
+    Session.set('formErrorMessage', null);  // Reseting formErrorMessage
+});
 
 
 Template.login.helpers({
@@ -28,7 +34,6 @@ Template.login.events({
             if(error){
                 Session.set('formErrorMessage', error.reason);
             } else{
-                Session.set('formErrorMessage', null);  // Reseting formErrorMessage
                 Session.set('userPage', '');  // Send the logged user to userprofile page
             }
         });

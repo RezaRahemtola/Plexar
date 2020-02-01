@@ -6,8 +6,10 @@ import { Accounts } from 'meteor/accounts-base';
 // Database import
 import { Utilisateurs } from '../../bdd/utilisateurs.js';
 
-// HTML imports
+// HTML import
 import './editProfile.html';
+
+// Form validation functions import
 import './formValidation.js';
 
 
@@ -17,6 +19,7 @@ Template.editProfile.helpers({
   }
 });
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
+    Session.set('formErrorMessage', null);  // Reseting formErrorMessage
     var userInformations = Utilisateurs.findOne({username :{$eq: Meteor.user().username}},{});
     document.getElementById('username').value = Meteor.user().username;  // Auto fill username with current value
     document.getElementById('email').value = Meteor.user().emails[0].address;  // Auto fill email with current value
@@ -28,20 +31,18 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 Template.editProfile.events({
     'submit form' (event){
         event.preventDefault();
+        var userInformations = Utilisateurs.findOne({username :{$eq: Meteor.user().username}},{});
         var form = new FormData(document.getElementById('editProfile'));  // Catch the form element
         var username = form.get('username');  // Saving inputs in variables
         var firstName = form.get('firstName');  // Saving inputs in variables
         var lastName = form.get('lastName');  // Saving inputs in variables
         var email = form.get('email');  // Saving inputs in variables
 
-        // TODO:  Insert informations of the form in the Utilisateurs database
-        // Inserting informations in the database
-        Utilisateurs.insert({
+        // Updating informations in the database
+        Utilisateurs.update(userInformations._id, { $set: {
             firstName: firstName,
-            lastName: lastName,
-            username: username,
-            email: email
-        });
+            lastName: lastName
+        }});
 
         if(document.getElementById('advancedEdition').style.display == 'inherit'){  // Advanced options are displayed, so they should have been filled
             var oldPassword = form.get('oldPassword');  // Saving inputs in variables
@@ -49,8 +50,8 @@ Template.editProfile.events({
             var confirmNewPassword = form.get('confirmNewPassword');  // Saving inputs in variables
             if(!(areValidPasswords(newPassword, confirmNewPassword))){
                 // Error in passwords fields
-                document.getElementById('password').classList.add("error");
-                document.getElementById('confirmPassword').classList.add("error");
+                document.getElementById('newPassword').classList.add("error");
+                document.getElementById('confirmNewPassword').classList.add("error");
             } else{
                 // No error
                 Accounts.changePassword(oldPassword, newPassword, function(error){  // Callback function which can raise an error
@@ -58,7 +59,6 @@ Template.editProfile.events({
                         Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
                     } else{
                         console.log("Le mot de passe a été modifié avec succès");  // Success message
-                        Session.set('formErrorMessage', null);  // Reseting formErrorMessage
                         Session.set('userPage', '');
                     }
                 });

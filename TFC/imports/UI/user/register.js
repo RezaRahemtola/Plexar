@@ -6,15 +6,24 @@ import { Accounts } from 'meteor/accounts-base';
 // Database import
 import { Utilisateurs } from '../../bdd/utilisateurs.js';
 
-// HTML imports
+// HTML import
 import './register.html';
+
+// Form validation functions import
 import './formValidation.js';
+
+
+Template.register.onRendered(function(){
+    Session.set('formErrorMessage', null);  // Reseting formErrorMessage
+});
+
 
 Template.register.helpers({
     formErrorMessage: function() {
         return Session.get('formErrorMessage');
   }
 });
+
 
 Template.register.events({
     'submit form'(event){
@@ -49,7 +58,6 @@ Template.register.events({
                             username: username,
                             email: email
                         });
-                        Session.set('formErrorMessage', null);  // Reseting formErrorMessage
                         Session.set('userPage', '');  // Send the new user to default userprofile page
                     }
 

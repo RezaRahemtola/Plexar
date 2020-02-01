@@ -6,11 +6,10 @@ import { Accounts } from 'meteor/accounts-base';
 // Database import
 import { Utilisateurs } from '../../bdd/utilisateurs.js';
 
-// HTML imports
+// HTML import
 import './userProfile.html';
 
 // JS imports
-import './formValidation.js';
 import './register.js';
 import './login.js';
 import './forgotPassword.js';

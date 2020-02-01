@@ -6,10 +6,16 @@ import { Accounts } from 'meteor/accounts-base';
 // Database import
 import { Utilisateurs } from '../../bdd/utilisateurs.js';
 
-// HTML imports
+// HTML import
 import './forgotPassword.html';
+
+// Form validation functions import
 import './formValidation.js';
 
+
+Template.forgotPassword.onRendered(function(){
+    Session.set('formErrorMessage', null);  // Reseting formErrorMessage
+});
 
 
 Template.forgotPassword.events({
@@ -22,7 +28,6 @@ Template.forgotPassword.events({
                 Session.set('formErrorMessage', error.reason);
             } else{
                 console.log("Email envoyé avec succès");  // Success message
-                Session.set('formErrorMessage', null);  // Reseting formErrorMessage
                 Session.set('userPage', '');  // Send the logged user to userprofile page
             }
         });
