@@ -1,0 +1,21 @@
+<template name="register">
+    <h2>Inscription</h2>
+    <form id="register">
+        <label for="username">Nom d'utilisateur:</label>
+        <input type="text" name="username" required/>
+        <br><br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+        <br><br>
+        <label for="password">Mot de passe:</label>
+        <input type="password" name="password" id="password" required autocomplete="new-password">
+        <br><br>
+        <label for="confirmPassword">Confirmer le mot de passe:</label>
+        <input type="password" name="confirmPassword" id="confirmPassword" required autocomplete="new-password">
+        <br><br>
+        <button type="submit">Valider</button>
+        {{#if formErrorMessage}}
+            {{formErrorMessage}}
+        {{/if}}
+    </form>
+</template>

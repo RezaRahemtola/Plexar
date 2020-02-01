@@ -1,0 +1,16 @@
+<template name="userProfile">
+    <h1 style="text-align: right;">Utilisateur</h1>
+    {{#if currentUser}}
+        <!-- Displayed when the user is logged in-->
+        <button class="logout" style="color: red">Déconnexion</button>
+        <button class="info">Magasins favoris</button>
+        <button class="comp">Magasins ajoutés</button>
+        <button class="info">Produits favoris</button>
+        <button class="editProfile">Editer le profil</button>
+    {{else}}
+        <!-- Displayed when the user is NOT logged in-->
+        <button class="register" style="color: red;">Inscription</button>
+        <button class="login" style="color: red;">Connexion</button>
+    {{/if}}
+    {{> Template.dynamic template=currentUserPage}} <!-- Affichage du template dynamique -->
+</template>

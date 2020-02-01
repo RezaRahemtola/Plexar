@@ -1,0 +1,34 @@
+<template name="editProfile">
+    <h2>Editer le profil</h2>
+    <form id="editProfile" style="width:fit-content;">
+        <label for="username">Nom d'utilisateur:</label>
+        <input type="text" name="username" id="username" required/>
+        <br><br>
+        <label for="firstName">Prénom:</label>
+        <input type="text" name="firstName" id="firstName">
+        <br><br>
+        <label for="lastName">Nom:</label>
+        <input type="text" name="lastName" id="lastName">
+        <br><br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
+        <br><br>
+        <button type="button" id="showAdvancedEdition">Options avancées</button>
+        <div id="advancedEdition" style="display: none;">
+            <hr>
+            <label for="oldPassword">Mot de passe actuel:</label>
+            <input type="password" name="oldPassword" id="oldPassword" autocomplete="current-password">
+            <br><br>
+            <label for="newPassword">Nouveau mot de passe:</label>
+            <input type="password" name="newPassword" id="newPassword" autocomplete="new-password">
+            <br><br>
+            <label for="confirmNewPassword">Confirmer le mot de passe:</label>
+            <input type="password" name="confirmNewPassword" id="confirmNewPassword" autocomplete="new-password">
+            <br><br>
+        </div>
+        <button type="submit">Valider</button>
+        {{#if formErrorMessage}}
+            {{formErrorMessage}}
+        {{/if}}
+    </form>
+</template>
