@@ -10,7 +10,7 @@ Accounts.sendVerificationEmail(userId)
 
 Ajouter le support de l'envoi d'email
 
-Pour bloquer la modification via la console (a faire avant lancement en ligne):
+Pour bloquer la modification de db via la console (a faire avant lancement en ligne):
 meteor remove insecure
 
 Pour changer d'username (throw une erreur si deja utilisé, a faire SUR LE SERVEUR)

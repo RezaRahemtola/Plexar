@@ -7,3 +7,4 @@ meteor add session
 meteor add accounts-ui accounts-password
 meteor npm install jquery
 meteor add reactive-var
+meteor update
