@@ -8,6 +8,3 @@ Pour envoyer email de verification de l'adresse (SUR LE SERVEUR) :
 Accounts.sendVerificationEmail(userId)
 
 Ajouter le support de l'envoi d'email
-
-Pour changer d'username (throw une erreur si deja utilisé, a faire SUR LE SERVEUR)
-Accounts.setUsername(userId, newUsername)

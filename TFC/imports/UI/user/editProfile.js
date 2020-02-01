@@ -32,17 +32,32 @@ Template.editProfile.events({
     'submit form' (event){
         event.preventDefault();
         var userInformations = Utilisateurs.findOne({username :{$eq: Meteor.user().username}},{});
+
         var form = new FormData(document.getElementById('editProfile'));  // Catch the form element
         var username = form.get('username');  // Saving inputs in variables
         var firstName = form.get('firstName');  // Saving inputs in variables
         var lastName = form.get('lastName');  // Saving inputs in variables
         var email = form.get('email');  // Saving inputs in variables
 
-        // Updating informations in the database
+        // Updating informations of the database
         Utilisateurs.update(userInformations._id, { $set: {
             firstName: firstName,
             lastName: lastName
         }});
+
+        if(Meteor.user().username !== username){
+            Meteor.call('changeUsername', {userId: Meteor.userId(), newUsername: username}, function(error){
+                if(error){
+                    Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
+                } else{
+                    // Username was changed successfully, updating value in our database
+                    Utilisateurs.update(userInformations._id, { $set: {
+                        username: username
+                    }});
+                    Session.set('userPage', '');
+                }
+            });
+        }
 
         if(document.getElementById('advancedEdition').style.display == 'inherit'){  // Advanced options are displayed, so they should have been filled
             var oldPassword = form.get('oldPassword');  // Saving inputs in variables
