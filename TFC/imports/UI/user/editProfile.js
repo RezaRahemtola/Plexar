@@ -31,55 +31,54 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 Template.editProfile.events({
     'submit form' (event){
         event.preventDefault();
-        var userInformations = Utilisateurs.findOne({username :{$eq: Meteor.user().username}},{});
+        var userInformations = Utilisateurs.findOne({username :{$eq: Meteor.user().username}},{});  // Getting current user informations
 
-        var form = new FormData(document.getElementById('editProfile'));  // Catch the form element
-        var username = form.get('username');  // Saving inputs in variables
-        var firstName = form.get('firstName');  // Saving inputs in variables
-        var lastName = form.get('lastName');  // Saving inputs in variables
-        var email = form.get('email');  // Saving inputs in variables
+        // Catching the form element and saving inputs in variables
+        var form = new FormData(document.getElementById('editProfile'));
+        var username = form.get('username');
+        var firstName = form.get('firstName');
+        var lastName = form.get('lastName');
+        var email = form.get('email');
 
-        // Updating informations of the database
+        // Updating non-sensitive informations in our database
         Utilisateurs.update(userInformations._id, { $set: {
             firstName: firstName,
             lastName: lastName
         }});
 
-        if(Meteor.user().username !== username){
-            Meteor.call('changeUsername', {userId: Meteor.userId(), newUsername: username}, function(error){
-                if(error){
-                    Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
-                } else{
-                    // Username was changed successfully, updating value in our database
-                    Utilisateurs.update(userInformations._id, { $set: {
-                        username: username
-                    }});
-                    Session.set('userPage', '');
-                }
-            });
-        }
-
-        if(document.getElementById('advancedEdition').style.display == 'inherit'){  // Advanced options are displayed, so they should have been filled
-            var oldPassword = form.get('oldPassword');  // Saving inputs in variables
-            var newPassword = form.get('newPassword');  // Saving inputs in variables
-            var confirmNewPassword = form.get('confirmNewPassword');  // Saving inputs in variables
-            if(!(areValidPasswords(newPassword, confirmNewPassword))){
-                // Error in passwords fields
-                document.getElementById('newPassword').classList.add("error");
-                document.getElementById('confirmNewPassword').classList.add("error");
+        Meteor.call('changeUsername', {userId: Meteor.userId(), newUsername: username}, function(error){
+            if(error){
+                Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
             } else{
-                // No error
-                Accounts.changePassword(oldPassword, newPassword, function(error){  // Callback function which can raise an error
-                    if(error){
-                        Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
+                // Username was changed successfully, updating value in our database
+                Utilisateurs.update(userInformations._id, { $set: {
+                    username: username
+                }});
+                if(document.getElementById('advancedEdition').style.display == 'none'){
+                    // Advanced edition is disabled, sending user to profile page
+                    Session.set('userPage', '');
+                } else{
+                    var oldPassword = form.get('oldPassword');  // Saving inputs in variables
+                    var newPassword = form.get('newPassword');  // Saving inputs in variables
+                    var confirmNewPassword = form.get('confirmNewPassword');  // Saving inputs in variables
+                    if(!(areValidPasswords(newPassword, confirmNewPassword))){
+                        // Error in passwords fields
+                        document.getElementById('newPassword').classList.add("error");
+                        document.getElementById('confirmNewPassword').classList.add("error");
                     } else{
-                        console.log("Le mot de passe a été modifié avec succès");  // Success message
-                        Session.set('userPage', '');
+                        // No error
+                        Accounts.changePassword(oldPassword, newPassword, function(error){  // Callback function which can raise an error
+                            if(error){
+                                Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
+                            } else{
+                                console.log("Le mot de passe a été modifié avec succès");  // Success message
+                                Session.set('userPage', '');
+                            }
+                        });
                     }
-                });
+                }
             }
-
-        }
+        });
     },
     'click #showAdvancedEdition'(event){
         event.preventDefault();
