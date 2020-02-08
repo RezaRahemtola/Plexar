@@ -56,6 +56,7 @@ Template.editProfile.events({
                 }});
                 if(document.getElementById('advancedEdition').style.display == 'none'){
                     // Advanced edition is disabled, sending user to profile page
+                    alert('Vos informations ont été modifiées avec succès !');
                     Session.set('userPage', '');
                 } else{
                     var oldPassword = form.get('oldPassword');  // Saving inputs in variables
@@ -71,7 +72,7 @@ Template.editProfile.events({
                             if(error){
                                 Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
                             } else{
-                                console.log("Le mot de passe a été modifié avec succès");  // Success message
+                                alert("Le mot de passe a été modifié avec succès");  // Success message
                                 Session.set('userPage', '');
                             }
                         });

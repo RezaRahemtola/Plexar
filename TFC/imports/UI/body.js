@@ -9,6 +9,7 @@ import './body.html';
 import './home.js';
 import './manageProduit.js';
 import './user/userProfile.js';
+import './productPage.js';
 
 Session.set('page', 'home');  // Site loads with home page
 Session.set('formErrorMessage', null);  // No forms error for the moment
