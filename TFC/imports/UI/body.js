@@ -30,5 +30,8 @@ Template.body.events({
     },
     'click #manageProduit' (event){
         Session.set('page', 'manageProduit');
+    },
+    'click #productPage' (event){
+        Session.set('page', 'productPage');
     }
 });
