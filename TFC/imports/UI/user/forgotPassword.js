@@ -27,7 +27,7 @@ Template.forgotPassword.events({
             if(error){
                 Session.set('formErrorMessage', error.reason);
             } else{
-                console.log("Email envoyé avec succès");  // Success message
+                alert("Email envoyé avec succès");  // Success message
                 Session.set('userPage', '');  // Send the logged user to userprofile page
             }
         });

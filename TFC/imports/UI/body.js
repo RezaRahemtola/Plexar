@@ -10,6 +10,7 @@ import './home.js';
 import './manageProduit.js';
 import './user/userProfile.js';
 import './productPage.js';
+import './shopPage.js';
 
 Session.set('page', 'home');  // Site loads with home page
 Session.set('formErrorMessage', null);  // No forms error for the moment
@@ -34,5 +35,8 @@ Template.body.events({
     },
     'click #productPage' (event){
         Session.set('page', 'productPage');
+    },
+    'click #shopPage' (event){
+        Session.set('page', 'shopPage');
     }
 });

@@ -2,16 +2,28 @@
     <!-- Il s'agit de notre introduction qui est à compléter  -->
     <p>
         EKOTOPIA est une plateforme reposant sur un système participatif où les utilisateurs peuvent acheter et proposer des produits dans le commerce à proximité de chez eux. Cela permet aux client de réduire leur impact en dioxyde de carbone... A COMPLETER
-    </p>
-    <p>
+        <br>
         Nous comptons actuellement {{productsCounter}} produits dans notre base de données.
     </p>
-    <P>Magasin en vogue </p>          <p> Produits en vogue </p>                <p>Autour de moi</p>
+    <div style="display:inline-block; margin: 20px">
+        <h4>Magasins en vogue</h4>
+    </div>
+    <div style="display:inline-block; margin: 20px">
+        <h4>Produits en vogue</h4>
+    </div>
+    <div style="display:inline-block; margin: 20px">
+        <h4>Autour de moi</h4>
+    </div>
     <br>
-    <br>
-    <br>
-<center>
-<button type="button" name="Ajouter un magasin">Ajouter un magasin</button>   <!-- Ces bouttons n'ont pour l'instant aucune utilité!!!  -->
-<button type="button" name="Ajouter un produit">Ajouter un produit</button>
-</center>
+
+    {{#if currentUser}}
+        <!-- Displayed only when the user is logged in-->
+        <div style="text-align:center;">
+            <button id="addShop">Ajouter un magasin</button>
+            <button id="addProduct">Ajouter un produit</button>
+        </div>
+    {{else}}
+        <!-- Displayed when the user is NOT logged in-->
+    {{/if}}
+
 </template>

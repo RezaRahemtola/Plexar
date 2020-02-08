@@ -49,7 +49,7 @@ Template.register.events({
                         Session.set('formErrorMessage', error.reason); // Output error if registration fails
                     } else{
                         // TODO: Define things to complete in Utilisateurs (db collums order)
-                        console.log('Votre compte a bien été créé');
+                        alert('Votre compte a bien été créé');
 
                         // Inserting informations in the database
                         Utilisateurs.insert({
