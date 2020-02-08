@@ -1,0 +1,16 @@
+<template name="login">
+    <h2>Connexion</h2>
+    <form id="login">
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+        <br><br>
+        <label for="password">Mot de passe:</label>
+        <input type="password" name="password" required autocomplete="current-password">
+        <br><br>
+        <button type="submit">Valider</button>
+    </form>
+    <button class="forgotPassword">Mot de passe oublié</button>
+    {{#if formErrorMessage}}
+        {{formErrorMessage}}
+    {{/if}}
+</template>

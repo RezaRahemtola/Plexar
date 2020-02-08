@@ -8,7 +8,7 @@ import './body.html';
 // JS Imports
 import './home.js';
 import './manageProduit.js';
-import './userProfile.js';
+import './user/userProfile.js';
 
 Session.set('page', 'home');  // Site loads with home page
 Session.set('formErrorMessage', null);  // No forms error for the moment
