@@ -14,6 +14,7 @@ import './register.js';
 import './login.js';
 import './forgotPassword.js';
 import './editProfile.js';
+import './favorite.js';
 
 Session.set('userPage', '');  // Set the page to default
 
@@ -43,5 +44,9 @@ Template.userProfile.events({
     'click .editProfile' (event){
         event.preventDefault();
         Session.set('userPage', 'editProfile');
+    },
+    'click .favorite' (event){
+        event.preventDefault();
+        Session.set('userPage', 'favorite');
     }
 });
