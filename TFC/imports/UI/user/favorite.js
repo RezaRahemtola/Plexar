@@ -13,7 +13,7 @@ Template.favorite.helpers({
     getFavorites: function(){
         return Favoris.find({user :{$eq: Meteor.user()._id}},{});
     },
-    dsiplayFavorites: function(IDproduit){
+    displayFavorites: function(IDproduit){
         return Produits.find({_id :{$eq: IDproduit}},{});
     }
 });

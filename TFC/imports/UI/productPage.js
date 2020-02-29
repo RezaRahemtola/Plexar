@@ -34,11 +34,13 @@ Template.productPage.helpers({
 
 Template.displayedProductPage.helpers({
     productInFavorites: function(IDproduit){
-        var productInDatabase = Favoris.findOne({user :{$eq: Meteor.user()._id}, produit: IDproduit},{});
+        // Check if the given product ID is in the favorite products of the user
+        var productInDatabase = Favoris.findOne({user :{$eq: Meteor.user()._id}, produit: IDproduit},{});  // Search for the product in the current user's favorites
         if(productInDatabase === undefined){
             // This product is not in the database, we return false
             return false
+        } else{
+            return true
         }
-        return true
     }
 });
