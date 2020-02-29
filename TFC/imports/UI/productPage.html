@@ -1,7 +1,23 @@
 <template name="productPage">
+    {{#each displayProduct}}
+        {{> displayedProductPage}}
+    {{/each}}
+</template>
+
+<template name="displayedProductPage">
     <button>Retour aux résultats</button>
-    <h3>Nom du produit</h3>
+    <h3>{{nom}}</h3>
+    <p>{{description}}</p>
     <button> Partager la page du produit sur les réseaux sociaux</button>
     <button>Lien vers la page du magasin / site</button>
-    <button id="addToFavoriteProducts">Ajouter aux produits favoris</button>
+    {{#if currentUser}}
+        <!-- Diplay favorites options only if the user is logged-->
+        {{#if productInFavorites _id}}
+            <!-- Product is already in the favorites, suggest to remove it -->
+            <button id="removeFromFavoriteProducts">Retirer des produits favoris</button>
+        {{else}}
+            <!-- Product is not in the favorites, suggest to add it -->
+            <button id="addToFavoriteProducts">Ajouter aux produits favoris</button>
+        {{/if}}
+    {{/if}}
 </template>

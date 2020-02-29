@@ -1,7 +1,7 @@
 body {
     padding: 100px;
     font-family: sans-serif;
-    background: url('https://rezarahemtola.com/wp-content/uploads/2019/08/desktop-3246124_960_720.jpg') fixed repeat;
+    /* background: url('https://rezarahemtola.com/wp-content/uploads/2019/08/desktop-3246124_960_720.jpg') fixed repeat; */
 }
 
 input.error{

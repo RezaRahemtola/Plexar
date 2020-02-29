@@ -33,10 +33,12 @@ Template.body.events({
     'click #manageProduit' (event){
         Session.set('page', 'manageProduit');
     },
-    'click #productPage' (event){
-        Session.set('page', 'productPage');
-    },
     'click #shopPage' (event){
         Session.set('page', 'shopPage');
+    },
+    'click .produit'(event){
+        event.preventDefault();
+        Session.set('page', 'productPage');
+        Session.set('IDproduit', event.currentTarget.id);
     }
 });

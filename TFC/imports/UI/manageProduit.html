@@ -19,8 +19,10 @@
 </template>
 
 <template name="displayProduit">
-    <p>
-        ID : {{_id}}  Nom : {{nom}}  Description : {{description}}
-        <br>
-    </p>
+    <div id="{{_id}}" class="produit">
+        <p style="border: 2px solid black; width: fit-content;">
+            ID : {{_id}}<br>  Nom : {{nom}} <br> Description : {{description}}
+            <br>
+        </p>
+    </div>
 </template>
