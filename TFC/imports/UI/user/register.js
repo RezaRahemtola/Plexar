@@ -5,6 +5,7 @@ import { Accounts } from 'meteor/accounts-base';
 
 // Database import
 import { Utilisateurs } from '../../bdd/utilisateurs.js';
+import { Favoris } from '../../bdd/favoris.js';
 
 // HTML import
 import './register.html';
@@ -57,6 +58,12 @@ Template.register.events({
                             lastName: "",
                             username: username,
                             email: email
+                        });
+
+                        // Creating empty favorites of the new user
+                        Favoris.insert({
+                            user: Meteor.user()._id,
+                            produits: []
                         });
                         Session.set('userPage', '');  // Send the new user to default userprofile page
                     }

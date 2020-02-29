@@ -1,10 +1,8 @@
 <template name="favorite">
     <div id="favoriteProducts">
         <h4>Produits favoris</h4>
-        {{#each getFavorites}}
-            {{#each displayFavorites produit}}
-                {{> favoriteProduct}}
-            {{/each}}
+        {{#each displayFavorites}}
+            {{> favoriteProduct}}
         {{/each}}
     </div>
     <div id="favoriteShops">
