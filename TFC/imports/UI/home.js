@@ -6,10 +6,10 @@ import { Template } from 'meteor/templating';
 import './home.html';
 
 // Database import
-import { Produits } from '../bdd/produits.js';
+import { Products } from '../bdd/products.js';
 
 Template.home.helpers({
     productsCounter(){
-        return Produits.find().count();
+        return Products.find().count();
     }
 });

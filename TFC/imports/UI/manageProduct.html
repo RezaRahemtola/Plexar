@@ -1,27 +1,27 @@
-<template name="manageProduit">
+<template name="manageProduct">
     <h3>Ajouter un produit</h3>
-    <form id="newProduit">
+    <form id="newProduct">
         <input name="productName" type="text" placeholder="Nom du produit" required>
         <input name="productDescription" type="textarea" placeholder="Description du produit" required>
         <button id="addProduct" type="submit">Ajouter le produit !</button>
     </form>
     <br>
     <h3>Supprimer un produit</h3>
-    <form id="deleteProduit">
+    <form id="deleteProduct">
         <input name="ID" type="text" placeholder="ID du produit à supprimer" required>
         <button id="deleteProduct" type="submit">Supprimer le produit</button>
     </form>
     <br>
     <h3>Produits dans la database :</h3>
-    {{#each displayAllProduits}}
-        {{> displayProduit}}
+    {{#each displayAllProducts}}
+        {{> displayProduct}}
     {{/each}}
 </template>
 
-<template name="displayProduit">
-    <div id="{{_id}}" class="produit">
+<template name="displayProduct">
+    <div id="{{_id}}" class="product">
         <p style="border: 2px solid black; width: fit-content;">
-            ID : {{_id}}<br>  Nom : {{nom}} <br> Description : {{description}}
+            ID : {{_id}}<br>  Nom : {{name}} <br> Description : {{description}}
             <br>
         </p>
     </div>

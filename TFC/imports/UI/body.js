@@ -7,7 +7,7 @@ import './body.html';
 
 // JS Imports
 import './home.js';
-import './manageProduit.js';
+import './manageProduct.js';
 import './user/userProfile.js';
 import './productPage.js';
 import './shopPage.js';
@@ -32,7 +32,7 @@ Template.body.events({
         Session.set('userPage', '');  // Set the user page to default
     },
     'click #manageProduit'(event){
-        Session.set('page', 'manageProduit');
+        Session.set('page', 'manageProduct');
     },
     'click #manageShop'(event){
         Session.set('page', 'manageShop');
@@ -40,14 +40,14 @@ Template.body.events({
     'click #shopPage' (event){
         Session.set('page', 'shopPage');
     },
-    'click .produit'(event){
+    'click .product'(event){
         event.preventDefault();
         Session.set('page', 'productPage');
-        Session.set('IDproduit', event.currentTarget.id);
+        Session.set('currentProductID', event.currentTarget.id);
     },
     'click .shop'(event){
         event.preventDefault();
         Session.set('page', 'shopPage');
-        Session.set('IDshop', event.currentTarget.id);
+        Session.set('currentShopID', event.currentTarget.id);
     }
 });

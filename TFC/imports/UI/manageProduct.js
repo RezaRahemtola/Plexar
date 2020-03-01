@@ -3,36 +3,36 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 // Database import
-import { Produits } from '../bdd/produits.js';
+import { Products } from '../bdd/products.js';
 
 // HTML import
-import './manageProduit.html';
+import './manageProduct.html';
 
-Template.manageProduit.events({
+Template.manageProduct.events({
     'click #addProduct'(event){
         event.preventDefault();
-        var form = new FormData(document.getElementById('newProduit'));
+        var form = new FormData(document.getElementById('newProduct'));
         var productName = form.get('productName');
         var productDescription = form.get('productDescription');
 
         // Inserting informations in the database
-        Produits.insert({
-            nom: productName,
+        Products.insert({
+            name: productName,
             description: productDescription,
         });
     },
     'click #deleteProduct'(event){
         event.preventDefault();
-        var form = new FormData(document.getElementById('deleteProduit'));
-        var IDproduit = form.get('ID');
+        var form = new FormData(document.getElementById('deleteProduct'));
+        var productID = form.get('ID');
 
         // Delete corresponding line in the database
-        Produits.remove(IDproduit);
+        Products.remove(productID);
     }
 });
 
-Template.manageProduit.helpers({
-    displayAllProduits: function(){
-        return Produits.find({}, {});
+Template.manageProduct.helpers({
+    displayAllProducts: function(){
+        return Products.find({}, {});
     }
 });

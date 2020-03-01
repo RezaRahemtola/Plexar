@@ -7,25 +7,25 @@ import './favorite.html';
 
 // Database import
 import { Favoris } from '../../bdd/favoris.js';
-import { Produits } from '../../bdd/produits.js';
-import { Magasins } from '../../bdd/magasins.js';
+import { Products } from '../../bdd/products.js';
+import { Shops } from '../../bdd/shops.js';
 
 Template.favorite.helpers({
     displayFavoriteProducts: function(){
-        var favoriteProductsID = Favoris.findOne({user: Meteor.user()._id}).produits  // Return an array with IDs of the products database
+        var favoriteProductsID = Favoris.findOne({user: Meteor.user()._id}).products  // Return an array with IDs of the products database
         var favoritesProducts = [];  // Creating an empty array of the products
         for (var element of favoriteProductsID) {
             // Filling the array with the products
-            favoritesProducts.push(Produits.findOne({_id : element}));
+            favoritesProducts.push(Products.findOne({_id : element}));
         }
         return favoritesProducts;
     },
     displayFavoriteShops: function(){
-        var favoriteShopsID = Favoris.findOne({user: Meteor.user()._id}).magasins  // Return an array with IDs of the products database
+        var favoriteShopsID = Favoris.findOne({user: Meteor.user()._id}).shops  // Return an array with IDs of the products database
         var favoriteShops = [];  // Creating an empty array of the products
         for (var element of favoriteShopsID) {
             // Filling the array with the products
-            favoriteShops.push(Magasins.findOne({_id : element}));
+            favoriteShops.push(Shops.findOne({_id : element}));
         }
         return favoriteShops;
     }

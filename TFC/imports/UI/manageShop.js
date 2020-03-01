@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 // Database import
-import { Magasins } from '../bdd/magasins.js';
+import { Shops } from '../bdd/shops.js';
 
 // HTML import
 import './manageShop.html';
@@ -16,23 +16,23 @@ Template.manageShop.events({
         var shopDescription = form.get('shopDescription');
 
         // Inserting informations in the database
-        Magasins.insert({
-            nom: shopName,
+        Shops.insert({
+            name: shopName,
             description: shopDescription,
         });
     },
     'click #deleteShop'(event){
         event.preventDefault();
         var form = new FormData(document.getElementById('deleteShop'));
-        var IDshop = form.get('ID');
+        var shopID = form.get('ID');
 
         // Delete corresponding line in the database
-        Magasins.remove(IDshop);
+        Shops.remove(shopID);
     }
 });
 
 Template.manageShop.helpers({
     displayAllShops: function(){
-        return Magasins.find({}, {});
+        return Shops.find({}, {});
     }
 });
