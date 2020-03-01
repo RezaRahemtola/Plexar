@@ -5,7 +5,7 @@ import { Template } from 'meteor/templating';
 // HTML imports
 import './favorite.html';
 
-// Database import
+// Database imports
 import { Favoris } from '../../bdd/favoris.js';
 import { Products } from '../../bdd/products.js';
 import { Shops } from '../../bdd/shops.js';
@@ -18,15 +18,15 @@ Template.favorite.helpers({
             // Filling the array with the products
             favoritesProducts.push(Products.findOne({_id : element}));
         }
-        return favoritesProducts;
+        return favoritesProducts;  // Returning the array of products to display
     },
     displayFavoriteShops: function(){
-        var favoriteShopsID = Favoris.findOne({user: Meteor.user()._id}).shops  // Return an array with IDs of the products database
-        var favoriteShops = [];  // Creating an empty array of the products
+        var favoriteShopsID = Favoris.findOne({user: Meteor.user()._id}).shops  // Return an array with IDs of the shops database
+        var favoriteShops = [];  // Creating an empty array of the shops
         for (var element of favoriteShopsID) {
-            // Filling the array with the products
+            // Filling the array with the shops
             favoriteShops.push(Shops.findOne({_id : element}));
         }
-        return favoriteShops;
+        return favoriteShops;  // Returning the array of shops to display
     }
 });

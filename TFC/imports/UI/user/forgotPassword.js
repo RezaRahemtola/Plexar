@@ -20,9 +20,10 @@ Template.forgotPassword.onRendered(function(){
 
 Template.forgotPassword.events({
     'submit form' (event){
+        // When the form is submitted
         event.preventDefault();
-        var form = new FormData(document.getElementById('forgotPassword'));
-        var email = form.get('email');
+        var form = new FormData(document.getElementById('forgotPassword'));  // Catching form data
+        var email = form.get('email');  // Catching email input
         Accounts.forgotPassword({email: email}, function(error){
             if(error){
                 Session.set('formErrorMessage', error.reason);

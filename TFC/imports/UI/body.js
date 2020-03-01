@@ -40,14 +40,16 @@ Template.body.events({
     'click #shopPage' (event){
         Session.set('page', 'shopPage');
     },
-    'click .product'(event){
+    'click .productBanner'(event){
+        // When a product banner is clicked (like in search result or favorites)
         event.preventDefault();
-        Session.set('page', 'productPage');
-        Session.set('currentProductID', event.currentTarget.id);
+        Session.set('currentProductID', event.currentTarget.id);  // Setting displayed product with value of the target
+        Session.set('page', 'productPage');  // Redirecting to product page
     },
-    'click .shop'(event){
+    'click .shopBanner'(event){
+        // When a shop banner is clicked (like in search result or favorites)
         event.preventDefault();
-        Session.set('page', 'shopPage');
-        Session.set('currentShopID', event.currentTarget.id);
+        Session.set('currentShopID', event.currentTarget.id);  // Setting displayed product with value of the target
+        Session.set('page', 'shopPage');  // Redirecting to product page
     }
 });
