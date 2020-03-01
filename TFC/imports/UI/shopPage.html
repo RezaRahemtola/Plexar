@@ -1,7 +1,24 @@
 <template name="shopPage">
+    {{#each displayShop}}
+        {{> displayedShopPage}}
+    {{/each}}
+</template>
+
+
+<template name="displayedShopPage">
     <button>Retour aux résultats</button>
-    <h3>Nom du magasin</h3>
-    <button>Partager la page du magasin sur les réseaux sociaux</button>
+    <h3>{{nom}}</h3>
+    <p>{{description}}</p>
+    <button> Partager la page du magasin sur les réseaux sociaux</button>
     <button>Lien vers le site du magasin</button>
-    <button id="addToFavoriteShops">Ajouter aux magasins favoris</button>
+    {{#if currentUser}}
+        <!-- Diplay favorites options only if the user is logged-->
+        {{#if shopInFavorites _id}}
+            <!-- The shop is already in favorites, suggest to remove it -->
+            <button id="removeFromFavoriteShops">Retirer des magasins favoris</button>
+        {{else}}
+            <!-- The shop is not in favorites, suggest to add it -->
+            <button id="addToFavoriteShops">Ajouter aux magasins favoris</button>
+        {{/if}}
+    {{/if}}
 </template>

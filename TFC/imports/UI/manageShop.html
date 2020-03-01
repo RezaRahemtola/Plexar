@@ -1,0 +1,29 @@
+<template name="manageShop">
+    <h3>Ajouter un magasin</h3>
+    <form id="newShop">
+        <input name="shopName" type="text" placeholder="Nom du magasin" required>
+        <input name="shopDescription" type="textarea" placeholder="Description du magasin" required>
+        <button id="addShop" type="submit">Ajouter le masgasin !</button>
+    </form>
+    <br>
+    <h3>Supprimer un magasin</h3>
+    <form id="deleteShop">
+        <input name="ID" type="text" placeholder="ID du magasin à supprimer" required>
+        <button id="deleteShop" type="submit">Supprimer le magasin</button>
+    </form>
+    <br>
+    <h3>Magasins dans la database :</h3>
+    {{#each displayAllShops}}
+        {{> displayShop}}
+    {{/each}}
+</template>
+
+
+<template name="displayShop">
+    <div id="{{_id}}" class="shop">
+        <p style="border: 2px solid black; width: fit-content;">
+            ID : {{_id}}<br>  Nom : {{nom}} <br> Description : {{description}}
+            <br>
+        </p>
+    </div>
+</template>
