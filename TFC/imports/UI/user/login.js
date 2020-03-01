@@ -3,9 +3,6 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
 
-// Database import
-import { Utilisateurs } from '../../bdd/utilisateurs.js';
-
 // HTML import
 import './login.html';
 

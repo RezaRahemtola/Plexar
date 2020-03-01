@@ -8,10 +8,10 @@ import './body.html';
 // JS Imports
 import './home.js';
 import './manageProduct.js';
-import './user/userProfile.js';
 import './productPage.js';
 import './shopPage.js';
 import './manageShop.js';
+import './user/userProfile.js';
 
 Session.set('page', 'home');  // Site loads with home page
 Session.set('formErrorMessage', null);  // No forms error for the moment
@@ -19,26 +19,27 @@ Session.set('formErrorMessage', null);  // No forms error for the moment
 
 Template.body.helpers({
     currentPage: function(page){
-        return Session.get('page');  // Return current page
+        return Session.get('page');  // Return the page to display
   }
 });
 
 Template.body.events({
     'click #home' (event){
+        event.preventDefault();
         Session.set('page', 'home');  // Switch to home page
     },
     'click #userProfile'(event){
+        event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', '');  // Set the user page to default
     },
     'click #manageProduit'(event){
+        event.preventDefault();
         Session.set('page', 'manageProduct');
     },
     'click #manageShop'(event){
+        event.preventDefault();
         Session.set('page', 'manageShop');
-    },
-    'click #shopPage' (event){
-        Session.set('page', 'shopPage');
     },
     'click .productBanner'(event){
         // When a product banner is clicked (like in search result or favorites)

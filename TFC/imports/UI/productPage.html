@@ -14,10 +14,10 @@
         <!-- Diplay favorites options only if the user is logged-->
         {{#if productInFavorites _id}}
             <!-- Product is already in the favorites, suggest to remove it -->
-            <button id="removeFromFavoriteProducts">Retirer des produits favoris</button>
+            <img src="heartFilled.png" alt="" id="removeFromFavoriteProducts" style="width: 100px; display:inherit;"/>
         {{else}}
             <!-- Product is not in the favorites, suggest to add it -->
-            <button id="addToFavoriteProducts">Ajouter aux produits favoris</button>
+            <img src="heartEmpty.png" alt="" id="addToFavoriteProducts" style="width: 100px; display:inherit;"/>
         {{/if}}
     {{/if}}
 </template>

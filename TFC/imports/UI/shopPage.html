@@ -15,10 +15,10 @@
         <!-- Diplay favorites options only if the user is logged-->
         {{#if shopInFavorites _id}}
             <!-- The shop is already in favorites, suggest to remove it -->
-            <button id="removeFromFavoriteShops">Retirer des magasins favoris</button>
+            <img src="heartFilled.png" alt="" id="removeFromFavoriteShops" style="width: 100px; display:inherit;"/>
         {{else}}
             <!-- The shop is not in favorites, suggest to add it -->
-            <button id="addToFavoriteShops">Ajouter aux magasins favoris</button>
+            <img src="heartEmpty.png" alt="" id="addToFavoriteShops" style="width: 100px; display:inherit;"/>
         {{/if}}
     {{/if}}
 </template>

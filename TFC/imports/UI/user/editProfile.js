@@ -4,7 +4,7 @@ import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
 
 // Database import
-import { Utilisateurs } from '../../bdd/utilisateurs.js';
+import { UsersInformations } from '../../bdd/usersInformations.js';
 
 // HTML import
 import './editProfile.html';
@@ -19,8 +19,9 @@ Template.editProfile.helpers({
   }
 });
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
+    console.log(UsersInformations.find())
     Session.set('formErrorMessage', null);  // Reseting formErrorMessage
-    var userInformations = Utilisateurs.findOne({username :{$eq: Meteor.user().username}},{});
+    var userInformations = UsersInformations.findOne({username :{$eq: Meteor.user().username}},{});
     document.getElementById('username').value = Meteor.user().username;  // Auto fill username with current value
     document.getElementById('email').value = Meteor.user().emails[0].address;  // Auto fill email with current value
     document.getElementById('firstName').value = userInformations.firstName;  // Auto fill first name with current value
@@ -31,27 +32,25 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 Template.editProfile.events({
     'submit form' (event){
         event.preventDefault();
-        var userInformations = Utilisateurs.findOne({username :{$eq: Meteor.user().username}},{});  // Getting current user informations
-
         // Catching the form element and saving inputs in variables
         var form = new FormData(document.getElementById('editProfile'));
         var username = form.get('username');
         var firstName = form.get('firstName');
         var lastName = form.get('lastName');
         var email = form.get('email');
-
         // Updating non-sensitive informations in our database
-        Utilisateurs.update(userInformations._id, { $set: {
+        UsersInformations.update(Meteor.userId(), { $set: {
             firstName: firstName,
             lastName: lastName
         }});
 
+        // Changing username with server method :
         Meteor.call('changeUsername', {userId: Meteor.userId(), newUsername: username}, function(error){
             if(error){
                 Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
             } else{
                 // Username was changed successfully, updating value in our database
-                Utilisateurs.update(userInformations._id, { $set: {
+                UsersInformations.update(Meteor.userId(), { $set: {
                     username: username
                 }});
                 if(document.getElementById('advancedEdition').style.display == 'none'){

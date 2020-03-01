@@ -3,9 +3,9 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
 
-// Database import
-import { Utilisateurs } from '../../bdd/utilisateurs.js';
-import { Favoris } from '../../bdd/favoris.js';
+// Database imports
+import { UsersInformations } from '../../bdd/usersInformations.js';
+import { Favorites } from '../../bdd/favorites.js';
 
 // HTML import
 import './register.html';
@@ -49,20 +49,20 @@ Template.register.events({
                     if(error){
                         Session.set('formErrorMessage', error.reason); // Output error if registration fails
                     } else{
-                        // TODO: Define things to complete in Utilisateurs (db collums order)
+                        // TODO: Define things to complete in UsersInformations (db collums order)
                         alert('Votre compte a bien été créé');
 
                         // Inserting informations in the database
-                        Utilisateurs.insert({
-                            firstName: "",
-                            lastName: "",
+                        UsersInformations.insert({
                             username: username,
-                            email: email
+                            email: email,
+                            firstName: "",
+                            lastName: ""
                         });
 
                         // Creating empty favorites of the new user
-                        Favoris.insert({
-                            user: Meteor.user()._id,
+                        Favorites.insert({
+                            user: Meteor.userId(),
                             products: [],
                             shops: []
                         });
