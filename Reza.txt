@@ -11,3 +11,7 @@ Pour envoyer email de verification de l'adresse (SUR LE SERVEUR) :
 Accounts.sendVerificationEmail(userId)
 
 Ajouter le support de l'envoi d'email
+
+
+Image heartEmpty.png :
+https://pixabay.com/illustrations/icon-heart-black-love-emblem-2445095/
