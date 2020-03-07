@@ -17,3 +17,12 @@ Template.home.helpers({
         return Shops.find().count();
     }
 });
+
+Template.home.events({
+    'click #searchSubmit'(event){
+        event.preventDefault();
+        var searchedText = document.getElementById("searchBox").value;
+        Session.set("searchedText", searchedText);
+        Session.set('page', 'searchResults');
+    }
+});

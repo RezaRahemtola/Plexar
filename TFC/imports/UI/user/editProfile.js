@@ -19,7 +19,6 @@ Template.editProfile.helpers({
   }
 });
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
-    console.log(UsersInformations.find())
     Session.set('formErrorMessage', null);  // Reseting formErrorMessage
     var userInformations = UsersInformations.findOne({username :{$eq: Meteor.user().username}},{});
     document.getElementById('username').value = Meteor.user().username;  // Auto fill username with current value

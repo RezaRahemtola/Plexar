@@ -4,6 +4,8 @@ import { Template } from 'meteor/templating';
 
 // HTML import
 import './body.html';
+import './productBanner.html';
+import './shopBanner.html';
 
 // JS Imports
 import './home.js';
@@ -12,8 +14,8 @@ import './productPage.js';
 import './shopPage.js';
 import './manageShop.js';
 import './user/userProfile.js';
-import './productBanner.html';
-import './shopBanner.html';
+import './searchResults.js'
+
 
 Session.set('page', 'home');  // Site loads with home page
 Session.set('formErrorMessage', null);  // No forms error for the moment
