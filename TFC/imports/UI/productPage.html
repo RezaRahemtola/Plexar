@@ -6,10 +6,10 @@
 
 <template name="displayedProductPage">
     <button>Retour aux résultats</button>
-    <h3>{{name}}</h3>
-    <p>{{description}}</p>
-    <button> Partager la page du produit sur les réseaux sociaux</button>
-    <button>Lien vers la page du magasin / site</button>
+    <h3><center>{{name}}</center></h3>
+    <p><center>{{description}}</center></p>
+    <div align="right"><button> Partager la page du produit sur les réseaux sociaux</button></div>
+    <div align="right"><button>Lien vers la page du magasin / site</button></div>
     {{#if currentUser}}
         <!-- Diplay favorites options only if the user is logged-->
         {{#if productInFavorites _id}}
