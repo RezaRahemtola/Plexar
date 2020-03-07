@@ -14,16 +14,6 @@
     <br>
     <h3>Magasins dans la database :</h3>
     {{#each displayAllShops}}
-        {{> displayShop}}
+        {{> shopBanner}}
     {{/each}}
-</template>
-
-
-<template name="displayShop">
-    <div id="{{_id}}" class="shopBanner">
-        <p style="border: 2px solid black; width: fit-content;">
-            ID : {{_id}}<br>  Nom : {{name}} <br> Description : {{description}}
-            <br>
-        </p>
-    </div>
 </template>

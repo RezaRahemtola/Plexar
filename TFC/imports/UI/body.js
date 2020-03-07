@@ -12,6 +12,8 @@ import './productPage.js';
 import './shopPage.js';
 import './manageShop.js';
 import './user/userProfile.js';
+import './productBanner.html';
+import './shopBanner.html';
 
 Session.set('page', 'home');  // Site loads with home page
 Session.set('formErrorMessage', null);  // No forms error for the moment

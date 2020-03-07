@@ -14,15 +14,6 @@
     <br>
     <h3>Produits dans la database :</h3>
     {{#each displayAllProducts}}
-        {{> displayProduct}}
+        {{> productBanner}}
     {{/each}}
-</template>
-
-<template name="displayProduct">
-    <div id="{{_id}}" class="productBanner">
-        <p style="border: 2px solid black; width: fit-content;">
-            ID : {{_id}}<br>  Nom : {{name}} <br> Description : {{description}}
-            <br>
-        </p>
-    </div>
 </template>

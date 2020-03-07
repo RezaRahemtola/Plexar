@@ -2,31 +2,13 @@
     <div id="favoriteProducts">
         <h4>Produits favoris</h4>
         {{#each displayFavoriteProducts}}
-            {{> favoriteProduct}}
+            {{> productBanner}}
         {{/each}}
     </div>
     <div id="favoriteShops">
         <h4>Magasins favoris</h4>
         {{#each displayFavoriteShops}}
-            {{> favoriteShop}}
+            {{> shopBanner}}
         {{/each}}
-    </div>
-</template>
-
-<template name="favoriteProduct">
-    <div id="{{_id}}" class="productBanner">
-        <p style="border: 2px solid black; width: fit-content;">
-            ID : {{_id}}<br>  Nom : {{name}} <br> Description : {{description}}
-            <br>
-        </p>
-    </div>
-</template>
-
-<template name="favoriteShop">
-    <div id="{{_id}}" class="shopBanner">
-        <p style="border: 2px solid black; width: fit-content;">
-            ID : {{_id}}<br>  Nom : {{name}} <br> Description : {{description}}
-            <br>
-        </p>
     </div>
 </template>
