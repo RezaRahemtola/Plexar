@@ -16,8 +16,8 @@ Meteor.startup(() => {
 });
 
 Meteor.methods({
-    'changeUsername'({userId, newUsername}){
-        Accounts.setUsername(userId, newUsername)
+    'changeUsername'({newUsername}){
+        Accounts.setUsername(Meteor.userId(), newUsername)
     },
     'searchForProducts'({text}){
         var result = Products.find({$text: { $search: text}}).fetch();  // Return the matching products

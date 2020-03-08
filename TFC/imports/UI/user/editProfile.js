@@ -44,7 +44,7 @@ Template.editProfile.events({
         }});
 
         // Changing username with server method :
-        Meteor.call('changeUsername', {userId: Meteor.userId(), newUsername: username}, function(error){
+        Meteor.call('changeUsername', {newUsername: username}, function(error){
             if(error){
                 Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
             } else{
