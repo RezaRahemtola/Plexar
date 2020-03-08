@@ -1,5 +1,5 @@
 <template name="login">
-    <h2>Connexion</h2>
+    <h2 class="title">Connexion</h2>
     <form id="login">
         <label for="email">Email:</label>
         <p class="control has-icons-left">
@@ -19,7 +19,7 @@
         <br><br>
         <button type="submit" class="button is-success">Valider</button>
     </form>
-    <button class="forgotPassword">Mot de passe oublié</button>
+    <button class="button forgotPassword">Mot de passe oublié</button>
     {{#if formErrorMessage}}
         {{formErrorMessage}}
     {{/if}}

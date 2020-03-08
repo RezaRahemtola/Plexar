@@ -14,28 +14,28 @@
             </div>
             <div class="control">
                 <a class="button is-rounded" type="submit">
-                    <i class="fas fa-search" id="searchSubmit" style="color: black;"></i>
+                    <i class="fas fa-search" id="searchSubmit"></i>
                 </a>
             </div>
         </div>
     </form>
 
     <div style="display:inline-block; margin: 20px">
-        <h4>Magasins en vogue</h4>
+        <h4 class="title">Magasins en vogue</h4>
     </div>
     <div style="display:inline-block; margin: 20px">
-        <h4>Produits en vogue</h4>
+        <h4 class="title">Produits en vogue</h4>
     </div>
     <div style="display:inline-block; margin: 20px">
-        <h4>Autour de moi</h4>
+        <h4 class="title">Autour de moi</h4>
     </div>
     <br>
 
     {{#if currentUser}}
         <!-- Displayed only when the user is logged in-->
         <div style="text-align:center;">
-            <button id="addShop">Ajouter un magasin</button>
-            <button id="addProduct">Ajouter un produit</button>
+            <button id="addShop" class="button">Ajouter un magasin</button>
+            <button id="addProduct" class="button">Ajouter un produit</button>
         </div>
     {{else}}
         <!-- Displayed when the user is NOT logged in-->

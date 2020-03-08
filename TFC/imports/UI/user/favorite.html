@@ -1,12 +1,12 @@
 <template name="favorite">
     <div id="favoriteProducts">
-        <h4>Produits favoris</h4>
+        <h4 class="title">Produits favoris</h4>
         {{#each displayFavoriteProducts}}
             {{> productBanner}}
         {{/each}}
     </div>
     <div id="favoriteShops">
-        <h4>Magasins favoris</h4>
+        <h4 class="title">Magasins favoris</h4>
         {{#each displayFavoriteShops}}
             {{> shopBanner}}
         {{/each}}
