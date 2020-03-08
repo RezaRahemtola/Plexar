@@ -16,9 +16,11 @@ import './manageShop.js';
 import './user/userProfile.js';
 import './searchResults.js'
 
-
+// Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page
 Session.set('formErrorMessage', null);  // No forms error for the moment
+Session.set("searchedShopsID", []);  // No search for the moment
+Session.set("searchedProductsID", []);  // No search for the moment
 
 
 Template.body.helpers({

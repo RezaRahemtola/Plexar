@@ -10,14 +10,11 @@ import { Shops } from '../bdd/shops.js';
 // HTML imports
 import './searchResults.html';
 
-console.log();
-
 Template.searchResults.helpers({
     displayProductsResults: function(){
         Meteor.call('searchForProducts', {text: Session.get("searchedText")}, function(error, result){
             Session.set("searchedProductsID", result);  // Result is an array of products ID, saving it in a Session variable
         });
-        console.log(Session.get("searchedProductsID"));
         var searchedProducts = []  // We will save the products in an array
         for (var productID of Session.get("searchedProductsID")){
             // For each product ID we add the product to the array

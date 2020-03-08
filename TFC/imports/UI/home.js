@@ -19,10 +19,9 @@ Template.home.helpers({
 });
 
 Template.home.events({
-    'click #searchSubmit'(event){
+    'submit form#searchForm'(event){
         event.preventDefault();
-        var searchedText = document.getElementById("searchBox").value;
-        Session.set("searchedText", searchedText);
-        Session.set('page', 'searchResults');
+        Session.set('searchedText', document.getElementById("searchBox").value);  // Storing search input value in a variable
+        Session.set('page', 'searchResults');  // Sending the user to the search results page
     }
 });
