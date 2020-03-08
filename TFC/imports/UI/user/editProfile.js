@@ -62,8 +62,8 @@ Template.editProfile.events({
                     var confirmNewPassword = form.get('confirmNewPassword');  // Saving inputs in variables
                     if(!(areValidPasswords(newPassword, confirmNewPassword))){
                         // Error in passwords fields
-                        document.getElementById('newPassword').classList.add("error");
-                        document.getElementById('confirmNewPassword').classList.add("error");
+                        document.getElementById('newPassword').classList.add("is-danger");
+                        document.getElementById('confirmNewPassword').classList.add("is-danger");
                     } else{
                         // No error
                         Accounts.changePassword(oldPassword, newPassword, function(error){  // Callback function which can raise an error

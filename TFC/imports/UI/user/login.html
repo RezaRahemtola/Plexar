@@ -2,12 +2,22 @@
     <h2>Connexion</h2>
     <form id="login">
         <label for="email">Email:</label>
-        <input type="email" name="email" required>
+        <p class="control has-icons-left">
+            <input class="input" type="email" name="email" required>
+            <span class="icon is-left">
+                <i class="fas fa-envelope"></i>
+            </span>
+        </p>
         <br><br>
         <label for="password">Mot de passe:</label>
-        <input type="password" name="password" required autocomplete="current-password">
+        <p class="control has-icons-left">
+            <input type="password" class="input" name="password" required autocomplete="current-password">
+            <span class="icon is-left">
+                <i class="fas fa-lock"></i>
+            </span>
+        </p>
         <br><br>
-        <button type="submit">Valider</button>
+        <button type="submit" class="button is-success">Valider</button>
     </form>
     <button class="forgotPassword">Mot de passe oublié</button>
     {{#if formErrorMessage}}

@@ -1,8 +1,8 @@
 <body>
-    <header style="position: fixed; top: 0; left: 0; width: 100%; background-color: green;">
+    <header>
         <!-- Elements de l'en-tête -->
         <h1 style="text-align: center;">EKOTOPIA</h1>
-        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" id="userProfile" style="height: 50px; position: absolute; top: 0; right: 0;"/>
+        <i class="fas fa-user icon is-large" id="userProfile"></i>
     </header>
 
 
@@ -12,13 +12,4 @@
     <!-- {{> loginButtons}}  Ajoute le bouton de connexion utilisateur -->
     <br><br>
     {{> Template.dynamic template=currentPage}} <!-- Affichage du template dynamique -->
-
-    <footer style="position: absolute; bottom: 0; left: 0; width: 100%; background-color: grey;">
-        <!-- Elements de bas de page-->
-        <ul style="list-style-type: none;">
-            <li style="height: 100%; width: 33%; display: inline-block;">Mentions légales</li>
-            <li style="height: 100%; width: 33%; display: inline-block;">Cookies Policy & Data Privacy etc...</li>
-            <li style="height: 100%; width: 33%; display: inline-block;">Qui sommes nous ?</li>
-        </ul>
-    </footer>
 </body>

@@ -2,18 +2,38 @@
     <h2>Inscription</h2>
     <form id="register">
         <label for="username">Nom d'utilisateur:</label>
-        <input type="text" name="username" required/>
+        <p class="control has-icons-left">
+            <input type="text" class="input" name="username" required/>
+            <span class="icon is-left">
+                <i class="fas fa-user-circle"></i>
+            </span>
+        </p>
         <br><br>
         <label for="email">Email:</label>
-        <input type="email" name="email" required>
+        <p class="control has-icons-left">
+            <input type="email" class="input" name="email" required>
+            <span class="icon is-left">
+                <i class="fas fa-envelope"></i>
+            </span>
+        </p>
         <br><br>
         <label for="password">Mot de passe:</label>
-        <input type="password" name="password" id="password" required autocomplete="new-password">
+        <p class="control has-icons-left">
+            <input type="password" class="input" name="password" id="password" required autocomplete="new-password">
+            <span class="icon is-left">
+                <i class="fas fa-lock"></i>
+            </span>
+        </p>
         <br><br>
         <label for="confirmPassword">Confirmer le mot de passe:</label>
-        <input type="password" name="confirmPassword" id="confirmPassword" required autocomplete="new-password">
+        <p class="control has-icons-left">
+            <input type="password" class="input" name="confirmPassword" id="confirmPassword" required autocomplete="new-password">
+            <span class="icon is-left">
+                <i class="fas fa-lock"></i>
+            </span>
+        </p>
         <br><br>
-        <button type="submit">Valider</button>
+        <button type="submit" class="button is-success">Valider</button>
         {{#if formErrorMessage}}
             {{formErrorMessage}}
         {{/if}}

@@ -2,31 +2,46 @@
     <h2>Editer le profil</h2>
     <form id="editProfile" style="width:fit-content;">
         <label for="username">Nom d'utilisateur:</label>
-        <input type="text" name="username" id="username" required/>
+        <p class="control has-icons-left">
+            <input type="text" class="input" name="username" id="username" required/>
+            <span class="icon is-left">
+                <i class="fas fa-user-circle"></i>
+            </span>
+        </p>
         <br><br>
         <label for="firstName">Prénom:</label>
-        <input type="text" name="firstName" id="firstName">
+        <input type="text" class="input" name="firstName" id="firstName">
         <br><br>
         <label for="lastName">Nom:</label>
-        <input type="text" name="lastName" id="lastName">
+        <input type="text" class="input" name="lastName" id="lastName">
         <br><br>
         <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required disabled>
+        <p class="control has-icons-left">
+            <input type="email" class="input" id="email" required disabled>
+            <span class="icon is-left">
+                <i class="fas fa-envelope"></i>
+            </span>
+        </p>
         <br><br>
-        <button type="button" id="showAdvancedEdition">Options avancées</button>
+        <button type="button" id="showAdvancedEdition" class="button">Options avancées</button>
         <div id="advancedEdition" style="display: none;">
             <hr>
             <label for="oldPassword">Mot de passe actuel:</label>
-            <input type="password" name="oldPassword" id="oldPassword" autocomplete="current-password">
+            <p class="control has-icons-left">
+                <input type="password" class="input" name="oldPassword" id="oldPassword" autocomplete="current-password">
+                <span class="icon is-left">
+                    <i class="fas fa-lock"></i>
+                </span>
+            </p>
             <br><br>
             <label for="newPassword">Nouveau mot de passe:</label>
-            <input type="password" name="newPassword" id="newPassword" autocomplete="new-password">
+            <input type="password" class="input" name="newPassword" id="newPassword" autocomplete="new-password">
             <br><br>
             <label for="confirmNewPassword">Confirmer le mot de passe:</label>
-            <input type="password" name="confirmNewPassword" id="confirmNewPassword" autocomplete="new-password">
+            <input type="password" class="input" name="confirmNewPassword" id="confirmNewPassword" autocomplete="new-password">
             <br><br>
         </div>
-        <button type="submit">Valider</button>
+        <button type="submit" class="button is-success">Valider</button>
         {{#if formErrorMessage}}
             {{formErrorMessage}}
         {{/if}}

@@ -1,15 +1,15 @@
 <template name="manageProduct">
     <h3>Ajouter un produit</h3>
     <form id="newProduct">
-        <input name="productName" type="text" placeholder="Nom du produit" required>
-        <input name="productDescription" type="textarea" placeholder="Description du produit" required>
-        <button id="addProduct" type="submit">Ajouter le produit !</button>
+        <input name="productName" type="text" placeholder="Nom du produit" class="input" required>
+        <input name="productDescription" type="textarea" placeholder="Description du produit" class="input" required>
+        <button id="addProduct" type="submit" class="button">Ajouter le produit !</button>
     </form>
     <br>
     <h3>Supprimer un produit</h3>
     <form id="deleteProduct">
-        <input name="ID" type="text" placeholder="ID du produit à supprimer" required>
-        <button id="deleteProduct" type="submit">Supprimer le produit</button>
+        <input name="ID" type="text" placeholder="ID du produit à supprimer" class="input" required>
+        <button id="deleteProduct" type="submit" class="button">Supprimer le produit</button>
     </form>
     <br>
     <h3>Produits dans la database :</h3>
