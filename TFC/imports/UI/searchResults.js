@@ -15,26 +15,25 @@ console.log();
 Template.searchResults.helpers({
     displayProductsResults: function(){
         Meteor.call('searchForProducts', {text: Session.get("searchedText")}, function(error, result){
-            // Result is an array of products ID, we find the products in the db
-            var searchedProducts = []
-            for (var productID of result){
-                // For each product ID we add the product to the array
-                searchedProducts.push(Products.findOne({_id : productID}))
-            }
-            Session.set("searchedProducts", searchedProducts);  // Saving products in a Session variable
+            Session.set("searchedProductsID", result);  // Result is an array of products ID, saving it in a Session variable
         });
-        return Session.get("searchedProducts")
+        console.log(Session.get("searchedProductsID"));
+        var searchedProducts = []  // We will save the products in an array
+        for (var productID of Session.get("searchedProductsID")){
+            // For each product ID we add the product to the array
+            searchedProducts.push(Products.findOne({_id : productID}))
+        }
+        return searchedProducts  // Return the products array
     },
     displayShopsResults: function(){
         Meteor.call('searchForShops', {text: Session.get("searchedText")}, function(error, result){
-            // Result is an array of shops ID, we find the shops in the db
-            var searchedShops = []
-            for (var shopID of result){
-                // For each shop ID we add the shop to the array
-                searchedShops.push(Shops.findOne({_id : shopID}))
-            }
-            Session.set("searchedShops", searchedShops);  // Saving shops in a Session variable
+            Session.set("searchedShopsID", result);  // Result is an array of shops ID, saving it in a Session variable
         });
-        return Session.get("searchedShops")
+        var searchedShops = []  // We will save the shops in an array
+        for (var shopID of Session.get("searchedShopsID")){
+            // For each shop ID we add the shop to the array
+            searchedShops.push(Shops.findOne({_id : shopID}))
+        }
+        return searchedShops  // Return the shops array
     }
 });
