@@ -12,8 +12,8 @@ import { Shops } from '../../bdd/shops.js';
 
 Template.favorite.helpers({
     displayFavoriteProducts: function(){
-        var favoriteProductsID = Favorites.findOne({user: Meteor.userId()}).products  // Return an array with IDs of the products database
-        var favoriteID = Favorites.findOne({user :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
+        var favoriteProductsID = Favorites.findOne({userId: Meteor.userId()}).products  // Return an array with IDs of the products database
+        var favoriteID = Favorites.findOne({userId :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
         var favoritesProducts = [];  // Creating an empty array of the products
         for (var productID of favoriteProductsID) {
             // Filling the array with the products
@@ -32,8 +32,8 @@ Template.favorite.helpers({
         return favoritesProducts;  // Returning the array of products to display
     },
     displayFavoriteShops: function(){
-        var favoriteShopsID = Favorites.findOne({user: Meteor.userId()}).shops  // Return an array with IDs of the shops database
-        var favoriteID = Favorites.findOne({user :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
+        var favoriteShopsID = Favorites.findOne({userId: Meteor.userId()}).shops  // Return an array with IDs of the shops database
+        var favoriteID = Favorites.findOne({userId: {$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
         var favoriteShops = [];  // Creating an empty array of the shops
         for (var shopID of favoriteShopsID) {
             // Filling the array with the shops

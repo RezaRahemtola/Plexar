@@ -27,8 +27,9 @@ Template.register.helpers({
 
 
 Template.register.events({
-    'submit form'(event){
+    'click #submitForm'(event){
         event.preventDefault();
+        event.target.classList.add("is-loading");  // Add a loading effect to the button
         var form = new FormData(document.getElementById('register'));
         var username = form.get('username');
         var email = form.get('email');
@@ -37,8 +38,9 @@ Template.register.events({
 
         if(!(areValidPasswords(password, confirmPassword))){
             // Error in passwords fields
-            document.getElementById('password').classList.add("error");
-            document.getElementById('confirmPassword').classList.add("error");
+            document.getElementById('password').classList.add("is-danger");
+            document.getElementById('confirmPassword').classList.add("is-danger");
+            event.target.classList.remove("is-loading");  // Remove the loading effect of the button
         } else{
             // Creating the new user
             Accounts.createUser({
@@ -48,12 +50,14 @@ Template.register.events({
             }, function(error){
                     if(error){
                         Session.set('formErrorMessage', error.reason); // Output error if registration fails
+                        event.target.classList.remove("is-loading");  // Remove the loading effect of the button
                     } else{
                         // TODO: Define things to complete in UsersInformations (db collums order)
                         alert('Votre compte a bien été créé');
 
                         // Inserting informations in the database
                         UsersInformations.insert({
+                            userId: Meteor.userId(),
                             username: username,
                             email: email,
                             firstName: "",
@@ -62,7 +66,7 @@ Template.register.events({
 
                         // Creating empty favorites of the new user
                         Favorites.insert({
-                            user: Meteor.userId(),
+                            userId: Meteor.userId(),
                             products: [],
                             shops: []
                         });

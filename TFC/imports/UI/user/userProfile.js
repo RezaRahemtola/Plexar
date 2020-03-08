@@ -40,10 +40,14 @@ Template.userProfile.events({
     },
     'click .editProfile' (event){
         event.preventDefault();
+        $("ul#test li.is-active").removeClass("is-active");  // Remove class from the older active tab
+        event.currentTarget.classList.add("is-active");  // Set the current tab as the active one
         Session.set('userPage', 'editProfile');
     },
     'click .favorite' (event){
         event.preventDefault();
+        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
+        event.currentTarget.classList.add("is-active");  // Set the current tab as the active one
         Session.set('userPage', 'favorite');
     }
 });

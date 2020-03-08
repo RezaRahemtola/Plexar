@@ -20,7 +20,7 @@ Template.editProfile.helpers({
 });
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
     Session.set('formErrorMessage', null);  // Reseting formErrorMessage
-    var userInformations = UsersInformations.findOne({username :{$eq: Meteor.user().username}},{});
+    var userInformations = UsersInformations.findOne({userId: Meteor.userId()});
     document.getElementById('username').value = Meteor.user().username;  // Auto fill username with current value
     document.getElementById('email').value = Meteor.user().emails[0].address;  // Auto fill email with current value
     document.getElementById('firstName').value = userInformations.firstName;  // Auto fill first name with current value
@@ -31,6 +31,7 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 Template.editProfile.events({
     'submit form' (event){
         event.preventDefault();
+        var userInformationsID = UsersInformations.findOne({userId: Meteor.userId()})._id;
         // Catching the form element and saving inputs in variables
         var form = new FormData(document.getElementById('editProfile'));
         var username = form.get('username');
@@ -38,7 +39,7 @@ Template.editProfile.events({
         var lastName = form.get('lastName');
         var email = form.get('email');
         // Updating non-sensitive informations in our database
-        UsersInformations.update(Meteor.userId(), { $set: {
+        UsersInformations.update(userInformationsID, { $set: {
             firstName: firstName,
             lastName: lastName
         }});
@@ -49,7 +50,7 @@ Template.editProfile.events({
                 Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
             } else{
                 // Username was changed successfully, updating value in our database
-                UsersInformations.update(Meteor.userId(), { $set: {
+                UsersInformations.update(userInformationsID, { $set: {
                     username: username
                 }});
                 if(document.getElementById('advancedEdition').style.display == 'none'){

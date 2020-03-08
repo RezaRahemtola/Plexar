@@ -22,14 +22,16 @@ Template.login.helpers({
 });
 
 Template.login.events({
-    'submit form' (event){
+    'click #submitForm' (event){
         event.preventDefault();
+        event.target.classList.add("is-loading");  // Add a loading effect to the button
         var form = new FormData(document.getElementById('login'));
         var email = form.get('email');
         var password = form.get('password');
         Meteor.loginWithPassword(email, password, function(error){
             if(error){
                 Session.set('formErrorMessage', error.reason);
+                event.target.classList.remove("is-loading");  // Remove the loading effect of the button
             } else{
                 Session.set('userPage', '');  // Send the logged user to userprofile page
             }
