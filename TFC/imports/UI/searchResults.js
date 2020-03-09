@@ -34,3 +34,19 @@ Template.searchResults.helpers({
         return searchedShops  // Return the shops array
     }
 });
+
+
+Template.searchResults.events({
+    'click #sortResults'(event){
+        var selectedOption = event.target.value;  // Catch the value attribute of the selected option
+        // Change the icon depending of the selected option
+        if(selectedOption === 'A-Z')
+            document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down"></i>';  // Change HTML content of the icon's parent div
+        else if(selectedOption === 'Z-A')
+            document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down-alt"></i>';  // Change HTML content of the icon's parent div
+    }
+});
+// Ordre alphabetique {sort: {name: -1}}
+// Ordre alphabetique inverse {sort: {name: -1}}
+
+//<i class="fas fa-sort-alpha-down-alt"></i>

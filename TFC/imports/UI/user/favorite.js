@@ -14,7 +14,7 @@ Template.favorite.helpers({
     displayFavoriteProducts: function(){
         var favoriteProductsID = Favorites.findOne({userId: Meteor.userId()}).products  // Return an array with IDs of the products database
         var favoriteID = Favorites.findOne({userId :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
-        var favoritesProducts = [];  // Creating an empty array of the products
+        var favoriteProducts = [];  // Creating an empty array of the products
         for (var productID of favoriteProductsID) {
             // Filling the array with the products
             if (Products.findOne({_id : productID}) === undefined){
@@ -26,10 +26,10 @@ Template.favorite.helpers({
                 }});
             } else{
                 // Product exists, adding it to the array
-                favoritesProducts.push(Products.findOne({_id : productID}));
+                favoriteProducts.push(Products.findOne({_id : productID}));
             }
         }
-        return favoritesProducts;  // Returning the array of products to display
+        return favoriteProducts;  // Returning the array of products to display
     },
     displayFavoriteShops: function(){
         var favoriteShopsID = Favorites.findOne({userId: Meteor.userId()}).shops  // Return an array with IDs of the shops database

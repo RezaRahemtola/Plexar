@@ -39,6 +39,16 @@ Template.body.events({
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', '');  // Set the user page to default
     },
+    'click .register'(event){
+        event.preventDefault();
+        Session.set('page', 'userProfile');  // Switch to userProfile page
+        Session.set('userPage', 'register');  // Set the user page to register
+    },
+    'click .login'(event){
+        event.preventDefault();
+        Session.set('page', 'userProfile');  // Switch to userProfile page
+        Session.set('userPage', 'login');  // Set the user page to register
+    },
     'click #manageProduit'(event){
         event.preventDefault();
         Session.set('page', 'manageProduct');
@@ -59,4 +69,14 @@ Template.body.events({
         Session.set('currentShopID', event.currentTarget.id);  // Setting displayed product with value of the target
         Session.set('page', 'shopPage');  // Redirecting to product page
     }
+});
+
+// jQuery code to display nav menu when burger-menu is clicked (code from https://bulma.io/documentation/components/navbar/)
+$(document).ready(function() {
+  // Check for click events on the navbar burger icon
+  $(".navbar-burger").click(function() {
+      // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+      $(".navbar-burger").toggleClass("is-active");
+      $(".navbar-menu").toggleClass("is-active");
+  });
 });

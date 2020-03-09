@@ -25,17 +25,10 @@ Template.userProfile.helpers({
 });
 
 Template.userProfile.events({
-    'click .register' (event){
-        event.preventDefault();
-        Session.set('userPage', 'register');
-    },
-    'click .login' (event){
-        event.preventDefault();
-        Session.set('userPage', 'login');
-    },
     'click .logout' (event){
         event.preventDefault();
         Session.set('userPage', '');  // Set the page to default
+        Session.set('page', 'home');  // Set the page to default
         Meteor.logout();  // Log out the user
     },
     'click .editProfile' (event){
