@@ -1,7 +1,7 @@
 <body>
     <header>
         <!-- Elements de l'en-tête -->
-        <h1 style="text-align: center;">EKOTOPIA</h1>
+        <h1 class="title">TITRE</h1>
     </header>
 
     <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -38,13 +38,14 @@
                 <div class="navbar-item">
                     <div class="buttons">
                         {{#if currentUser}}
+                            <!-- Displayed only when the user is logged in-->
                             <i class="fas fa-user icon is-large" id="userProfile"></i>
                         {{else}}
                             <!-- Displayed when the user is NOT logged in-->
                             <a class="button is-primary register">
-                                <strong>Sign up</strong>
+                                <strong>S'inscrire</strong>
                             </a>
-                            <a class="button is-light login">Log in</a>
+                            <a class="button is-light login">Se connecter</a>
                         {{/if}}
                     </div>
                 </div>

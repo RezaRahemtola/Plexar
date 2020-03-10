@@ -1,15 +1,19 @@
 <template name="searchResults">
-    <div class="control has-icons-left">
-        <div class="select">
-            <select id="sortResults">
-                <option value="A-Z" selected>Ordre alphabétique</option>
-                <option value="Z-A">Ordre alphabétique inversé</option>
-            </select>
-        </div>
-        <div id="sortResultsIconContainer" class="icon is-left" style="color: black;">
-            <i class="fas fa-sort-alpha-down"></i>
+    <div class="field has-addons">
+        <button type="button" class="button is-static">Trier par :</button>
+        <div class="control has-icons-left">
+            <div class="select">
+                <select id="sortResults">
+                    <option value="A-Z" selected>Ordre alphabétique</option>
+                    <option value="Z-A">Ordre alphabétique inversé</option>
+                </select>
+            </div>
+            <div id="sortResultsIconContainer" class="icon is-left" style="color: black;">
+                <i class="fas fa-sort-alpha-down"></i>
+            </div>
         </div>
     </div>
+
     <h3 class="title">Produits</h3>
     {{#each displayProductsResults}}
         {{> productBanner}}

@@ -48,5 +48,3 @@ Template.searchResults.events({
 });
 // Ordre alphabetique {sort: {name: -1}}
 // Ordre alphabetique inverse {sort: {name: -1}}
-
-//<i class="fas fa-sort-alpha-down-alt"></i>
