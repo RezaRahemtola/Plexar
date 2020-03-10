@@ -21,12 +21,16 @@ Session.set('page', 'home');  // Site loads with home page
 Session.set('formErrorMessage', null);  // No forms error for the moment
 Session.set("searchedShopsID", []);  // No search for the moment
 Session.set("searchedProductsID", []);  // No search for the moment
+Session.set('message', null);  // No message to display for the moment
 
 
 Template.body.helpers({
-    currentPage: function(page){
+    currentPage: function(){
         return Session.get('page');  // Return the page to display
-  }
+    },
+    currentMessage: function(){
+        return Session.get('message');  // Return the message to display (if there is one)
+    }
 });
 
 Template.body.events({
@@ -68,6 +72,11 @@ Template.body.events({
         event.preventDefault();
         Session.set('currentShopID', event.currentTarget.id);  // Setting displayed product with value of the target
         Session.set('page', 'shopPage');  // Redirecting to product page
+    },
+    'click div.message-header button.delete'(event){
+        // When the closing button of a message is clicked
+        event.preventDefault();
+        Session.set('message', null);  // Remove the message
     }
 });
 

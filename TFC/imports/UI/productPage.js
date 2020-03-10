@@ -4,6 +4,8 @@ import { Template } from 'meteor/templating';
 
 // HTML imports
 import './productPage.html';
+import './messages/productAddedToFavorite.html';
+import './messages/productRemovedFromFavorite.html'
 
 // Database imports
 import { Products } from '../bdd/products.js';
@@ -20,7 +22,7 @@ Template.displayedProductPage.events({
             // Updating the database with the modified array
             products: favoriteProducts
         }});
-        alert("Produit bien ajouté aux favoris !");  // Showing a confirmation message
+        Session.set('message', 'productAddedToFavorite');  // Showing a confirmation message
     },
     'click #removeFromFavoriteProducts'(event){
         // User wants to remove this product from it's favorites
@@ -32,7 +34,7 @@ Template.displayedProductPage.events({
             // Updating the database with the modified array
             products: favoriteProducts
         }});
-        alert("Produit supprimé de vos favoris");  // Showing a confirmation message
+        Session.set('message', 'productRemovedFromFavorite');  // Showing a confirmation message
     }
 })
 

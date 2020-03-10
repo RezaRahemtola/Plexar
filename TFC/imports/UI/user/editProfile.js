@@ -8,6 +8,7 @@ import { UsersInformations } from '../../bdd/usersInformations.js';
 
 // HTML import
 import './editProfile.html';
+import '../messages/editedProfile.html';
 
 // Form validation functions import
 import './formValidation.js';
@@ -18,6 +19,7 @@ Template.editProfile.helpers({
         return Session.get('formErrorMessage');
   }
 });
+
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
     Session.set('formErrorMessage', null);  // Reseting formErrorMessage
     var userInformations = UsersInformations.findOne({userId: Meteor.userId()});
@@ -25,7 +27,6 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
     document.getElementById('email').value = Meteor.user().emails[0].address;  // Auto fill email with current value
     document.getElementById('firstName').value = userInformations.firstName;  // Auto fill first name with current value
     document.getElementById('lastName').value = userInformations.lastName;  // Auto fill last name with current value
-
 });
 
 Template.editProfile.events({
@@ -55,7 +56,7 @@ Template.editProfile.events({
                 }});
                 if(document.getElementById('advancedEdition').style.display == 'none'){
                     // Advanced edition is disabled, sending user to profile page
-                    alert('Vos informations ont été modifiées avec succès !');
+                    Session.set('message', 'editedProfile');  // Display a success message
                     Session.set('userPage', '');
                 } else{
                     var oldPassword = form.get('oldPassword');  // Saving inputs in variables

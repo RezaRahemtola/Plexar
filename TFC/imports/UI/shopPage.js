@@ -4,6 +4,8 @@ import { Template } from 'meteor/templating';
 
 // HTML imports
 import './shopPage.html';
+import './messages/shopAddedToFavorite.html';
+import './messages/shopRemovedFromFavorite.html';
 
 // Database import
 import { Shops } from '../bdd/shops.js';
@@ -20,7 +22,7 @@ Template.displayedShopPage.events({
             // Updating the database with the modified array
             shops: favoriteShops
         }});
-        alert("Magasin bien ajouté aux favoris !");  // Showing a confirmation message
+        Session.set('message', 'shopAddedToFavorite');  // Showing a confirmation message
     },
     'click #removeFromFavoriteShops'(event){
         // User wants to remove this shop from it's favorites
@@ -32,7 +34,7 @@ Template.displayedShopPage.events({
             // Updating the database with the modified array
             shops: favoriteShops
         }});
-        alert("Magasin supprimé de vos favoris");  // Showing a confirmation message
+        Session.set('message', 'shopRemovedFromFavorite');  // Showing a confirmation message
     }
 })
 

@@ -5,6 +5,7 @@ import { Accounts } from 'meteor/accounts-base';
 
 // HTML import
 import './forgotPassword.html';
+import '../messages/forgotPasswordEmailSent.html';
 
 // Form validation functions import
 import './formValidation.js';
@@ -12,6 +13,12 @@ import './formValidation.js';
 
 Template.forgotPassword.onRendered(function(){
     Session.set('formErrorMessage', null);  // Reseting formErrorMessage
+});
+
+Template.forgotPassword.helpers({
+    formErrorMessage: function() {
+        return Session.get('formErrorMessage');
+  }
 });
 
 
@@ -25,8 +32,8 @@ Template.forgotPassword.events({
             if(error){
                 Session.set('formErrorMessage', error.reason);
             } else{
-                alert("Email envoyé avec succès");  // Success message
-                Session.set('userPage', '');  // Send the logged user to userprofile page
+                Session.set('message', 'forgotPasswordEmailSent');  // Success message
+                Session.set('userPage', 'login');
             }
         });
     }

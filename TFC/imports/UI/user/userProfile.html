@@ -1,12 +1,21 @@
 <template name="userProfile">
-    <h1 class="title">Utilisateur</h1>
     {{#if currentUser}}
         <!-- Displayed only when the user is logged in-->
-        <button class="button logout" style="color: red">Déconnexion</button>
         <div class="tabs is-boxed is-fullwidth">
             <ul>
-                <li class="favorite"><a>Mes favoris</a></li>
-                <li class="editProfile"><a>Éditer le profil</a></li>
+                <li id="favorite"><a>Mes favoris</a></li>
+                <li id="editProfile">
+                    <a>
+                        <span class="icon"><i class="fas fa-user-edit"></i></span>
+                        <span>Éditer le profil</span>
+                    </a>
+                </li>
+                <li class="logout">
+                    <a>
+                        <span class="icon"><i class="fas fa-power-off"></i></span>
+                        <span>Se déconnecter</span>
+                    </a>
+                </li>
             </ul>
         </div>
     {{else}}

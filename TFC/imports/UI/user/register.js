@@ -9,6 +9,7 @@ import { Favorites } from '../../bdd/favorites.js';
 
 // HTML import
 import './register.html';
+import '../messages/accountCreated.html';
 
 // Form validation functions import
 import './formValidation.js';
@@ -52,9 +53,7 @@ Template.register.events({
                         Session.set('formErrorMessage', error.reason); // Output error if registration fails
                         event.target.classList.remove("is-loading");  // Remove the loading effect of the button
                     } else{
-                        // TODO: Define things to complete in UsersInformations (db collums order)
-                        alert('Votre compte a bien été créé');
-
+                        Session.set('message', 'accountCreated');
                         // Inserting informations in the database
                         UsersInformations.insert({
                             userId: Meteor.userId(),
