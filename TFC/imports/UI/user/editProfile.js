@@ -30,11 +30,12 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 });
 
 Template.editProfile.events({
-    'submit form' (event){
+    'click button[type="submit"]' (event){
         event.preventDefault();
+        console.log("ok")
         var userInformationsID = UsersInformations.findOne({userId: Meteor.userId()})._id;
         // Catching the form element and saving inputs in variables
-        var form = new FormData(document.getElementById('editProfile'));
+        var form = new FormData(document.getElementById('editProfileForm'));
         var username = form.get('username');
         var firstName = form.get('firstName');
         var lastName = form.get('lastName');

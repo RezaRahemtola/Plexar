@@ -22,6 +22,7 @@ Session.set('formErrorMessage', null);  // No forms error for the moment
 Session.set("searchedShopsID", []);  // No search for the moment
 Session.set("searchedProductsID", []);  // No search for the moment
 Session.set('message', null);  // No message to display for the moment
+Session.set('searchFilters', '');  // No search filters for the moment
 
 
 Template.body.helpers({
@@ -52,6 +53,11 @@ Template.body.events({
         event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'login');  // Set the user page to register
+    },
+    'click .logout'(event){
+        event.preventDefault();
+        Session.set('page', 'home');  // Set the page to default
+        Meteor.logout();  // Log out the user
     },
     'click #manageProduit'(event){
         event.preventDefault();

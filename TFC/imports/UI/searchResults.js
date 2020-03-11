@@ -10,7 +10,13 @@ import { Shops } from '../bdd/shops.js';
 // HTML imports
 import './searchResults.html';
 
+// Functions import
+import './functions/sortResults.js';
+
 Template.searchResults.helpers({
+    getSearchQuery: function(){
+        return Session.get('searchedText');
+    },
     displayProductsResults: function(){
         Meteor.call('searchForProducts', {text: Session.get("searchedText")}, function(error, result){
             Session.set("searchedProductsID", result);  // Result is an array of products ID, saving it in a Session variable
@@ -20,6 +26,8 @@ Template.searchResults.helpers({
             // For each product ID we add the product to the array
             searchedProducts.push(Products.findOne({_id : productID}))
         }
+        var searchFilter = Session.get('searchFilter');  // Get search filter to sort the products array
+        sortResults(searchedProducts, order=searchFilter);
         return searchedProducts  // Return the products array
     },
     displayShopsResults: function(){
@@ -31,20 +39,40 @@ Template.searchResults.helpers({
             // For each shop ID we add the shop to the array
             searchedShops.push(Shops.findOne({_id : shopID}))
         }
+        var searchFilter = Session.get('searchFilter');  // Get search filter to sort the shops array
+        sortResults(searchedShops, order=searchFilter);
         return searchedShops  // Return the shops array
     }
 });
 
 
 Template.searchResults.events({
+    'submit form#searchForm'(event){
+        event.preventDefault();
+        Session.set('searchedText', document.getElementById("searchBox").value);  // Storing search input value in a variable
+    },
     'click #sortResults'(event){
         var selectedOption = event.target.value;  // Catch the value attribute of the selected option
-        // Change the icon depending of the selected option
-        if(selectedOption === 'A-Z')
-            document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down"></i>';  // Change HTML content of the icon's parent div
-        else if(selectedOption === 'Z-A')
-            document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down-alt"></i>';  // Change HTML content of the icon's parent div
+        switch(selectedOption){
+            case 'default':
+                document.getElementById("sortResultsIconContainer").innerHTML = '';  // Change HTML content of the icon's parent div
+                break;
+            case 'A-Z':
+                document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down"></i>';  // Change HTML content of the icon's parent div
+                Session.set('searchFilter', 'A-Z');  // Set the new filter
+                break;
+            case 'Z-A':
+                document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down-alt"></i>';  // Change HTML content of the icon's parent div
+                Session.set('searchFilter', 'Z-A');  // Set the new filter
+                break;
+            case 'random':
+                document.getElementById('sortResultsIconContainer').innerHTML = '<i class="fas fa-random"></i>';  // Change HTML content of the icon's parent div
+                Session.set('searchFilter', '')  // Reset filter (else if already on random it will not regenerate random order)
+                Session.set('searchFilter', 'random');  // Set the new filter
+                break;
+        }
     }
 });
 // Ordre alphabetique {sort: {name: -1}}
 // Ordre alphabetique inverse {sort: {name: -1}}
+// Aléatoire : suffle avec la fonction de temporary.js

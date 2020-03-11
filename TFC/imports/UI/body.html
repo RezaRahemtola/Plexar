@@ -36,7 +36,9 @@
                         <div class="buttons">
                             {{#if currentUser}}
                                 <!-- Displayed only when the user is logged in-->
-                                <i class="fas fa-user icon is-large" id="userProfile"></i>
+                                <span>
+                                    <i class="fas fa-user icon is-large" id="userProfile"></i>
+                                </span>
                             {{else}}
                                 <!-- Displayed when the user is NOT logged in-->
                                 <a class="button is-primary register">
@@ -50,7 +52,9 @@
             </div>
         </nav>
     </header>
+    <!--<figure class="image is-64x64">
 
+    </figure>-->
     {{> Template.dynamic template=currentMessage}}
     {{> Template.dynamic template=currentPage}} <!-- Affichage du template dynamique -->
 </body>

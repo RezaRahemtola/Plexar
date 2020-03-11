@@ -1,25 +1,23 @@
 <template name="login">
     <h2 class="title">Connexion</h2>
     <form id="login">
-        <label for="email">Email:</label>
         <p class="control has-icons-left">
-            <input class="input" type="email" name="email" required>
+            <input class="input" type="email" name="email" placeholder="Email" required>
             <span class="icon is-left">
                 <i class="fas fa-envelope"></i>
             </span>
         </p>
-        <br><br>
-        <label for="password">Mot de passe:</label>
         <p class="control has-icons-left">
-            <input type="password" class="input" name="password" required autocomplete="current-password">
+            <input type="password" class="input" name="password" placeholder="Mot de passe" autocomplete="current-password" required>
             <span class="icon is-left">
                 <i class="fas fa-lock"></i>
             </span>
         </p>
-        <br><br>
+        <br>
+        <button class="button forgotPassword">Mot de passe oublié</button>
         <button type="submit" id="submitForm" class="button is-success">Valider</button>
     </form>
-    <button class="button forgotPassword">Mot de passe oublié</button>
+
     {{#if formErrorMessage}}
         {{formErrorMessage}}
     {{/if}}

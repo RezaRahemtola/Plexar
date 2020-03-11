@@ -1,38 +1,31 @@
 <template name="register">
     <h2 class="title">Inscription</h2>
     <form id="register">
-        <label for="username">Nom d'utilisateur:</label>
         <p class="control has-icons-left">
-            <input type="text" class="input" name="username" required/>
+            <input type="text" class="input" name="username" placeholder="Nom d'utilisateur" required/>
             <span class="icon is-left">
                 <i class="fas fa-user-circle"></i>
             </span>
         </p>
-        <br><br>
-        <label for="email">Email:</label>
         <p class="control has-icons-left">
-            <input type="email" class="input" name="email" required>
+            <input type="email" class="input" name="email" placeholder="Email" required>
             <span class="icon is-left">
                 <i class="fas fa-envelope"></i>
             </span>
         </p>
-        <br><br>
-        <label for="password">Mot de passe:</label>
         <p class="control has-icons-left">
-            <input type="password" class="input" name="password" id="password" required autocomplete="new-password">
+            <input type="password" class="input" name="password" id="password" placeholder="Mot de passe"  autocomplete="new-password" required>
             <span class="icon is-left">
                 <i class="fas fa-lock"></i>
             </span>
         </p>
-        <br><br>
-        <label for="confirmPassword">Confirmer le mot de passe:</label>
         <p class="control has-icons-left">
-            <input type="password" class="input" name="confirmPassword" id="confirmPassword" required autocomplete="new-password">
+            <input type="password" class="input" name="confirmPassword" id="confirmPassword" placeholder="Confirmer le mot de passe" autocomplete="new-password" required>
             <span class="icon is-left">
                 <i class="fas fa-lock"></i>
             </span>
         </p>
-        <br><br>
+        <br>
         <button type="submit" id="submitForm" class="button is-success">Valider</button>
         {{#if formErrorMessage}}
             {{formErrorMessage}}

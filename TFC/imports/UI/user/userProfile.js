@@ -31,11 +31,6 @@ Template.userProfile.helpers({
 
 
 Template.userProfile.events({
-    'click .logout' (event){
-        event.preventDefault();
-        Session.set('page', 'home');  // Set the page to default
-        Meteor.logout();  // Log out the user
-    },
     'click #editProfile' (event){
         event.preventDefault();
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
