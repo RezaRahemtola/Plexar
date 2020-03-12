@@ -27,6 +27,16 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
     document.getElementById('email').value = Meteor.user().emails[0].address;  // Auto fill email with current value
     document.getElementById('firstName').value = userInformations.firstName;  // Auto fill first name with current value
     document.getElementById('lastName').value = userInformations.lastName;  // Auto fill last name with current value
+
+    //Code to update file name from https://bulma.io/documentation/form/file/
+    const fileInput = document.querySelector('input#profilePictureFile');  // Saving input in a variable
+    fileInput.onchange = () => {
+        if(fileInput.files.length > 0){
+            // There's a file in the input
+            const fileName = document.querySelector('span.file-name');  //Catching the file name display
+            fileName.textContent = fileInput.files[0].name;  //Updating displayed value
+        }
+    }
 });
 
 Template.editProfile.events({

@@ -4,20 +4,43 @@
     {{/each}}
 </template>
 
+
 <template name="displayedProductPage">
-    <button class="button">Revenir à la page précédente</button>
-    <h3 class="title" style="text-align: center;">{{name}}</h3>
-    <p style="text-align: center;">{{description}}</p>
-    <button class="button"> Partager la page du produit sur les réseaux sociaux</button>
-    <button class="button">Lien vers la page du magasin / site</button>
-    {{#if currentUser}}
-        <!-- Diplay favorites options only if the user is logged-->
-        {{#if productInFavorites _id}}
-            <!-- Product is already in the favorites, suggest to remove it -->
-            <img src="heartFilled.png" alt="" id="removeFromFavoriteProducts" style="width: 100px; display:inherit;"/>
-        {{else}}
-            <!-- Product is not in the favorites, suggest to add it -->
-            <img src="heartEmpty.png" alt="" id="addToFavoriteProducts" style="width: 100px; display:inherit;"/>
-        {{/if}}
-    {{/if}}
+    <div class="card" style="width: fit-content;">
+        <header class="card-header">
+            <div class="card-header-icon">
+                <span class="icon"><i class="fas fa-reply"></i></span>
+                <p>Retour</p>
+            </div>
+            <p class="card-header-title is-centered title is-3" style="margin-bottom: 0;">
+                {{name}}
+            </p>
+            <div class="card-header-icon">
+                {{#if currentUser}}
+                    <!-- Diplay favorites options only if the user is logged-->
+                    {{#if productInFavorites _id}}
+                        <!-- Product is already in the favorites, suggest to remove it -->
+                        <span class="icon" id="removeFromFavoriteProducts"><i class="fas fa-heart" style="color: green;"></i></span>
+                    {{else}}
+                        <!-- Product is not in the favorites, suggest to add it -->
+                        <span class="icon" id="addToFavoriteProducts"><i class="far fa-heart"></i></span>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </header>
+        <div class="card-image">
+            <figure class="image">
+                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+            </figure>
+        </div>
+        <div class="card-content">
+            <div class="content">
+                <p>
+                    Description : {{description}}
+                </p>
+                <button class="button"> Partager la page du produit sur les réseaux sociaux</button>
+                <button class="button">Lien vers la page du magasin / site</button>
+            </div>
+        </div>
+    </div>
 </template>
