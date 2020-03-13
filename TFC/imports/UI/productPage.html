@@ -20,10 +20,10 @@
                     <!-- Diplay favorites options only if the user is logged-->
                     {{#if productInFavorites _id}}
                         <!-- Product is already in the favorites, suggest to remove it -->
-                        <span class="icon" id="removeFromFavoriteProducts"><i class="fas fa-heart" style="color: green;"></i></span>
+                        <span class="icon" id="removeFromFavoriteProducts"><i class="fas fa-bookmark" style="color: green;"></i></span>
                     {{else}}
                         <!-- Product is not in the favorites, suggest to add it -->
-                        <span class="icon" id="addToFavoriteProducts"><i class="far fa-heart"></i></span>
+                        <span class="icon" id="addToFavoriteProducts"><i class="far fa-bookmark"></i></span>
                     {{/if}}
                 {{/if}}
             </div>
