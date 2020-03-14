@@ -5,6 +5,7 @@ import { Accounts } from 'meteor/accounts-base';
 
 // Database import
 import { UsersInformations } from '../../bdd/usersInformations.js';
+import { Images } from '../../bdd/images.js';
 
 // HTML import
 import './editProfile.html';
@@ -42,10 +43,23 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 Template.editProfile.events({
     'click button[type="submit"]' (event){
         event.preventDefault();
-        console.log("ok")
         var userInformationsID = UsersInformations.findOne({userId: Meteor.userId()})._id;
+        var currentProfilePictureID = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;
         // Catching the form element and saving inputs in variables
-        var form = new FormData(document.getElementById('editProfileForm'));
+        const form = new FormData(document.getElementById('editProfileForm'));
+        const fileInput = document.querySelector('input#profilePictureFile');
+        var files = fileInput.files;  // Catching profile picture files
+
+        if(files.length > 0){
+            // There's an uploaded file
+            var profilePictureImage = Images.insert(files[0]);  // Adding the new profile picture to the images db
+            Images.remove(currentProfilePictureID);  // Removing the old profile picture
+            // Linking the profile picture with user's informations
+            UsersInformations.update(userInformationsID, { $set: {
+                profilePictureID: profilePictureImage._id
+            }});
+        }
+
         var username = form.get('username');
         var firstName = form.get('firstName');
         var lastName = form.get('lastName');
@@ -53,7 +67,7 @@ Template.editProfile.events({
         // Updating non-sensitive informations in our database
         UsersInformations.update(userInformationsID, { $set: {
             firstName: firstName,
-            lastName: lastName
+            lastName: lastName,
         }});
 
         // Changing username with server method :

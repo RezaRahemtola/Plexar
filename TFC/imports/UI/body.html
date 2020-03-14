@@ -41,9 +41,15 @@
                         <div class="buttons">
                             {{#if currentUser}}
                                 <!-- Displayed only when the user is logged in-->
-                                <span>
-                                    <i class="fas fa-user icon is-large" id="userProfile"></i>
-                                </span>
+                                {{#if hasProfilePicture}}
+                                    {{#each images}}
+                                        <img src="{{this.url}}" id="userProfile" alt="" style="max-height: 3rem;"/>
+                                    {{/each}}
+                                {{else}}
+                                    <span>
+                                        <i class="fas fa-user icon is-large" id="userProfile"></i>
+                                    </span>
+                                {{/if}}
                             {{else}}
                                 <!-- Displayed when the user is NOT logged in-->
                                 <a class="button is-primary register">

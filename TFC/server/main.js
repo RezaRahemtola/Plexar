@@ -5,6 +5,7 @@ import '../imports/bdd/products.js';
 import '../imports/bdd/usersInformations.js';
 import '../imports/bdd/favorites.js';
 import '../imports/bdd/shops.js';
+import '../imports/bdd/images.js';
 
 import { Products } from '../imports/bdd/products.js';
 import { Shops } from '../imports/bdd/shops.js';

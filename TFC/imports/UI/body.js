@@ -7,6 +7,9 @@ import './body.html';
 import './productBanner.html';
 import './shopBanner.html';
 
+import { UsersInformations } from '../bdd/usersInformations.js';
+import { Images } from '../bdd/images.js';
+
 // JS Imports
 import './home.js';
 import './manageProduct.js';
@@ -31,6 +34,16 @@ Template.body.helpers({
     },
     currentMessage: function(){
         return Session.get('message');  // Return the message to display (if there is one)
+    },
+    images: function(){
+        var profilePictureID = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;
+        return Images.find({_id: profilePictureID});
+    },
+    hasProfilePicture: function(){
+        if(UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID !== ""){
+            return true
+        }
+        return false
     }
 });
 

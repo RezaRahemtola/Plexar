@@ -8,6 +8,8 @@ import './home.html';
 // Database imports
 import { Products } from '../bdd/products.js';
 import { Shops } from '../bdd/shops.js';
+import { UsersInformations } from '../bdd/usersInformations.js';
+import { Images } from '../bdd/images.js';
 
 Template.home.helpers({
     productsCounter(){
