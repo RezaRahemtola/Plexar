@@ -1,3 +1,5 @@
-.navbar-item img {
-    max-height: 3rem;
-}
+/* SASS variables to change :
+
+$navbar-item-img-max-height: 3rem;
+
+*/
