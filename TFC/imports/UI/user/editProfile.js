@@ -52,13 +52,26 @@ Template.editProfile.events({
 
         if(files.length > 0){
             // There's an uploaded file
-            var profilePictureImage = Images.insert(files[0]);  // Adding the new profile picture to the images db
-            Images.remove(currentProfilePictureID);  // Removing the old profile picture
-            // Linking the profile picture with user's informations
-            UsersInformations.update(userInformationsID, { $set: {
-                profilePictureID: profilePictureImage._id
-            }});
+            if(files[0].type.indexOf("image") === -1){
+                // File is not an image
+            } else{
+                // Adding the new profile picture to the images db
+                var profilePictureImage = Images.insert(files[0], function (error, fileObj) {
+                    if(!error){
+                        // Image was successfully inserted, linking it with user's informations
+                        UsersInformations.update(userInformationsID, { $set: {
+                            profilePictureID: profilePictureImage._id
+                        }}, function(error, result){
+                            if(!error){
+                                // Image was successfully linked, we can now remove the old profile picture
+                                Images.remove(currentProfilePictureID);
+                            }
+                        });
+                    }
+                });
+            }
         }
+        
 
         var username = form.get('username');
         var firstName = form.get('firstName');

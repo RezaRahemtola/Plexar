@@ -7101,6 +7101,12 @@ label.panel-block {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem; }
 
+.navbar-item img {
+  max-width: 9rem; }
+
+a.navbar-item {
+  display: flex; }
+
 .navbar {
   background-color: white;
   min-height: 3.25rem;
