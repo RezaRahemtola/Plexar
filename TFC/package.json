@@ -1,11 +1,14 @@
 {
   "name": "TFC",
   "private": true,
+  "main": "sass/mystyles.scss",
   "scripts": {
-    "start": "meteor run",
+    "start": "npm run css-watch",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
-    "visualize": "meteor --production --extra-packages bundle-visualizer"
+    "visualize": "meteor --production --extra-packages bundle-visualizer",
+    "css-build": "node-sass --omit-source-map-url sass/mystyles.scss client/main.css",
+    "css-watch": "npm run css-build -- --watch"
   },
   "dependencies": {
     "@babel/runtime": "^7.8.4",
@@ -19,5 +22,9 @@
       "server": "server/main.js"
     },
     "testModule": "tests/main.js"
+  },
+  "devDependencies": {
+    "bulma": "^0.8.0",
+    "node-sass": "^4.13.1"
   }
 }
