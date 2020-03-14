@@ -5,7 +5,6 @@ import { Accounts } from 'meteor/accounts-base';
 
 // HTML import
 import './forgotPassword.html';
-import '../messages/forgotPasswordEmailSent.html';
 
 // Form validation functions import
 import './formValidation.js';
@@ -32,7 +31,7 @@ Template.forgotPassword.events({
             if(error){
                 Session.set('formErrorMessage', error.reason);
             } else{
-                Session.set('message', 'forgotPasswordEmailSent');  // Success message
+                Session.set('message', {type: "header", headerContent: "Un email pour réinitialiser votre mot de passe vous a été envoyé", style: "is-success"});  // Success message
                 Session.set('userPage', 'login');
             }
         });

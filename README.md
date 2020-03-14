@@ -15,4 +15,8 @@ npm install node-sass --save-dev
 
 npm install bulma --save-dev
 
+meteor add cfs:standard-packages
+
+meteor add cfs:filesystem
+
 meteor update

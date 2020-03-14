@@ -9,7 +9,6 @@ import { Images } from '../../bdd/images.js';
 
 // HTML import
 import './editProfile.html';
-import '../messages/editedProfile.html';
 
 // Form validation functions import
 import './formValidation.js';
@@ -56,11 +55,11 @@ Template.editProfile.events({
                 // File is not an image
             } else{
                 // Adding the new profile picture to the images db
-                var profilePictureImage = Images.insert(files[0], function (error, fileObj) {
+                Images.insert(files[0], function (error, fileObj) {
                     if(!error){
                         // Image was successfully inserted, linking it with user's informations
                         UsersInformations.update(userInformationsID, { $set: {
-                            profilePictureID: profilePictureImage._id
+                            profilePictureID: fileObj._id
                         }}, function(error, result){
                             if(!error){
                                 // Image was successfully linked, we can now remove the old profile picture
@@ -71,7 +70,7 @@ Template.editProfile.events({
                 });
             }
         }
-        
+
 
         var username = form.get('username');
         var firstName = form.get('firstName');
@@ -94,7 +93,7 @@ Template.editProfile.events({
                 }});
                 if(document.getElementById('advancedEdition').style.display == 'none'){
                     // Advanced edition is disabled, sending user to profile page
-                    Session.set('message', 'editedProfile');  // Display a success message
+                    Session.set('message', {type: "header", headerContent: "Vos informations ont été modifiées avec succès !", style:"is-success"} );  // Display a success message
                     Session.set('userPage', '');
                 } else{
                     var oldPassword = form.get('oldPassword');  // Saving inputs in variables

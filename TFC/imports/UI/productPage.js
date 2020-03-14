@@ -4,8 +4,6 @@ import { Template } from 'meteor/templating';
 
 // HTML imports
 import './productPage.html';
-import './messages/productAddedToFavorite.html';
-import './messages/productRemovedFromFavorite.html'
 
 // Database imports
 import { Products } from '../bdd/products.js';
@@ -15,14 +13,14 @@ Template.displayedProductPage.events({
     'click #addToFavoriteProducts'(event){
         // User wants to add this product to it's favorites
         event.preventDefault();
-        var favoriteProducts = Favorites.findOne({userId :{$eq: Meteor.userId()}}).products;  // Getting favorite products of the current user in the db
-        var favoriteID = Favorites.findOne({userId :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
+        var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
+        var favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         favoriteProducts.push(Session.get('currentProductID'));  // Adding the product to the array
         Favorites.update(favoriteID, { $set: {
             // Updating the database with the modified array
             products: favoriteProducts
         }});
-        Session.set('message', 'productAddedToFavorite');  // Showing a confirmation message
+        Session.set('message', {type: "header", headerContent: "Produit bien ajouté aux favoris !", style: "is-success"});  // Showing a confirmation message
     },
     'click #removeFromFavoriteProducts'(event){
         // User wants to remove this product from it's favorites
@@ -34,7 +32,7 @@ Template.displayedProductPage.events({
             // Updating the database with the modified array
             products: favoriteProducts
         }});
-        Session.set('message', 'productRemovedFromFavorite');  // Showing a confirmation message
+        Session.set('message', {type: "header", headerContent: "Produit supprimé de vos favoris", style: "is-success"});  // Showing a confirmation message
     }
 })
 

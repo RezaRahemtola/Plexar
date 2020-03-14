@@ -4,8 +4,6 @@ import { Template } from 'meteor/templating';
 
 // HTML imports
 import './shopPage.html';
-import './messages/shopAddedToFavorite.html';
-import './messages/shopRemovedFromFavorite.html';
 
 // Database import
 import { Shops } from '../bdd/shops.js';
@@ -15,14 +13,14 @@ Template.displayedShopPage.events({
     'click #addToFavoriteShops'(event){
         // User wants to add this shop to it's favorites
         event.preventDefault();
-        var favoriteShops = Favorites.findOne({userId :{$eq: Meteor.userId()}}).shops;  // Getting favorite shops of the current user in the db
-        var favoriteID = Favorites.findOne({userId :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
+        var favoriteShops = Favorites.findOne({userId: Meteor.userId()}).shops;  // Getting favorite shops of the current user in the db
+        var favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         favoriteShops.push(Session.get('currentShopID'));  // Adding the shop to the array
         Favorites.update(favoriteID, { $set: {
             // Updating the database with the modified array
             shops: favoriteShops
         }});
-        Session.set('message', 'shopAddedToFavorite');  // Showing a confirmation message
+        Session.set('message', {type: "header", headerContent: "Magasin bien ajouté aux favoris !", style: "is-success"});  // Showing a confirmation message
     },
     'click #removeFromFavoriteShops'(event){
         // User wants to remove this shop from it's favorites
@@ -34,7 +32,7 @@ Template.displayedShopPage.events({
             // Updating the database with the modified array
             shops: favoriteShops
         }});
-        Session.set('message', 'shopRemovedFromFavorite');  // Showing a confirmation message
+        Session.set('message', {type: "header", headerContent: "Magasin supprimé de vos favoris", style: "is-success"});  // Showing a confirmation message
     }
 })
 
