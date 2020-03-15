@@ -2,8 +2,11 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-// HTML imports
+// HTML import
 import './shopPage.html';
+
+// CSS import
+import './css/slideshow.css';
 
 // Database imports
 import { Shops } from '../bdd/shops.js';

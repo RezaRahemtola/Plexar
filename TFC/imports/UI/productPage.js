@@ -5,6 +5,9 @@ import { Template } from 'meteor/templating';
 // HTML imports
 import './productPage.html';
 
+// CSS import
+import './css/slideshow.css';
+
 // Database imports
 import { Products } from '../bdd/products.js';
 import { Favorites } from '../bdd/favorites.js';
