@@ -60,7 +60,7 @@ Template.register.events({
                             email: email,
                             firstName: "",
                             lastName: "",
-                            profilePictureID: ""
+                            profilePictureID: null
                         });
 
                         // Creating empty favorites of the new user

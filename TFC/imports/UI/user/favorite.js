@@ -15,9 +15,9 @@ Template.favorite.helpers({
         var favoriteProductsID = Favorites.findOne({userId: Meteor.userId()}).products  // Return an array with IDs of the products database
         var favoriteID = Favorites.findOne({userId :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
         var favoriteProducts = [];  // Creating an empty array of the products
-        for (var productID of favoriteProductsID) {
+        for(var productID of favoriteProductsID){
             // Filling the array with the products
-            if (Products.findOne({_id : productID}) === undefined){
+            if(Products.findOne({_id : productID}) === undefined){
                 // This product is in favorites but doesn't exist in the products db (maybe deleted), we remove it from favorites
                 favoriteProductsID.pop(productID);  // Removing the product from the array
                 Favorites.update(favoriteID, { $set: {

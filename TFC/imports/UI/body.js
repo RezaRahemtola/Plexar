@@ -4,13 +4,16 @@ import { Template } from 'meteor/templating';
 
 // HTML import
 import './body.html';
+
+// Alone templates imports
 import './productBanner.html';
 import './shopBanner.html';
 
+// Databases imports
 import { UsersInformations } from '../bdd/usersInformations.js';
 import { Images } from '../bdd/images.js';
 
-// JS Imports
+// JS imports
 import './home.js';
 import './manageProduct.js';
 import './productPage.js';
@@ -19,7 +22,7 @@ import './manageShop.js';
 import './user/userProfile.js';
 import './searchResults.js';
 
-// Importing messages
+// Messages imports
 import './messages/header.js';
 import './messages/full.js';
 
@@ -43,15 +46,15 @@ Template.body.helpers({
             return message.type  // Return the message to display
         }
     },
-    images: function(){
-        var profilePictureID = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;
-        return Images.find({_id: profilePictureID});
-    },
     hasProfilePicture: function(){
-        if(UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID !== ""){
+        if(UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID !== null){
             return true
         }
         return false
+    },
+    displayProfilePicture: function(){
+        var profilePictureID = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;
+        return Images.find({_id: profilePictureID});
     }
 });
 

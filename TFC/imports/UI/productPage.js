@@ -8,6 +8,7 @@ import './productPage.html';
 // Database imports
 import { Products } from '../bdd/products.js';
 import { Favorites } from '../bdd/favorites.js';
+import { Images } from '../bdd/images.js';
 
 Template.displayedProductPage.events({
     'click #addToFavoriteProducts'(event){
@@ -39,18 +40,27 @@ Template.displayedProductPage.events({
 Template.productPage.helpers({
     displayProduct: function(){
         // Return the product that corresponds to the one to display
-        return Products.find({_id :{$eq: Session.get('currentProductID')}},{});
+        return Products.find({_id: Session.get('currentProductID')});
     }
 });
 
 Template.displayedProductPage.helpers({
-    productInFavorites: function(productID){
+    productInFavorites: function(){
         // Check if the given product ID is in the favorite products of the user
         var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Return the favorites of the current user
-        if(favoriteProducts.indexOf(productID) === -1){
+        if(favoriteProducts.indexOf(Session.get('currentProductID')) === -1){
             return false;  // Given ID is not in the favorite products, so return false
         } else{
             return true;  // Given ID is in the favorite products, return true
         }
+    },
+    displayProductImages: function(){
+        var productImagesID = Products.findOne({_id: Session.get('currentProductID')}).imagesID;  // Return an array with IDs of the product images
+        var productImages = [];  // Creating an empty array for the images
+        for(var imageID of productImagesID){
+            // Filling the array with product's images
+            productImages.push(Images.findOne({_id: imageID}));
+        }
+        return productImages
     }
 });
