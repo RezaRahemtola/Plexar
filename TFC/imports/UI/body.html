@@ -42,8 +42,8 @@
                             {{#if currentUser}}
                                 <!-- Displayed only when the user is logged in-->
                                 {{#if hasProfilePicture}}
-                                    {{#each images}}
-                                        <img src="{{this.url}}" id="userProfile" alt=""/>
+                                    {{#each displayProfilePicture}}
+                                        <img src="{{this.url}}" id="userProfile" alt="Photo de profil"/>
                                     {{/each}}
                                 {{else}}
                                     <span>
@@ -65,7 +65,7 @@
     </header>
 
     <hr style="margin: 0;">
-    
+
     {{> Template.dynamic template=currentMessage}}
     {{> Template.dynamic template=currentPage}} <!-- Affichage du template dynamique -->
 </body>

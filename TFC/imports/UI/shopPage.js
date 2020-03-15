@@ -2,12 +2,25 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-// HTML imports
+// HTML import
 import './shopPage.html';
 
-// Database import
+// CSS import
+import './css/slideshow.css';
+
+// Database imports
 import { Shops } from '../bdd/shops.js';
 import { Favorites } from '../bdd/favorites.js';
+import { Images } from '../bdd/images.js';
+
+
+Template.shopPage.helpers({
+    displayShop: function(){
+        // Return the shop that corresponds to the one to display
+        return Shops.find({_id: Session.get('currentShopID')});
+    }
+});
+
 
 Template.displayedShopPage.events({
     'click #addToFavoriteShops'(event){
@@ -25,8 +38,8 @@ Template.displayedShopPage.events({
     'click #removeFromFavoriteShops'(event){
         // User wants to remove this shop from it's favorites
         event.preventDefault();
-        var favoriteShops = Favorites.findOne({userId :{$eq: Meteor.userId()}}).shops;  // Getting favorite shops of the current user in the db
-        var favoriteID = Favorites.findOne({userId :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
+        var favoriteShops = Favorites.findOne({userId: Meteor.userId()}).shops;  // Getting favorite shops of the current user in the db
+        var favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         favoriteShops.pop(Session.get('currentShopID'));  // Removing the shop from the array
         Favorites.update(favoriteID, { $set: {
             // Updating the database with the modified array
@@ -36,12 +49,6 @@ Template.displayedShopPage.events({
     }
 })
 
-Template.shopPage.helpers({
-    displayShop: function(){
-        // Return the shop that corresponds to the one to display
-        return Shops.find({_id :{$eq: Session.get('currentShopID')}},{});
-    }
-});
 
 Template.displayedShopPage.helpers({
     shopInFavorites: function(IDshop){
@@ -49,8 +56,23 @@ Template.displayedShopPage.helpers({
         var favoriteShops = Favorites.findOne({userId: Meteor.userId()}).shops;  // Return the favorites of the current user
         if(favoriteShops.indexOf(IDshop) === -1){
             return false;  // Given ID is not in the favorite shops, so return false
-        } else{
-            return true;  // Given ID is in the favorite shops, return true
         }
+        return true;  // Given ID is in the favorite shops, return true
+    },
+    displayShopImages: function(){
+        var shopImagesID = Shops.findOne({_id: Session.get('currentShopID')}).imagesID;  // Return an array with IDs of the shop's images
+        var shopImages = [];  // Creating an empty array for images
+        for(var imageID of shopImagesID){
+            // Filling the array with shop's images
+            shopImages.push(Images.findOne({_id: imageID}));
+        }
+        return shopImages
+    },
+    moreThanOneImage: function(){
+        var shopImagesID = Shops.findOne({_id: Session.get('currentShopID')}).imagesID;  // Return an array with IDs of the shop's images
+        if(shopImagesID.length > 1){
+            return true
+        }
+        return false
     }
 });

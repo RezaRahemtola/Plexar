@@ -3,6 +3,19 @@
     <form id="newProduct">
         <input name="productName" type="text" placeholder="Nom du produit" class="input" required>
         <input name="productDescription" type="textarea" placeholder="Description du produit" class="input" required>
+        <label for="productPictures">Images :</label>
+        <div class="file has-name is-boxed">
+            <label class="file-label">
+                <input class="file-input" type="file" name="productPictures" id="productPictures" accept="image/*" multiple>
+                <span class="file-cta">
+                    <span class="file-icon">
+                        <i class="fas fa-file-image"></i>
+                    </span>
+                    <span class="file-label">Choisir un fichier…</span>
+                </span>
+                <span class="file-name" style="text-align: center;">Aucun fichier sélectionné</span>
+            </label>
+        </div>
         <button id="addProduct" type="submit" class="button">Ajouter le produit !</button>
     </form>
     <br>

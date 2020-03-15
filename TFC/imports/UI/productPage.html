@@ -6,6 +6,7 @@
 
 
 <template name="displayedProductPage">
+
     <div class="card" style="width: fit-content;">
         <header class="card-header">
             <div class="card-header-icon">
@@ -18,7 +19,7 @@
             <div class="card-header-icon">
                 {{#if currentUser}}
                     <!-- Diplay favorites options only if the user is logged-->
-                    {{#if productInFavorites _id}}
+                    {{#if productInFavorites}}
                         <!-- Product is already in the favorites, suggest to remove it -->
                         <span class="icon" id="removeFromFavoriteProducts"><i class="fas fa-bookmark" style="color: green;"></i></span>
                     {{else}}
@@ -28,17 +29,56 @@
                 {{/if}}
             </div>
         </header>
+        <br>
         <div class="card-image">
-            <figure class="image">
-                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-            </figure>
+            <div class="slideshow">
+                {{#each displayProductImages}}
+                    <div class="slide">
+                        <img src="{{this.url}}" alt="Image du produit"/>
+                    </div>
+                {{/each}}
+                {{#if moreThanOneImage}}
+                    <!--At least 2 images, displaying next and previous image buttons-->
+                    <a class="previous" onclick="changeSlide(-1)">&#10094;</a>
+                    <a class="next" onclick="changeSlide(1)">&#10095;</a>
+                {{/if}}
+                <script>
+                    // Slideshow script
+
+                    // Showing the first image by default
+                    var slideIndex = 1;
+                    showSlide(slideIndex);
+
+                    function changeSlide(number){
+                        // If number is 1 it will show next slide, if it's -1 it will show the previous
+                        showSlide(slideIndex += number);
+                    }
+
+                    function showSlide(number) {
+                        var slides = document.getElementsByClassName("slide");
+                        if(number > slides.length){
+                            // User pressed next button in last slide, comming back to the first slide)
+                            slideIndex = 1;
+                        } else if(number < 1){
+                            // User pressed previous button in first slide, going to the last slide
+                            slideIndex = slides.length;
+                        }
+                        for(var i = 0; i < slides.length; i++){
+                            // Hide all the slides
+                            slides[i].style.display = "none";
+                        }
+                        // Showing the desired slide (index starts at 0 so it's the index-1 slide)
+                        slides[slideIndex-1].style.display = "block";
+                    }
+                </script>
+            </div>
         </div>
         <div class="card-content">
             <div class="content">
                 <p>
                     Description : {{description}}
                 </p>
-                <button class="button"> Partager la page du produit sur les réseaux sociaux</button>
+                <button class="button">Partager la page du produit sur les réseaux sociaux</button>
                 <button class="button">Lien vers la page du magasin / site</button>
             </div>
         </div>

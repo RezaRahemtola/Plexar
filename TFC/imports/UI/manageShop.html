@@ -2,7 +2,22 @@
     <h3 class="title">Ajouter un magasin</h3>
     <form id="newShop">
         <input name="shopName" type="text" placeholder="Nom du magasin" class="input" required>
+
         <input name="shopDescription" type="textarea" placeholder="Description du magasin" class="input" required>
+
+        <div class="file has-name is-boxed">
+            <label class="file-label">
+                <input class="file-input" type="file" name="shopPictures" id="shopPictures" accept="image/*" multiple>
+                <span class="file-cta">
+                    <span class="file-icon">
+                        <i class="fas fa-file-image"></i>
+                    </span>
+                    <span class="file-label">Choisir un fichier…</span>
+                </span>
+                <span class="file-name" style="text-align: center;">Aucun fichier sélectionné</span>
+            </label>
+        </div>
+
         <button id="addShop" type="submit" class="button">Ajouter le masgasin !</button>
     </form>
     <br>

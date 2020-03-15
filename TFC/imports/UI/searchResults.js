@@ -75,4 +75,3 @@ Template.searchResults.events({
 });
 // Ordre alphabetique {sort: {name: -1}}
 // Ordre alphabetique inverse {sort: {name: -1}}
-// Aléatoire : suffle avec la fonction de temporary.js

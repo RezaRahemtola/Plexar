@@ -12,6 +12,7 @@ import './editProfile.html';
 
 // Form validation functions import
 import './formValidation.js';
+import '../functions/checkFileUpload.js';
 
 
 Template.editProfile.helpers({
@@ -19,6 +20,7 @@ Template.editProfile.helpers({
         return Session.get('formErrorMessage');
   }
 });
+
 
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
     Session.set('formErrorMessage', null);  // Reseting formErrorMessage
@@ -39,6 +41,7 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
     }
 });
 
+
 Template.editProfile.events({
     'click button[type="submit"]' (event){
         event.preventDefault();
@@ -46,30 +49,24 @@ Template.editProfile.events({
         var currentProfilePictureID = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;
         // Catching the form element and saving inputs in variables
         const form = new FormData(document.getElementById('editProfileForm'));
-        const fileInput = document.querySelector('input#profilePictureFile');
-        var files = fileInput.files;  // Catching profile picture files
+        var files = document.querySelector('input#profilePictureFile').files;  // Catching profile picture files
 
-        if(files.length > 0){
-            // There's an uploaded file
-            if(files[0].type.indexOf("image") === -1){
-                // File is not an image
-            } else{
-                // Adding the new profile picture to the images db
-                Images.insert(files[0], function (error, fileObj) {
-                    if(!error){
-                        // Image was successfully inserted, linking it with user's informations
-                        UsersInformations.update(userInformationsID, { $set: {
-                            profilePictureID: fileObj._id
-                        }}, function(error, result){
+        if(checkFileUpload(files=files, minLength=1, maxLength=1, type='image')){
+            Images.insert(files[0], function (error, fileObj){
+                if(!error){
+                    // Image was successfully inserted, linking it with user's informations
+                    UsersInformations.update(userInformationsID, { $set: {
+                        profilePictureID: fileObj._id
+                    }}, function(error, result){
                             if(!error){
                                 // Image was successfully linked, we can now remove the old profile picture
                                 Images.remove(currentProfilePictureID);
                             }
                         });
-                    }
-                });
-            }
+                }
+            });
         }
+
 
 
         var username = form.get('username');
@@ -109,7 +106,7 @@ Template.editProfile.events({
                             if(error){
                                 Session.set('formErrorMessage', error.reason);  // Set the error message with given error value
                             } else{
-                                alert("Le mot de passe a été modifié avec succès");  // Success message
+                                Session.set('message', {type: "header", headerContent: "Vos informations ont été modifiées avec succès !", style:"is-success"} );  // Display a success message
                                 Session.set('userPage', '');
                             }
                         });

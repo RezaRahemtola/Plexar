@@ -1,3 +1,4 @@
+// Useful imports
 import { Meteor } from 'meteor/meteor';
 
 // Importing databases
@@ -11,9 +12,9 @@ import { Products } from '../imports/bdd/products.js';
 import { Shops } from '../imports/bdd/shops.js';
 
 Meteor.startup(() => {
-  // code to run on server at startup
-  Products.rawCollection().createIndex({ name: "text", description: "text" });
-  Shops.rawCollection().createIndex({ name: "text", description: "text" });
+    // code to run on server at startup
+    Products.rawCollection().createIndex({ name: "text", description: "text" });  // Creating text index to enable search in those fields of the db
+    Shops.rawCollection().createIndex({ name: "text", description: "text" });  // Creating text index to enable search in those fields of the db
 });
 
 Meteor.methods({
