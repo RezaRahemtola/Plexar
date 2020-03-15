@@ -37,8 +37,11 @@
                         <img src="{{this.url}}" alt="Image du produit"/>
                     </div>
                 {{/each}}
-                <a class="previous" onclick="changeSlide(-1)">&#10094;</a>
-                <a class="next" onclick="changeSlide(1)">&#10095;</a>
+                {{#if moreThanOneImage}}
+                    <!--At least 2 images, displaying next and previous image buttons-->
+                    <a class="previous" onclick="changeSlide(-1)">&#10094;</a>
+                    <a class="next" onclick="changeSlide(1)">&#10095;</a>
+                {{/if}}
                 <script>
                     // Slideshow script
 

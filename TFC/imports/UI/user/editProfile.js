@@ -12,6 +12,7 @@ import './editProfile.html';
 
 // Form validation functions import
 import './formValidation.js';
+import '../functions/checkFileUpload.js';
 
 
 Template.editProfile.helpers({
@@ -19,6 +20,7 @@ Template.editProfile.helpers({
         return Session.get('formErrorMessage');
   }
 });
+
 
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
     Session.set('formErrorMessage', null);  // Reseting formErrorMessage
@@ -33,12 +35,12 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
     fileInput.onchange = () => {
         if(fileInput.files.length > 0){
             // There's a file in the input
-            console.log(fileInput.files[0]);
             const fileName = document.querySelector('span.file-name');  //Catching the file name display
             fileName.textContent = fileInput.files[0].name;  //Updating displayed value
         }
     }
 });
+
 
 Template.editProfile.events({
     'click button[type="submit"]' (event){
@@ -49,27 +51,22 @@ Template.editProfile.events({
         const form = new FormData(document.getElementById('editProfileForm'));
         var files = document.querySelector('input#profilePictureFile').files;  // Catching profile picture files
 
-        if(files.length > 0){
-            // There's an uploaded file
-            if(files[0].type.indexOf("image") === -1){
-                // File is not an image
-            } else{
-                // Adding the new profile picture to the images db
-                Images.insert(files[0], function (error, fileObj) {
-                    if(!error){
-                        // Image was successfully inserted, linking it with user's informations
-                        UsersInformations.update(userInformationsID, { $set: {
-                            profilePictureID: fileObj._id
-                        }}, function(error, result){
+        if(checkFileUpload(files=files, minLength=1, maxLength=1, type='image')){
+            Images.insert(files[0], function (error, fileObj){
+                if(!error){
+                    // Image was successfully inserted, linking it with user's informations
+                    UsersInformations.update(userInformationsID, { $set: {
+                        profilePictureID: fileObj._id
+                    }}, function(error, result){
                             if(!error){
                                 // Image was successfully linked, we can now remove the old profile picture
                                 Images.remove(currentProfilePictureID);
                             }
                         });
-                    }
-                });
-            }
+                }
+            });
         }
+
 
 
         var username = form.get('username');

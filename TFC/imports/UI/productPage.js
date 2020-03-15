@@ -13,6 +13,15 @@ import { Products } from '../bdd/products.js';
 import { Favorites } from '../bdd/favorites.js';
 import { Images } from '../bdd/images.js';
 
+
+Template.productPage.helpers({
+    displayProduct: function(){
+        // Return the product that corresponds to the one to display
+        return Products.find({_id: Session.get('currentProductID')});
+    }
+});
+
+
 Template.displayedProductPage.events({
     'click #addToFavoriteProducts'(event){
         // User wants to add this product to it's favorites
@@ -40,12 +49,6 @@ Template.displayedProductPage.events({
     }
 })
 
-Template.productPage.helpers({
-    displayProduct: function(){
-        // Return the product that corresponds to the one to display
-        return Products.find({_id: Session.get('currentProductID')});
-    }
-});
 
 Template.displayedProductPage.helpers({
     productInFavorites: function(){
@@ -65,5 +68,12 @@ Template.displayedProductPage.helpers({
             productImages.push(Images.findOne({_id: imageID}));
         }
         return productImages
+    },
+    moreThanOneImage: function(){
+        var productImagesID = Products.findOne({_id: Session.get('currentProductID')}).imagesID;  // Return an array with IDs of the product images
+        if(productImagesID.length > 1){
+            return true
+        }
+        return false
     }
 });

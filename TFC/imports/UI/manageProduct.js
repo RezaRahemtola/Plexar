@@ -8,6 +8,8 @@ import { Images } from '../bdd/images.js';
 
 // HTML import
 import './manageProduct.html';
+import './functions/checkFileUpload.js';
+
 
 Template.manageProduct.onRendered(function(){
     //Code to update file name from https://bulma.io/documentation/form/file/
@@ -26,59 +28,58 @@ Template.manageProduct.onRendered(function(){
     }
 });
 
+
 Template.manageProduct.events({
-    'click #addProduct'(event){
+    'click button#addProduct'(event){
         event.preventDefault();
         var form = new FormData(document.getElementById('newProduct'));
         var productName = form.get('productName');
         var productDescription = form.get('productDescription');
         var files = document.querySelector('input#productPictures').files;
 
-        // Inserting informations in the database
-        Products.insert({
-            name: productName,
-            description: productDescription,
-            imagesID: []
-        }, function(error, ID){
-                if(!error){
-                    // The product was successfully added, saving it's ID returned by the callback function in a variable
-                    var productID = ID;
-
-                    // Now let's add the images
-                    if(files.length > 0){
-                        // There's at least one uploaded file
-                        for(var i = 0, length = files.length; i < length; i++){
-                            // For each file, check if it's an image
-                            if(files[i].type.indexOf("image") === -1){
-                                // File is not an image
-                            } else{
-                                // Adding the image to the db
-                                Images.insert(files[i], function (error, fileObj) {
-                                    if(!error){
-                                        // Image was successfully inserted, linking it with the product
-                                        var productImagesID = Products.findOne({_id: productID}).imagesID;  // Catching the product images IDs array
-                                        productImagesID.push(fileObj._id);  // Adding inserted image ID to the array
-                                        // Updating the db with the new array
-                                        Products.update(productID, { $set: {
-                                            imagesID: productImagesID
-                                        }});
-                                    }
-                                });
-                            }
+        // Check if the file upload is correct
+        if(checkFileUpload(files=files, minLength=1, maxLength=10, type='image')){
+            Products.insert({
+                name: productName,
+                description: productDescription,
+                imagesID: []
+            }, function(error, addedProductID){
+                    if(!error){
+                        // The product was successfully added, now let's add the images
+                        for(var file of files){
+                            // For each image, inserting it in the db
+                            Images.insert(file, function (error, fileObj){
+                                if(!error){
+                                    // Image was successfully inserted, linking it with the product
+                                    var productImagesID = Products.findOne({_id: addedProductID}).imagesID;  // Catching the product images IDs array
+                                    productImagesID.push(fileObj._id);  // Adding inserted image ID to the array
+                                    // Updating the db with the new array
+                                    Products.update(addedProductID, { $set: {
+                                        imagesID: productImagesID
+                                    }});
+                                }
+                            });
                         }
                     }
                 }
-            }
-        );
-
+            );
+        }
     },
-    'click #deleteProduct'(event){
+    'click button#deleteProduct'(event){
         event.preventDefault();
         var form = new FormData(document.getElementById('deleteProduct'));
         var productID = form.get('ID');
+        var productImagesID = Products.findOne({_id: productID}).imagesID;  // Catching the shop images
 
-        // Delete corresponding line in the database
-        Products.remove(productID);
+        // Delete corresponding line in the databaset
+        Products.remove(productID, function(error, result){
+            if(!error){
+                // Shop was successfully removed, we can now delete it's images
+                for(var imageID of productImagesID){
+                    Images.remove(imageID);
+                }
+            }
+        });
     }
 });
 

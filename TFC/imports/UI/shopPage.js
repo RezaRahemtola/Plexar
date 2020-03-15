@@ -13,6 +13,15 @@ import { Shops } from '../bdd/shops.js';
 import { Favorites } from '../bdd/favorites.js';
 import { Images } from '../bdd/images.js';
 
+
+Template.shopPage.helpers({
+    displayShop: function(){
+        // Return the shop that corresponds to the one to display
+        return Shops.find({_id: Session.get('currentShopID')});
+    }
+});
+
+
 Template.displayedShopPage.events({
     'click #addToFavoriteShops'(event){
         // User wants to add this shop to it's favorites
@@ -40,12 +49,6 @@ Template.displayedShopPage.events({
     }
 })
 
-Template.shopPage.helpers({
-    displayShop: function(){
-        // Return the shop that corresponds to the one to display
-        return Shops.find({_id: Session.get('currentShopID')});
-    }
-});
 
 Template.displayedShopPage.helpers({
     shopInFavorites: function(IDshop){
@@ -57,12 +60,19 @@ Template.displayedShopPage.helpers({
         return true;  // Given ID is in the favorite shops, return true
     },
     displayShopImages: function(){
-        var shopImagesID = Shops.findOne({_id: Session.get('currentShopID')}).imagesID;  // Return an array with IDs of the shop images
+        var shopImagesID = Shops.findOne({_id: Session.get('currentShopID')}).imagesID;  // Return an array with IDs of the shop's images
         var shopImages = [];  // Creating an empty array for images
         for(var imageID of shopImagesID){
             // Filling the array with shop's images
             shopImages.push(Images.findOne({_id: imageID}));
         }
         return shopImages
+    },
+    moreThanOneImage: function(){
+        var shopImagesID = Shops.findOne({_id: Session.get('currentShopID')}).imagesID;  // Return an array with IDs of the shop's images
+        if(shopImagesID.length > 1){
+            return true
+        }
+        return false
     }
 });
