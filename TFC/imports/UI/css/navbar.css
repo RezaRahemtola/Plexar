@@ -1,0 +1,6 @@
+.navbar-item img{
+    max-width: 9rem;
+}
+a.navbar-item{
+    display: flex;
+}

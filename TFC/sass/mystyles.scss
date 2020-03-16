@@ -3,6 +3,7 @@
 
 // Update Bulma's global variables
 $navbar-item-img-max-height: 3rem;
+$dimensions: 16 24 32 48 64 96 128 150;
 
 .navbar-item img{
     max-width: 9rem;
@@ -10,6 +11,7 @@ $navbar-item-img-max-height: 3rem;
 a.navbar-item{
     display: flex;
 }
+
 
 // Import only what you need from Bulma
 @import "../node_modules/bulma/bulma.sass";

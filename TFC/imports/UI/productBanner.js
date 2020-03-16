@@ -1,0 +1,20 @@
+// Useful imports
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+
+// HTML imports
+import './productBanner.html';
+import './css/image.css';
+
+// Database imports
+import { Products } from '../bdd/products.js';
+import { Images } from '../bdd/images.js';
+
+
+Template.productBanner.helpers({
+    displayProductFirstImage: function(productID){
+        var productImagesID = Products.findOne({_id: productID}).imagesID;  // Return an array with IDs of the product images
+        var productFirstImage = [Images.findOne({_id: productImagesID[0]})];
+        return productFirstImage
+    }
+});

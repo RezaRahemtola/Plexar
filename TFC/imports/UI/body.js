@@ -5,13 +5,9 @@ import { Template } from 'meteor/templating';
 // HTML import
 import './body.html';
 
-// Alone templates imports
-import './productBanner.html';
-import './shopBanner.html';
-
-// Databases imports
-import { UsersInformations } from '../bdd/usersInformations.js';
-import { Images } from '../bdd/images.js';
+// CSS import
+import './css/navbar.css';
+import './css/image.css';
 
 // JS imports
 import './home.js';
@@ -21,10 +17,16 @@ import './shopPage.js';
 import './manageShop.js';
 import './user/userProfile.js';
 import './searchResults.js';
+import './productBanner.js'
+import './shopBanner.js';
 
 // Messages imports
 import './messages/header.js';
 import './messages/full.js';
+
+// Databases imports
+import { UsersInformations } from '../bdd/usersInformations.js';
+import { Images } from '../bdd/images.js';
 
 // Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page

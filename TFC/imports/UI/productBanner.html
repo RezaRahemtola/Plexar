@@ -5,12 +5,12 @@
         </div>
         <div class="message-body">
             <div class="field has-addons">
-                <figure class="image is-128x128">
-                    <img src="https://bulma.io/images/placeholders/128x128.png">
+                <figure class="image is-150x150">
+                    {{#each displayProductFirstImage _id}}
+                        <img src="{{this.url}}" alt="Image du produit"/>
+                    {{/each}}
                 </figure>
-                <p>
-                    Description : {{description}}
-                </p>
+                <p>Description : {{description}}</p>
             </div>
         </div>
     </article>
