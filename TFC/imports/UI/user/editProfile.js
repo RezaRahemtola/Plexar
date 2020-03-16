@@ -25,9 +25,12 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
     //Code to update file name from https://bulma.io/documentation/form/file/
     const fileInput = document.querySelector('input#profilePictureFile');  // Saving input in a variable
     fileInput.onchange = () => {
-        if(fileInput.files.length > 0){
+        const fileName = document.querySelector('span.file-name');  //Catching the file name display
+        if(fileInput.files.length === 0){
+            // No file uploaded
+            fileName.textContent = "Aucun fichier sélectionné";
+        } else if(fileInput.files.length === 1){
             // There's a file in the input
-            const fileName = document.querySelector('span.file-name');  //Catching the file name display
             fileName.textContent = fileInput.files[0].name;  //Updating displayed value
         }
     }
@@ -99,11 +102,12 @@ Template.editProfile.events({
         var files = document.querySelector('input#profilePictureFile').files;  // Catching profile picture files
         if(files.length > 0){
             // There's an uploaded file, user wants to update it's profile picture
-            if(checkFileUpload(files=files, minLength=1, maxLength=1, type='image', maxMBSize=1)){
+            if(checkFileUpload(files=files, minLength=1, maxLength=1, type='image', maxMBSize=5)){
                 callbacksPending++;  // Starting a call with a callback function
                 Images.insert(files[0], function (error, fileObj){
                     if(!error){
                         // Image was successfully inserted, linking it with user's informations
+                        callbacksPending++;  // Starting a call with a callback function
                         UsersInformations.update(userInformationsID, { $set: {
                             profilePictureID: fileObj._id
                         }}, function(error, result){
@@ -115,6 +119,7 @@ Template.editProfile.events({
                                     formErrors++;
                                     Images.remove(fileObj._id);  // Removing the new picture
                                 }
+                                callbacksPending--;  // End of callback function
                             });
                     } else{
                         // There was an error while inserting the file in Images db
@@ -122,6 +127,9 @@ Template.editProfile.events({
                     }
                     callbacksPending--;  // End of callback function
                 });
+            } else{
+                // File doesn't match all criteria
+                formErrors++;
             }
         }
 
