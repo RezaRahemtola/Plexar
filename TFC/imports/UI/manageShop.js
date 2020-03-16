@@ -38,7 +38,7 @@ Template.manageShop.events({
         var files = document.querySelector('input#shopPictures').files;
 
         // Check if the file upload is correct
-        if(checkFileUpload(files=files, minLength=1, maxLength=10, type='image')){
+        if(checkFileUpload(files=files, minLength=1, maxLength=10, type='image', maxMBSize=1)){
             Shops.insert({
                 name: shopName,
                 description: shopDescription,

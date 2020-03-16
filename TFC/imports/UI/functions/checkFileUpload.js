@@ -1,23 +1,33 @@
-checkFileUpload = function(files, minLength=1, maxLength=10, type='all'){
+/**
+ * Check if a file upload match all given criteria
+ *
+ *  @param  {FileList}  files   Content of the file input
+ *  @param  {int}   minLength   Minimum file number, default = 1
+ *  @param  {int}   maxLength   Maximum file number, default = 10
+ *  @param  {string}     type   Files type (images, audio, text...), default = all
+ *  @param  {int}   maxMBSize   Maximum size per file (in MegaBytes), default = 10
+ *
+ *  @return {boolean}  true if files matched all criteria, else false
+ */
+checkFileUpload = function(files, minLength=1, maxLength=10, type='all', maxMBSize=10){
     if(files.length >= minLength && files.length <= maxLength){
-        // Number of files is ok
-        if(type !== 'all'){
-            // Files need to be of a certain type
-            // Creating a boolean replaced by false if one of the files isn't of the correct type
-            var validType = true;
-            for(var file of files){
-                // For each file check if it's of the correct type
+        // Number of files is ok, checking for each file if the size is correct
+        var maxSize = maxMBSize*1000000  // File size is in bytes, converting maxSize (1 MegaByte = 1 000 000 bytes)
+        for(var file of files){
+            if(file.size > maxSize){
+                // One of the file is too big
+                return false;
+            } else if(type !== 'all'){
+                // Files need to be of a certain type
                 if(file.type.indexOf(type) === -1){
                     // File is not of the correct type
-                    validType = false;
+                    return false;
                 }
             }
-            if(validType){
-                return true;
-            }
-            return false;
         }
+        // Files match all criteria
         return true;
     }
+    // Number of files is not correct
     return false;
 }

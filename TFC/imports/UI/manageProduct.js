@@ -38,7 +38,7 @@ Template.manageProduct.events({
         var files = document.querySelector('input#productPictures').files;
 
         // Check if the file upload is correct
-        if(checkFileUpload(files=files, minLength=1, maxLength=10, type='image')){
+        if(checkFileUpload(files=files, minLength=1, maxLength=10, type='image', maxMBSize=1)){
             Products.insert({
                 name: productName,
                 description: productDescription,
