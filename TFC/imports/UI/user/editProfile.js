@@ -10,9 +10,8 @@ import { Images } from '../../bdd/images.js';
 // HTML import
 import './editProfile.html';
 
-// Form validation functions import
-import './formValidation.js';
-import '../functions/checkFileUpload.js';
+// Functions import
+import '../functions/checkInputs.js';
 
 
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
@@ -80,7 +79,7 @@ Template.editProfile.events({
             var oldPassword = form.get('oldPassword');  // Saving input in variable
             var newPassword = form.get('newPassword');  // Saving input in variable
             var confirmNewPassword = form.get('confirmNewPassword');  // Saving input in variable
-            if(!(areValidPasswords(newPassword, confirmNewPassword))){
+            if(!(areValidPasswords(newPassword, confirmNewPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
                 // Error in passwords fields
                 formErrors++;
                 // Adding a red border to those fields
@@ -99,10 +98,10 @@ Template.editProfile.events({
             }
         }
 
-        var files = document.querySelector('input#profilePictureFile').files;  // Catching profile picture files
+        var files = document.querySelector('input#profilePictureFile').files;  // Catching profile picture file in file input
         if(files.length > 0){
             // There's an uploaded file, user wants to update it's profile picture
-            if(checkFileUpload(files=files, minLength=1, maxLength=1, type='image', maxMBSize=5)){
+            if(checkFileInput(files=files, minLength=1, maxLength=1, type='image', maxMBSize=5)){
                 callbacksPending++;  // Starting a call with a callback function
                 Images.insert(files[0], function (error, fileObj){
                     if(!error){

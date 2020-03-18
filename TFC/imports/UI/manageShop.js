@@ -8,7 +8,7 @@ import { Images } from '../bdd/images.js';
 
 // HTML import
 import './manageShop.html';
-import './functions/checkFileUpload.js';
+import './functions/checkInputs.js';
 
 
 Template.manageShop.onRendered(function(){
@@ -32,53 +32,65 @@ Template.manageShop.events({
     'click button#addShop'(event){
         event.preventDefault();
         var form = new FormData(document.getElementById('newShop'));
-        var shopName = form.get('shopName');
-        var shopDescription = form.get('shopDescription');
         var formErrors = 0;  // No error for the moment
         var callbacksPending = 0;  // No callback is pending for the moment
 
-
-        var files = document.querySelector('input#shopPictures').files;
-        // Check if the file upload is correct
-        if(checkFileUpload(files=files, minLength=1, maxLength=5, type='image', maxMBSize=5)){
-            callbacksPending++;  // Starting a call with a callback function
-            Shops.insert({
-                name: shopName,
-                description: shopDescription,
-                imagesID: []
-            }, function(error, addedShopID){
-                    if(!error){
-                        // The shop was successfully added, now let's add the images
-                        for(var file of files){
-                            // For each file, check if it's an image
-                            callbacksPending++;  // Starting a call with a callback function
-                            Images.insert(file, function (error, fileObj){
-                                if(!error){
-                                    // Image was successfully inserted, linking it with the shop
-                                    var shopImagesID = Shops.findOne({_id: addedShopID}).imagesID;  // Catching the shop images IDs array
-                                    shopImagesID.push(fileObj._id);  // Adding inserted image ID to the array
-                                    // Updating the db with the new array
-                                    Shops.update(addedShopID, { $set: {
-                                        imagesID: shopImagesID
-                                    }});
-                                } else{
-                                    // There was an error while inserting the file in Images db
-                                    formErrors++;
+        // Check if the name is correctly formatted
+        var shopName = form.get('shopName');
+        if(checkTextInput(text=shopName, minLength=1, maxLength=70)){
+            // Shop name is correct, checking the description
+            var shopDescription = form.get('shopDescription');
+            if(checkTextInput(text=shopDescription, minLength=50, maxLength=1000)){
+                // Check if the file upload is correct
+                var files = document.querySelector('input#shopPictures').files;
+                if(checkFileInput(files=files, minLength=1, maxLength=5, type='image', maxMBSize=5)){
+                    callbacksPending++;  // Starting a call with a callback function
+                    Shops.insert({
+                        name: shopName,
+                        description: shopDescription,
+                        imagesID: []
+                    }, function(error, addedShopID){
+                            if(!error){
+                                // The shop was successfully added, now let's add the images
+                                for(var file of files){
+                                    // For each file, check if it's an image
+                                    callbacksPending++;  // Starting a call with a callback function
+                                    Images.insert(file, function (error, fileObj){
+                                        if(!error){
+                                            // Image was successfully inserted, linking it with the shop
+                                            var shopImagesID = Shops.findOne({_id: addedShopID}).imagesID;  // Catching the shop images IDs array
+                                            shopImagesID.push(fileObj._id);  // Adding inserted image ID to the array
+                                            // Updating the db with the new array
+                                            Shops.update(addedShopID, { $set: {
+                                                imagesID: shopImagesID
+                                            }});
+                                        } else{
+                                            // There was an error while inserting the file in Images db
+                                            formErrors++;
+                                        }
+                                        callbacksPending--;  // End of callback function
+                                    });
                                 }
-                                callbacksPending--;  // End of callback function
-                            });
+                            } else{
+                                // There was an error while adding the shop
+                                formErrors++;
+                            }
+                            callbacksPending--;  // End of callback function
                         }
-                    } else{
-                        // There was an error while adding the shop
-                        formErrors++;
-                    }
-                    callbacksPending--;  // End of callback function
+                    );
+                } else{
+                    // File doesn't match all criteria
+                    formErrors++;
                 }
-            );
+            } else{
+                // Shop description doesn't match all criteria
+                formErrors++;
+            }
         } else{
-            // File doesn't match all criteria
+            // Shop name doesn't match all criteria
             formErrors++;
         }
+
 
 
         // Waiting for all callbacks to complete (to see if an error is raised)

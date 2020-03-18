@@ -10,8 +10,8 @@ import { Favorites } from '../../bdd/favorites.js';
 // HTML import
 import './register.html';
 
-// Form validation functions import
-import './formValidation.js';
+// Functions import
+import '../functions/checkInputs.js';
 
 
 Template.register.onRendered(function(){
@@ -36,7 +36,7 @@ Template.register.events({
         var password = form.get('password');
         var confirmPassword = form.get('confirmPassword');
 
-        if(!(areValidPasswords(password, confirmPassword))){
+        if(!(areValidPasswords(password, confirmPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
             // Error in passwords fields
             document.getElementById('password').classList.add("is-danger");
             document.getElementById('confirmPassword').classList.add("is-danger");

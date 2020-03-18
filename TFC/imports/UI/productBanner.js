@@ -4,7 +4,10 @@ import { Template } from 'meteor/templating';
 
 // HTML imports
 import './productBanner.html';
+
+// CSS imports
 import './css/image.css';
+import './css/banners.css';
 
 // Database imports
 import { Products } from '../bdd/products.js';
