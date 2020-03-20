@@ -17,5 +17,11 @@ Template.header.helpers({
     bodyContent: function(){
         var message = Session.set('message');
         return message.bodyContent
+    },
+    messageToDisplay: function(){
+        if(Session.get('message') !== null){
+            return true
+        }
+        return false
     }
 });

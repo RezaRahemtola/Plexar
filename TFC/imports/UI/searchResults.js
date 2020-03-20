@@ -13,6 +13,34 @@ import './searchResults.html';
 // Functions import
 import './functions/sortResults.js';
 
+
+Template.searchResults.onRendered(function(){
+
+    // Catch sorting select changes to filter results
+    const sortResults = document.querySelector("select#sortResults");
+    sortResults.onchange = () => {
+        var selectedOption = sortResults.value;  // Catch the value attribute of the selected option
+        switch(selectedOption){
+            case 'default':
+                document.getElementById("sortResultsIconContainer").innerHTML = '';  // Change HTML content of the icon's parent div
+                break;
+            case 'A-Z':
+                document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down"></i>';  // Change HTML content of the icon's parent div
+                Session.set('searchFilter', 'A-Z');  // Set the new filter
+                break;
+            case 'Z-A':
+                document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down-alt"></i>';  // Change HTML content of the icon's parent div
+                Session.set('searchFilter', 'Z-A');  // Set the new filter
+                break;
+            case 'random':
+                document.getElementById('sortResultsIconContainer').innerHTML = '<i class="fas fa-random"></i>';  // Change HTML content of the icon's parent div
+                Session.set('searchFilter', 'random');  // Set the new filter
+                break;
+        }
+    }
+});
+
+
 Template.searchResults.helpers({
     getSearchQuery: function(){
         return Session.get('searchedText');
@@ -50,28 +78,5 @@ Template.searchResults.events({
     'submit form#searchForm'(event){
         event.preventDefault();
         Session.set('searchedText', document.getElementById("searchBox").value);  // Storing search input value in a variable
-    },
-    'click #sortResults'(event){
-        var selectedOption = event.target.value;  // Catch the value attribute of the selected option
-        switch(selectedOption){
-            case 'default':
-                document.getElementById("sortResultsIconContainer").innerHTML = '';  // Change HTML content of the icon's parent div
-                break;
-            case 'A-Z':
-                document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down"></i>';  // Change HTML content of the icon's parent div
-                Session.set('searchFilter', 'A-Z');  // Set the new filter
-                break;
-            case 'Z-A':
-                document.getElementById("sortResultsIconContainer").innerHTML = '<i class="fas fa-sort-alpha-down-alt"></i>';  // Change HTML content of the icon's parent div
-                Session.set('searchFilter', 'Z-A');  // Set the new filter
-                break;
-            case 'random':
-                document.getElementById('sortResultsIconContainer').innerHTML = '<i class="fas fa-random"></i>';  // Change HTML content of the icon's parent div
-                Session.set('searchFilter', '')  // Reset filter (else if already on random it will not regenerate random order)
-                Session.set('searchFilter', 'random');  // Set the new filter
-                break;
-        }
     }
 });
-// Ordre alphabetique {sort: {name: -1}}
-// Ordre alphabetique inverse {sort: {name: -1}}

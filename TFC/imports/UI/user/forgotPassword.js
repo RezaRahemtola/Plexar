@@ -6,8 +6,8 @@ import { Accounts } from 'meteor/accounts-base';
 // HTML import
 import './forgotPassword.html';
 
-// Form validation functions import
-import './formValidation.js';
+// Functions import
+import '../functions/checkInputs.js';
 
 
 Template.forgotPassword.onRendered(function(){

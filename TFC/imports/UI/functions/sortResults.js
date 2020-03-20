@@ -1,5 +1,10 @@
-
-// Original code from http://www.javascriptkit.com/javatutors/arraysort2.shtml
+/**
+ * Original code from http://www.javascriptkit.com/javatutors/arraysort2.shtml
+ * 
+ * Sort an array of products or shops in a given order
+ * @param  {array}  arrayToSort
+ * @param  {string} order
+ */
 sortResults = function(arrayToSort, order){
     arrayToSort.sort(function(a, b){
         var nameA = a.name.toLowerCase();

@@ -11,6 +11,7 @@ import { Shops } from '../bdd/shops.js';
 import { UsersInformations } from '../bdd/usersInformations.js';
 import { Images } from '../bdd/images.js';
 
+
 Template.home.helpers({
     productsCounter(){
         return Products.find().count();

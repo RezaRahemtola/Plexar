@@ -6,6 +6,11 @@
 
 
 <template name="displayedShopPage">
+    <style>
+        .green{
+            color: green;
+        }
+    </style>
 
     <div class="card" style="width: fit-content;">
         <header class="card-header">
@@ -78,6 +83,19 @@
                 <p>
                     Description : {{description}}
                 </p>
+                {{score}}
+                {{#if currentUser}}
+                    <div class="shopVote" id="upvote">
+                        <span class="icon">
+                            <i class="fas fa-angle-up"></i>
+                        </span>
+                    </div>
+                    <div class="shopVote" id="downvote">
+                        <span class="icon">
+                            <i class="fas fa-angle-down"></i>
+                        </span>
+                    </div>
+                {{/if}}
                 <button class="button"> Partager la page du produit sur les réseaux sociaux</button>
                 <button class="button">Lien vers la page du magasin / site</button>
             </div>

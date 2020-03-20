@@ -43,7 +43,9 @@
                                 <!-- Displayed only when the user is logged in-->
                                 {{#if hasProfilePicture}}
                                     {{#each displayProfilePicture}}
+                                    <figure class="image is-48x48">
                                         <img src="{{this.url}}" id="userProfile" alt="Photo de profil"/>
+                                    </figure>
                                     {{/each}}
                                 {{else}}
                                     <span>

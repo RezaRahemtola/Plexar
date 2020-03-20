@@ -1,8 +1,10 @@
 <template name="header">
-    <article class="message {{style}}">
-        <div class="message-header">
-            <p>{{headerContent}}</p>
-            <button class="delete" aria-label="delete"></button>
-        </div>
-    </article>
+    {{#if messageToDisplay}}
+        <article class="message {{style}}">
+            <div class="message-header">
+                <p>{{headerContent}}</p>
+                <button class="delete" aria-label="delete"></button>
+            </div>
+        </article>
+    {{/if}}
 </template>
