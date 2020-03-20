@@ -48,7 +48,8 @@ Template.manageProduct.events({
                     Products.insert({
                         name: productName,
                         description: productDescription,
-                        imagesID: []
+                        imagesID: [],
+                        score: 0
                     }, function(error, addedProductID){
                             if(!error){
                                 // The product was successfully added, now let's add the images

@@ -2,7 +2,7 @@
     <h2 class="title">Inscription</h2>
     <form id="register">
         <p class="control has-icons-left">
-            <input type="text" class="input" name="username" placeholder="Nom d'utilisateur" required/>
+            <input type="text" class="input" name="username" id="username" placeholder="Nom d'utilisateur" required/>
             <span class="icon is-left">
                 <i class="fas fa-user-circle"></i>
             </span>
@@ -27,8 +27,5 @@
         </p>
         <br>
         <button type="submit" id="submitForm" class="button is-success">Valider</button>
-        {{#if formErrorMessage}}
-            {{formErrorMessage}}
-        {{/if}}
     </form>
 </template>

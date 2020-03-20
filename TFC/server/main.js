@@ -19,7 +19,16 @@ Meteor.startup(() => {
 
 Meteor.methods({
     'changeUsername'({newUsername}){
-        Accounts.setUsername(Meteor.userId(), newUsername)
+        Accounts.setUsername(Meteor.userId(), newUsername);
+    },
+    'checkIfUsernameIsTaken'({username}){
+        if(Meteor.user()){
+            // If user is logged in, check if username exists and if it's different than current user's
+            return (Meteor.users.findOne({username: username}) && username !== Meteor.user().username) ? true : false;
+        } else{
+            // Only check if username exists
+            return (Meteor.users.findOne({username: username})) ? true : false;
+        }
     },
     'searchForProducts'({text}){
         var result = Products.find({$text: { $search: text}}).fetch();  // Return the matching products

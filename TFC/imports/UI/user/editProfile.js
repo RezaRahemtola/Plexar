@@ -15,11 +15,28 @@ import '../functions/checkInputs.js';
 
 
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
-    var userInformations = UsersInformations.findOne({userId: Meteor.userId()});
+    var userInformations = UsersInformations.findOne({userID: Meteor.userId()});
     document.getElementById('username').value = Meteor.user().username;  // Auto fill username with current value
     document.getElementById('email').value = Meteor.user().emails[0].address;  // Auto fill email with current value
     document.getElementById('firstName').value = userInformations.firstName;  // Auto fill first name with current value
     document.getElementById('lastName').value = userInformations.lastName;  // Auto fill last name with current value
+
+    // Live username verification
+    const usernameInput = document.querySelector('input#username');  // Saving input in a variable
+    usernameInput.oninput = () => {
+        // When value of the input change, call a server method
+        Meteor.call('checkIfUsernameIsTaken', {username: usernameInput.value}, function(error, result){
+            if(result){
+                // Username already exist
+                document.querySelector('input#username').classList.remove("is-success");
+                document.querySelector('input#username').classList.add("is-danger");
+            } else{
+                // Username doesn't exists
+                document.querySelector('input#username').classList.remove("is-danger");
+                document.querySelector('input#username').classList.add("is-success");
+            }
+        });
+    }
 
     //Code to update file name from https://bulma.io/documentation/form/file/
     const fileInput = document.querySelector('input#profilePictureFile');  // Saving input in a variable
@@ -39,8 +56,8 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 Template.editProfile.events({
     'click button[type="submit"]' (event){
         event.preventDefault();
-        var userInformationsID = UsersInformations.findOne({userId: Meteor.userId()})._id;
-        var currentProfilePictureID = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;
+        var userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
+        var currentProfilePictureID = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;
         var formErrors = 0;  // No error for the moment
         var callbacksPending = 0;  // No callback is pending for the moment
         // Catching the form element and saving inputs in variables

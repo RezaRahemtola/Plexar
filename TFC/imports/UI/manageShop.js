@@ -48,7 +48,8 @@ Template.manageShop.events({
                     Shops.insert({
                         name: shopName,
                         description: shopDescription,
-                        imagesID: []
+                        imagesID: [],
+                        score: 0
                     }, function(error, addedShopID){
                             if(!error){
                                 // The shop was successfully added, now let's add the images

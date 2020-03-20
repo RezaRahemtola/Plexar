@@ -12,6 +12,7 @@ import './css/slideshow.css';
 import { Shops } from '../bdd/shops.js';
 import { Favorites } from '../bdd/favorites.js';
 import { Images } from '../bdd/images.js';
+import { UsersInformations } from '../bdd/usersInformations.js';
 
 
 Template.shopPage.helpers({
@@ -46,6 +47,61 @@ Template.displayedShopPage.events({
             shops: favoriteShops
         }});
         Session.set('message', {type: "header", headerContent: "Magasin supprimé de vos favoris", style: "is-success"});  // Showing a confirmation message
+    },
+    'click .shopVote'(event){
+        var shopID = Session.get('currentShopID');
+        var shopScore = Shops.findOne({_id: shopID}).score;
+        var userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
+        var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
+        var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
+
+        if(event.currentTarget.id === "upvote"){
+            if(userUpvotes.includes(shopID)){
+                // Shop has already been upvoted, we remove the upvote
+                userUpvotes.pop(shopID);
+                shopScore--;
+                document.getElementById('upvote').classList.remove("green");
+            } else if(userDownvotes.includes(shopID)){
+                // Shop has already been downvoted, remove the downvote and set an upvote
+                userDownvotes.pop(shopID);
+                userUpvotes.push(shopID);
+                shopScore += 2;  // Removing the downvote and adding an upvote
+                document.getElementById('upvote').classList.add("green");
+                document.getElementById('downvote').classList.remove("green");
+            } else{
+                // Shop hasn't already been voted
+                userUpvotes.push(shopID);
+                shopScore++;
+                document.getElementById('upvote').classList.add("green");
+            }
+        } else{
+            if(userUpvotes.includes(shopID)){
+                // Shop has already been upvoted, we remove the upvote and set a downvote
+                userUpvotes.pop(shopID);
+                userDownvotes.push(shopID);
+                shopScore -= 2;
+                document.getElementById('upvote').classList.remove("green");
+                document.getElementById('downvote').classList.add("green");
+            } else if(userDownvotes.includes(shopID)){
+                // Shop has already been downvoted, remove the downvote
+                userDownvotes.pop(shopID);
+                shopScore++;
+                document.getElementById('downvote').classList.remove("green");
+            } else{
+                // Shop hasn't already been voted
+                userDownvotes.push(shopID);
+                shopScore--;
+                document.getElementById('downvote').classList.add("green");
+            }
+        }
+        Shops.update(shopID, { $set: {
+            // Updating the database with the new score
+            score: shopScore
+        }});
+        UsersInformations.update(userInformationsID, { $set: {
+            upvotes: userUpvotes,
+            downvotes: userDownvotes
+        }});
     }
 })
 
@@ -54,10 +110,7 @@ Template.displayedShopPage.helpers({
     shopInFavorites: function(IDshop){
         // Check if the given shop ID is in the favorite shops of the user
         var favoriteShops = Favorites.findOne({userId: Meteor.userId()}).shops;  // Return the favorites of the current user
-        if(favoriteShops.indexOf(IDshop) === -1){
-            return false;  // Given ID is not in the favorite shops, so return false
-        }
-        return true;  // Given ID is in the favorite shops, return true
+        return favoriteShops.includes(IDshop);
     },
     displayShopImages: function(){
         var shopImagesID = Shops.findOne({_id: Session.get('currentShopID')}).imagesID;  // Return an array with IDs of the shop's images

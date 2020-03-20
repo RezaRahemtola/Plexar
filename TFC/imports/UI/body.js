@@ -49,13 +49,13 @@ Template.body.helpers({
         }
     },
     hasProfilePicture: function(){
-        if(UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID !== null){
+        if(UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID !== null){
             return true
         }
         return false
     },
     displayProfilePicture: function(){
-        var profilePictureID = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;
+        var profilePictureID = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;
         return Images.find({_id: profilePictureID});
     }
 });
