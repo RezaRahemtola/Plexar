@@ -49,6 +49,7 @@ Template.body.helpers({
         }
     },
     hasProfilePicture: function(){
+        // Find the current user and return true if he has a profile picture
         if(UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID !== null){
             return true
         }
@@ -85,11 +86,11 @@ Template.body.events({
         Session.set('page', 'home');  // Set the page to default
         Meteor.logout();  // Log out the user
     },
-    'click #manageProduit'(event){
+    'click a#addProduct'(event){
         event.preventDefault();
         Session.set('page', 'manageProduct');
     },
-    'click #manageShop'(event){
+    'click a#addShop'(event){
         event.preventDefault();
         Session.set('page', 'manageShop');
     },
