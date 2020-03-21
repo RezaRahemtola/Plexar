@@ -1,4 +1,25 @@
 <template name="home">
+    <section class="hero is-medium" style="background: #f8f9fa">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <p class="title">PLEXAR</p>
+                <p class="subtitle">PHRASE D'ACCROCHE SIMPLE ET COURTE</p>
+                <form id="searchForm">
+                    <div class="field has-addons" style="justify-content: center;">
+                        <div class="control">
+                            <input type="search" class="input is-rounded" id="searchBox" placeholder="Rechercher"/>
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-rounded">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <p>
          Bonjour bienvenue sur EKOTOPIA, il s'agit d'une plateforme reposant sur un système participatif où les utilisateurs peuvent acheter et proposer des produits dans le commerce à proximité de chez eux. Cela permet aux client de réduire leur impact en dioxyde de carbone et ainsi d'acheter des produits de façon plus durable pour l'environnement.
         <br>
@@ -6,18 +27,6 @@
         Nous comptons actuellement {{shopsCounter}} magasins dans notre base de données.
     </p>
 
-    <form id="searchForm">
-        <div class="field has-addons">
-            <div class="control">
-                <input type="search" class="input is-rounded" id="searchBox" placeholder="Rechercher"/>
-            </div>
-            <div class="control">
-                <button type="submit" class="button is-rounded">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </form>
 
     <br>
 
