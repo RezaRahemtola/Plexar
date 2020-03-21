@@ -1,15 +1,41 @@
 @charset "utf-8";
 
 
+
 // Update Bulma's global variables
+
+
+// Navbar
 $navbar-item-img-max-height: 3rem;
-$navbar-item-hover-color: #8cba51;
 
-$primary: #e47312;
+// Colors
+$primary: #e47312;  // Primary color in orange
+$link: #8cba51;  // Links in green
 
+// Inputs
+$input-focus-border-color: transparent;  // No border
+$input-focus-box-shadow-color: rgba(0, 0, 0, 0.25);  // Grey box-shadow when input is focused
 
-$dimensions: 16 24 32 48 64 96 128 150;
+// Images
+$dimensions: 16 24 32 48 64 96 128 150;  // Adding a 150x150 dimension for images
 
+$footer-padding: 0;
+
+body {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom: 10rem;    /* Footer height */
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 10rem;            /* Footer height */
+}
 
 
 // Import only what you need from Bulma
