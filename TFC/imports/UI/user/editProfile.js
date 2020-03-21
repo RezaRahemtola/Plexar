@@ -96,7 +96,7 @@ Template.editProfile.events({
             var oldPassword = form.get('oldPassword');  // Saving input in variable
             var newPassword = form.get('newPassword');  // Saving input in variable
             var confirmNewPassword = form.get('confirmNewPassword');  // Saving input in variable
-            if(!(areValidPasswords(newPassword, confirmNewPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
+            if(!(checkPasswordsInput(newPassword, confirmNewPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
                 // Error in passwords fields
                 formErrors++;
                 // Adding a red border to those fields

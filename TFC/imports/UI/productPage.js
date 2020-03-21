@@ -24,16 +24,18 @@ Template.productPage.helpers({
 
 
 Template.displayedProductPage.onRendered(function(){
-    var productID = Session.get('currentProductID');
-    var productScore = Products.findOne({_id: productID}).score;
-    var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
-    var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
-    if(userUpvotes.includes(productID)){
-        // Product has already been upvoted by the user
-        document.getElementById('upvote').classList.add("green");
-    } else if(userDownvotes.includes(productID)){
-        // User has already downvoted this product
-        document.getElementById('downvote').classList.add("green");
+    if(Meteor.user()){
+        var productID = Session.get('currentProductID');
+        var productScore = Products.findOne({_id: productID}).score;
+        var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
+        var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
+        if(userUpvotes.includes(productID)){
+            // Product has already been upvoted by the user
+            document.getElementById('upvote').classList.add("green");
+        } else if(userDownvotes.includes(productID)){
+            // User has already downvoted this product
+            document.getElementById('downvote').classList.add("green");
+        }
     }
 });
 

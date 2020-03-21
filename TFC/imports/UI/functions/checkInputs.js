@@ -95,7 +95,7 @@ checkTextInput = function(text, minLength=1, maxLength=100){
  *
  *  @return {boolean}  true if password matched all criteria, else false
  */
-areValidPasswords = function(password, confirmPassword, minLength=6, maxLength=100, forbiddenChars=[' ']){
+checkPasswordsInput = function(password, confirmPassword, minLength=6, maxLength=100, forbiddenChars=[' ']){
     if(password.length >= minLength && password.length <= maxLength){
         for(var char of forbiddenChars){
             if(password.includes(char)){
@@ -113,5 +113,22 @@ areValidPasswords = function(password, confirmPassword, minLength=6, maxLength=1
     }
     // Password length isn't correct
     Session.set('message', {type:"header", headerContent:"La taille du mot de passe n'est pas correcte.", style:"is-danger"} );
+    return false;
+}
+
+
+
+
+/**
+ * Check if a text match all criteria
+ *
+ *  @param  {string}     email   Content of the email input
+ *
+ *  @return {boolean}  true if the text matched all criteria, else false
+ */
+checkEmailInput = function(email){
+    if(email.includes('@')){
+        return true;
+    }
     return false;
 }

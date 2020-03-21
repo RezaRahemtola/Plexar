@@ -30,6 +30,9 @@ Meteor.methods({
             return (Meteor.users.findOne({username: username})) ? true : false;
         }
     },
+    'checkIfEmailIsTaken'({email}){
+        return (Accounts.findUserByEmail(email)) ? true : false;
+    },
     'searchForProducts'({text}){
         var result = Products.find({$text: { $search: text}}).fetch();  // Return the matching products
         var productsID = [];  // To save server resources we will only return products IDs

@@ -32,6 +32,29 @@ Template.register.onRendered(function(){
             }
         });
     }
+
+    // Live email validation
+    const emailInput = document.querySelector('input#email');
+    emailInput.oninput = function(){
+        if(checkEmailInput(emailInput.value)){
+            // Value looks like a valid email adress, checking if it's already taken
+            Meteor.call('checkIfEmailIsTaken', {email: emailInput.value}, function(error, result){
+                if(result){
+                    // Email is already used by someone
+                    document.querySelector('input#email').classList.remove("is-success");
+                    document.querySelector('input#email').classList.add("is-danger");
+                } else{
+                    // Email isn't in our database
+                    document.querySelector('input#email').classList.remove("is-danger");
+                    document.querySelector('input#email').classList.add("is-success");
+                }
+            });
+        } else{
+            // Value isn't a valid email adress
+            document.querySelector('input#email').classList.remove("is-success");
+            document.querySelector('input#email').classList.add("is-danger");
+        }
+    }
 });
 
 
@@ -45,7 +68,7 @@ Template.register.events({
         var password = form.get('password');
         var confirmPassword = form.get('confirmPassword');
 
-        if(!(areValidPasswords(password, confirmPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
+        if(!(checkPasswordsInput(password, confirmPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
             // Error in passwords fields
             document.getElementById('password').classList.add("is-danger");
             document.getElementById('confirmPassword').classList.add("is-danger");
