@@ -6,7 +6,6 @@
  * @param  {string} order
  */
 sortResults = function(arrayToSort, order){
-    console.log(arrayToSort);
     arrayToSort.sort(function(a, b){
         var nameA = a.name.toLowerCase();
         var nameB = b.name.toLowerCase();

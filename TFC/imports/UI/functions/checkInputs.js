@@ -71,7 +71,7 @@ checkTextInput = function(text, minLength=1, maxLength=100){
         } else{
             Session.set('message', {type:'header', headerContent:"La longueur minimale du texte doit être de "+minLength+" caractères.", style:"is-danger"});
         }
-    } else if(files.length > maxLength){
+    } else if(text.length > maxLength){
         if(maxLength === 1){
             Session.set('message', {type:'header', headerContent:"Vous ne pouvez pas sélectionner plus d'1 fichier.", style:"is-danger"});
         } else{
