@@ -5,8 +5,8 @@
 
 /* Slideshow container */
 .slideshow{
-    width: 400px;
-    height: 400px;
+    width: 640px;
+    height: 480px;
     max-width: 100%;
     margin: auto;
 }
