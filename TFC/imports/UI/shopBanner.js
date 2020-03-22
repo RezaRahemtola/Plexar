@@ -19,5 +19,9 @@ Template.shopBanner.helpers({
         var shopImagesID = Shops.findOne({_id: shopID}).imagesID;  // Return an array with IDs of the shop images
         var shopFirstImage = [Images.findOne({_id: shopImagesID[0]})];
         return shopFirstImage
+    },
+    displayShopCategories: function(shopID){
+        var shopCategories = Shops.findOne({_id: shopID}).categories;
+        return shopCategories;
     }
 });

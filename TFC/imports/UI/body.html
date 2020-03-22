@@ -39,28 +39,56 @@
 
                 <div class="navbar-end">
                     <div class="navbar-item">
-                        <div class="buttons">
                             {{#if currentUser}}
-                                <!-- Displayed only when the user is logged in-->
+                                <!-- Displayed only when the user is logged in (display a profile dropdown)-->
                                 {{#if hasProfilePicture}}
                                     {{#each displayProfilePicture}}
-                                    <figure class="image is-48x48">
-                                        <img src="{{this.url}}" id="userProfile" alt="Photo de profil"/>
-                                    </figure>
+                                    <div class="navbar-item has-dropdown is-hoverable">
+                                        <a class="navbar-link">
+                                            <figure class="image is-48x48">
+                                                <img src="{{this.url}}" alt="Photo de profil"/>
+                                            </figure>
+                                        </a>
+                                        <div class="navbar-dropdown is-right">
+                                            <a class="navbar-item" id="favorite">
+                                                <span class="icon"><i class="fas fa-bookmark"></i></span>
+                                                <span>Mes favoris</span>
+                                            </a>
+                                            <a class="navbar-item" id="editProfile">
+                                                <span class="icon"><i class="fas fa-user-edit"></i></span>
+                                                <span>Éditer le profil</span>
+                                            </a>
+                                            <hr class="navbar-divider">
+                                            <a class="navbar-item logout">
+                                                <span class="icon"><i class="fas fa-power-off"></i></span>
+                                                <span>Se déconnecter</span>
+                                            </a>
+                                        </div>
+                                    </div>
                                     {{/each}}
                                 {{else}}
-                                    <span>
-                                        <i class="fas fa-user icon is-large" id="userProfile"></i>
-                                    </span>
+                                <div class="navbar-item has-dropdown is-hoverable">
+                                    <a class="navbar-link">
+                                        <span><i class="fas fa-user icon is-large" id="userProfile"></i></span>
+                                    </a>
+                                    <div class="navbar-dropdown is-right">
+                                        <a class="navbar-item">About</a>
+                                        <a class="navbar-item">Jobs</a>
+                                        <a class="navbar-item">Contact</a>
+                                        <hr class="navbar-divider">
+                                        <a class="navbar-item">Report an issue</a>
+                                    </div>
+                                </div>
                                 {{/if}}
                             {{else}}
                                 <!-- Displayed when the user is NOT logged in-->
-                                <a class="button is-primary register">
-                                    <strong>S'inscrire</strong>
-                                </a>
-                                <a class="button is-light login">Se connecter</a>
+                                <div class="buttons">
+                                    <a class="button is-primary register">
+                                        <strong>S'inscrire</strong>
+                                    </a>
+                                    <a class="button is-light login">Se connecter</a>
+                                </div>
                             {{/if}}
-                        </div>
                     </div>
                 </div>
             </div>
@@ -75,12 +103,25 @@
 
     </div>
     <footer class="footer">
-        <p>Suivez-nous sur</p>
-        <span class="icon is-medium">
-            <img src="instagram.svg" alt="">
-        </span>
-        <span class="icon is-medium">
-            <img src="twitter.svg" alt="">
-        </span>
+        <div class="columns" style="height: 100%">
+            <div class="column">
+                <p>Réseaux sociaux</p>
+                <span class="icon is-medium">
+                    <img src="instagram.svg" alt="">
+                </span>
+                <span class="icon is-medium">
+                    <img src="twitter.svg" alt="">
+                </span>
+                <span class="icon is-medium">
+                    <img src="linkedin.svg" alt="">
+                </span>
+            </div>
+            <div class="column">
+                <ul>
+                    <li><img src="GooglePlayBadge.png" width="126px" height="39px" alt="Disponible sur Google Play"></li>
+                    <li><img src="AppStoreBadge.svg" alt="Télécharger dans l'App Store"></li>
+                </ul>
+            </div>
+        </div>
     </footer>
 </body>

@@ -16,12 +16,12 @@ import './favorite.js';
 Session.set('userPage', '');  // Set the page to default
 
 Template.userProfile.onRendered(function(){
-    $("li.is-active").removeClass("is-active");  // Remove active from all tabs
+    $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
+    $("li#"+Session.get('userPage')).addClass("is-active");  // Set the current tab as the active one
 });
 
-
 Template.userProfile.helpers({
-    currentUserPage: function(userPage){
+    currentUserPage: function(){
         return Session.get('userPage');  // Return current page on user profile
   },
     formErrorMessage: function() {

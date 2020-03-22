@@ -44,7 +44,7 @@ Template.body.helpers({
     currentMessage: function(){
         var message = Session.get('message');
         if(message !== null){
-            // There's a message to display
+            // There is a message to display
             return message.type  // Return the message to display
         }
     },
@@ -58,6 +58,9 @@ Template.body.helpers({
     displayProfilePicture: function(){
         var profilePictureID = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;
         return Images.find({_id: profilePictureID});
+    },
+    username: function(){
+        return Meteor.user().username
     }
 });
 
@@ -65,11 +68,6 @@ Template.body.events({
     'click #home' (event){
         event.preventDefault();
         Session.set('page', 'home');  // Switch to home page
-    },
-    'click #userProfile'(event){
-        event.preventDefault();
-        Session.set('page', 'userProfile');  // Switch to userProfile page
-        Session.set('userPage', '');  // Set the user page to default
     },
     'click .register'(event){
         event.preventDefault();
@@ -110,6 +108,22 @@ Template.body.events({
         // When the closing button of a message is clicked
         event.preventDefault();
         Session.set('message', null);  // Remove the message
+    },
+    'click #editProfile' (event){
+        event.preventDefault();
+        Session.set('page', 'userProfile');  // Switch to userProfile page
+        Session.set('userPage', 'editProfile');
+        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
+        $("li#editProfile").addClass("is-active");  // Set the current tab as the active one
+
+    },
+    'click #favorite' (event){
+        event.preventDefault();
+        Session.set('page', 'userProfile');  // Switch to userProfile page
+        Session.set('userPage', 'favorite');
+        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
+        $("li#favorite").addClass("is-active");  // Set the current tab as the active one
+
     }
 });
 

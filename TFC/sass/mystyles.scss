@@ -19,22 +19,25 @@ $input-focus-box-shadow-color: rgba(0, 0, 0, 0.25);  // Grey box-shadow when inp
 // Images
 $dimensions: 16 24 32 48 64 96 128 150;  // Adding a 150x150 dimension for images
 
+// Footer
 $footer-padding: 0;
+$footer-background-color: #f3f3f3;  // Shade of grey
+
 
 body {
   position: relative;
-  min-height: 100vh;
+  min-height: 100vh;  // Body takes full viewport height
 }
 
 #content-wrap {
-  padding-bottom: 10rem;    /* Footer height */
+  padding-bottom: 10rem;  // Leave space for footer
 }
 
 .footer {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 10rem;            /* Footer height */
+    bottom: 0;  // Position at the bottom
+    width: 100%;  // Footer takes full width
+    height: 10rem;  // Height of padding-bottom
 }
 
 

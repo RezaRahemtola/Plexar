@@ -44,12 +44,19 @@ Template.manageShop.events({
                 // Check if the file upload is correct
                 var files = document.querySelector('input#shopPictures').files;
                 if(checkFileInput(files=files, minLength=1, maxLength=5, type='image', maxMBSize=5)){
+                    // Files are correct, catching categories
+                    const checkedCategories = document.querySelectorAll('input[name="category"]:checked');
+                    var shopCategories = [];
+                    for(var category of checkedCategories){
+                        shopCategories.push(category.value);
+                    }
                     callbacksPending++;  // Starting a call with a callback function
                     Shops.insert({
                         name: shopName,
                         description: shopDescription,
                         imagesID: [],
-                        score: 0
+                        score: 0,
+                        categories: shopCategories
                     }, function(error, addedShopID){
                             if(!error){
                                 // The shop was successfully added, now let's add the images

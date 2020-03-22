@@ -143,5 +143,9 @@ Template.displayedProductPage.helpers({
             return true
         }
         return false
+    },
+    displayProductCategories: function(productID){
+        var productCategories = Products.findOne({_id: productID}).categories;
+        return productCategories;
     }
 });

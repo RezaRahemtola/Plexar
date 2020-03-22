@@ -19,5 +19,9 @@ Template.productBanner.helpers({
         var productImagesID = Products.findOne({_id: productID}).imagesID;  // Return an array with IDs of the product images
         var productFirstImage = [Images.findOne({_id: productImagesID[0]})];  // Making an array so we can use {{#each}}
         return productFirstImage
+    },
+    displayProductCategories: function(productID){
+        var productCategories = Products.findOne({_id: productID}).categories;
+        return productCategories;
     }
 });

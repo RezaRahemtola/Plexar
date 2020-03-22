@@ -96,6 +96,11 @@
                         </span>
                     </div>
                 {{/if}}
+                <div class="tags">
+                {{#each displayShopCategories _id}}
+                    <span class="tag is-link">{{this}}</span>
+                {{/each}}
+                </div>
                 <button class="button"> Partager la page du produit sur les réseaux sociaux</button>
                 <button class="button">Lien vers la page du magasin / site</button>
             </div>

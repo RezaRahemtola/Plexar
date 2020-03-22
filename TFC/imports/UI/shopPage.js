@@ -127,5 +127,9 @@ Template.displayedShopPage.helpers({
             return true
         }
         return false
+    },
+    displayShopCategories: function(shopID){
+        var shopCategories = Shops.findOne({_id: shopID}).categories;
+        return shopCategories;
     }
 });

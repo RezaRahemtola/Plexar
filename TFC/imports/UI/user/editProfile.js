@@ -154,7 +154,7 @@ Template.editProfile.events({
             if(callbacksPending === 0 && formErrors === 0){
                 // All callbacks were completed without any error, displaying a success message
                 Session.set('message', {type: "header", headerContent: "Votre profil a été modifié avec succès !", style:"is-success"} );
-                Session.set('userPage', '');
+                Session.set('page', 'home');
                 clearInterval(intervalID);  // This interval is not required anymore, removing it
             }
         }, 200);

@@ -44,12 +44,19 @@ Template.manageProduct.events({
                 // Description is correct, checking the file upload
                 var files = document.querySelector('input#productPictures').files;
                 if(checkFileInput(files=files, minLength=1, maxLength=5, type='image', maxMBSize=5)){
+                    // Files are correct, catching categories
+                    const checkedCategories = document.querySelectorAll('input[name="category"]:checked');
+                    var productCategories = [];
+                    for(var category of checkedCategories){
+                        productCategories.push(category.value);
+                    }
                     callbacksPending++;  // Starting a call with a callback function
                     Products.insert({
                         name: productName,
                         description: productDescription,
                         imagesID: [],
-                        score: 0
+                        score: 0,
+                        categories: productCategories
                     }, function(error, addedProductID){
                             if(!error){
                                 // The product was successfully added, now let's add the images

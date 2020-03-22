@@ -5,6 +5,7 @@
             <p>{{score}}</p>
         </div>
         <div class="message-body">
+
             <div class="field has-addons">
                 <figure class="image is-150x150">
                     {{#each displayShopFirstImage _id}}
@@ -13,6 +14,13 @@
                 </figure>
                 <p id="description">{{description}}</p>
             </div>
+
+            <div class="tags">
+            {{#each displayShopCategories _id}}
+                <span class="tag is-link">{{this}}</span>
+            {{/each}}
+            </div>
+            
         </div>
     </article>
 </template>
