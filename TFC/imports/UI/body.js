@@ -65,7 +65,7 @@ Template.body.helpers({
 });
 
 Template.body.events({
-    'click #home' (event){
+    'click #home'(event){
         event.preventDefault();
         Session.set('page', 'home');  // Switch to home page
     },
