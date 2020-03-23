@@ -41,45 +41,39 @@
                     <div class="navbar-item">
                             {{#if currentUser}}
                                 <!-- Displayed only when the user is logged in (display a profile dropdown)-->
+                                <div class="navbar-item has-dropdown is-hoverable">
                                 {{#if hasProfilePicture}}
+                                    <!-- Dropdown link with user's profile picture -->
                                     {{#each displayProfilePicture}}
-                                    <div class="navbar-item has-dropdown is-hoverable">
                                         <a class="navbar-link">
                                             <figure class="image is-48x48">
                                                 <img src="{{this.url}}" alt="Photo de profil"/>
                                             </figure>
                                         </a>
-                                        <div class="navbar-dropdown is-right">
-                                            <a class="navbar-item" id="favorite">
-                                                <span class="icon"><i class="fas fa-bookmark"></i></span>
-                                                <span>Mes favoris</span>
-                                            </a>
-                                            <a class="navbar-item" id="editProfile">
-                                                <span class="icon"><i class="fas fa-user-edit"></i></span>
-                                                <span>Éditer le profil</span>
-                                            </a>
-                                            <hr class="navbar-divider">
-                                            <a class="navbar-item logout">
-                                                <span class="icon"><i class="fas fa-power-off"></i></span>
-                                                <span>Se déconnecter</span>
-                                            </a>
-                                        </div>
-                                    </div>
                                     {{/each}}
                                 {{else}}
-                                <div class="navbar-item has-dropdown is-hoverable">
+                                    <!-- Dropdown link with default profile picture -->
                                     <a class="navbar-link">
                                         <span><i class="fas fa-user icon is-large" id="userProfile"></i></span>
                                     </a>
+                                {{/if}}
+                                <!-- Dropdown menu -->
                                     <div class="navbar-dropdown is-right">
-                                        <a class="navbar-item">About</a>
-                                        <a class="navbar-item">Jobs</a>
-                                        <a class="navbar-item">Contact</a>
+                                        <a class="navbar-item" id="favorite">
+                                            <span class="icon"><i class="fas fa-bookmark"></i></span>
+                                            <span>Mes favoris</span>
+                                        </a>
+                                        <a class="navbar-item" id="editProfile">
+                                            <span class="icon"><i class="fas fa-user-edit"></i></span>
+                                            <span>Éditer le profil</span>
+                                        </a>
                                         <hr class="navbar-divider">
-                                        <a class="navbar-item">Report an issue</a>
+                                        <a class="navbar-item logout">
+                                            <span class="icon"><i class="fas fa-power-off"></i></span>
+                                            <span>Se déconnecter</span>
+                                        </a>
                                     </div>
                                 </div>
-                                {{/if}}
                             {{else}}
                                 <!-- Displayed when the user is NOT logged in-->
                                 <div class="buttons">

@@ -1,18 +1,25 @@
 <template name="login">
     <h2 class="title">Connexion</h2>
     <form id="login">
-        <p class="control has-icons-left">
-            <input class="input" type="email" name="email" placeholder="Email" required>
-            <span class="icon is-left">
-                <i class="fas fa-envelope"></i>
-            </span>
-        </p>
-        <p class="control has-icons-left">
-            <input type="password" class="input" name="password" placeholder="Mot de passe" autocomplete="current-password" required>
-            <span class="icon is-left">
-                <i class="fas fa-lock"></i>
-            </span>
-        </p>
+
+        <div class="field">
+            <p class="control has-icons-left">
+                <input class="input" type="email" name="email" placeholder="Email" required>
+                <span class="icon is-left">
+                    <i class="fas fa-envelope"></i>
+                </span>
+            </p>
+        </div>
+
+        <div class="field">
+            <p class="control has-icons-left">
+                <input type="password" class="input" name="password" placeholder="Mot de passe" autocomplete="current-password" required>
+                <span class="icon is-left">
+                    <i class="fas fa-lock"></i>
+                </span>
+            </p>
+        </div>    
+
         <br>
         <button class="button forgotPassword">Mot de passe oublié</button>
         <button type="submit" id="submitForm" class="button is-success">Valider</button>

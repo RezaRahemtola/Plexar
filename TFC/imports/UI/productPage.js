@@ -44,7 +44,7 @@ Template.displayedProductPage.events({
         // User wants to add this product to it's favorites
         event.preventDefault();
         var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
-        var favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
+        const favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         favoriteProducts.push(Session.get('currentProductID'));  // Adding the product to the array
         Favorites.update(favoriteID, { $set: {
             // Updating the database with the modified array
@@ -56,7 +56,7 @@ Template.displayedProductPage.events({
         // User wants to remove this product from it's favorites
         event.preventDefault();
         var favoriteProducts = Favorites.findOne({userId :{$eq: Meteor.userId()}}).products;  // Getting favorite products of the current user in the db
-        var favoriteID = Favorites.findOne({userId :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
+        const favoriteID = Favorites.findOne({userId :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
         favoriteProducts.pop(Session.get('currentProductID'));  // Removing the product from the array
         Favorites.update(favoriteID, { $set: {
             // Updating the database with the modified array
@@ -67,7 +67,7 @@ Template.displayedProductPage.events({
     'click .productVote'(event){
         var productID = Session.get('currentProductID');
         var productScore = Products.findOne({_id: productID}).score;
-        var userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
+        const userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
         var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
         var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
 
@@ -76,19 +76,19 @@ Template.displayedProductPage.events({
                 // Product has already been upvoted, we remove the upvote
                 userUpvotes.pop(productID);
                 productScore--;
-                document.getElementById('upvote').classList.remove("green");
+                $('#upvote').removeClass("green");
             } else if(userDownvotes.includes(productID)){
                 // Product has already been downvoted, remove the downvote and set an upvote
                 userDownvotes.pop(productID);
                 userUpvotes.push(productID);
                 productScore += 2;  // Removing the downvote and adding an upvote
-                document.getElementById('upvote').classList.add("green");
-                document.getElementById('downvote').classList.remove("green");
+                $('#upvote').addClass("green");
+                $('#downvote').removeClass("green");
             } else{
                 // Product hasn't already been voted
                 userUpvotes.push(productID);
                 productScore++;
-                document.getElementById('upvote').classList.add("green");
+                $('#upvote').addClass("green");
             }
         } else{
             if(userUpvotes.includes(productID)){
@@ -96,18 +96,18 @@ Template.displayedProductPage.events({
                 userUpvotes.pop(productID);
                 userDownvotes.push(productID);
                 productScore -= 2;
-                document.getElementById('upvote').classList.remove("green");
-                document.getElementById('downvote').classList.add("green");
+                $('#upvote').removeClass("green");
+                $('downvote').addClass("green");
             } else if(userDownvotes.includes(productID)){
                 // Product has already been downvoted, remove the downvote
                 userDownvotes.pop(productID);
                 productScore++;
-                document.getElementById('downvote').classList.remove("green");
+                $('#downvote').removeClass("green");
             } else{
                 // Product hasn't already been voted
                 userDownvotes.push(productID);
                 productScore--;
-                document.getElementById('downvote').classList.add("green");
+                $('#downvote').addClass("green");
             }
         }
         Products.update(productID, { $set: {
@@ -145,7 +145,6 @@ Template.displayedProductPage.helpers({
         return false
     },
     displayProductCategories: function(productID){
-        var productCategories = Products.findOne({_id: productID}).categories;
-        return productCategories;
+        return Products.findOne({_id: productID}).categories;
     }
 });

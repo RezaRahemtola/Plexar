@@ -28,12 +28,12 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
         Meteor.call('checkIfUsernameIsTaken', {username: usernameInput.value}, function(error, result){
             if(result){
                 // Username already exist
-                document.querySelector('input#username').classList.remove("is-success");
-                document.querySelector('input#username').classList.add("is-danger");
+                $('input#username').removeClass("is-success");
+                $('input#username').addClass("is-danger");
             } else{
                 // Username doesn't exists
-                document.querySelector('input#username').classList.remove("is-danger");
-                document.querySelector('input#username').classList.add("is-success");
+                $('input#username').removeClass("is-danger");
+                $('input#username').addClass("is-success");
             }
         });
     }
@@ -56,7 +56,7 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 Template.editProfile.events({
     'click button[type="submit"]' (event){
         event.preventDefault();
-        var userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
+        const userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
         var currentProfilePictureID = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;
         var formErrors = 0;  // No error for the moment
         var callbacksPending = 0;  // No callback is pending for the moment
@@ -99,9 +99,7 @@ Template.editProfile.events({
             if(!(checkPasswordsInput(newPassword, confirmNewPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
                 // Error in passwords fields
                 formErrors++;
-                // Adding a red border to those fields
-                document.getElementById('newPassword').classList.add("is-danger");
-                document.getElementById('confirmNewPassword').classList.add("is-danger");
+                $('input#newPassword, input#confirmNewPassword').addClass("is-danger");  // Adding a red border to those fields
             } else{
                 // No error
                 callbacksPending++;  // Starting a call with a callback function

@@ -28,7 +28,7 @@ Template.displayedShopPage.events({
         // User wants to add this shop to it's favorites
         event.preventDefault();
         var favoriteShops = Favorites.findOne({userId: Meteor.userId()}).shops;  // Getting favorite shops of the current user in the db
-        var favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
+        const favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         favoriteShops.push(Session.get('currentShopID'));  // Adding the shop to the array
         Favorites.update(favoriteID, { $set: {
             // Updating the database with the modified array
@@ -40,7 +40,7 @@ Template.displayedShopPage.events({
         // User wants to remove this shop from it's favorites
         event.preventDefault();
         var favoriteShops = Favorites.findOne({userId: Meteor.userId()}).shops;  // Getting favorite shops of the current user in the db
-        var favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
+        const favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         favoriteShops.pop(Session.get('currentShopID'));  // Removing the shop from the array
         Favorites.update(favoriteID, { $set: {
             // Updating the database with the modified array
@@ -51,7 +51,7 @@ Template.displayedShopPage.events({
     'click .shopVote'(event){
         var shopID = Session.get('currentShopID');
         var shopScore = Shops.findOne({_id: shopID}).score;
-        var userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
+        const userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
         var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
         var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
 
@@ -60,19 +60,19 @@ Template.displayedShopPage.events({
                 // Shop has already been upvoted, we remove the upvote
                 userUpvotes.pop(shopID);
                 shopScore--;
-                document.getElementById('upvote').classList.remove("green");
+                $('#upvote').removeClass("green");
             } else if(userDownvotes.includes(shopID)){
                 // Shop has already been downvoted, remove the downvote and set an upvote
                 userDownvotes.pop(shopID);
                 userUpvotes.push(shopID);
                 shopScore += 2;  // Removing the downvote and adding an upvote
-                document.getElementById('upvote').classList.add("green");
-                document.getElementById('downvote').classList.remove("green");
+                $('#upvote').addClass("green");
+                $('#downvote').removeClass("green");
             } else{
                 // Shop hasn't already been voted
                 userUpvotes.push(shopID);
                 shopScore++;
-                document.getElementById('upvote').classList.add("green");
+                $('#upvote').addClass("green");
             }
         } else{
             if(userUpvotes.includes(shopID)){
@@ -80,18 +80,18 @@ Template.displayedShopPage.events({
                 userUpvotes.pop(shopID);
                 userDownvotes.push(shopID);
                 shopScore -= 2;
-                document.getElementById('upvote').classList.remove("green");
-                document.getElementById('downvote').classList.add("green");
+                $('#upvote').removeClass("green");
+                $('#downvote').addClass("green");
             } else if(userDownvotes.includes(shopID)){
                 // Shop has already been downvoted, remove the downvote
                 userDownvotes.pop(shopID);
                 shopScore++;
-                document.getElementById('downvote').classList.remove("green");
+                $('#downvote').removeClass("green");
             } else{
                 // Shop hasn't already been voted
                 userDownvotes.push(shopID);
                 shopScore--;
-                document.getElementById('downvote').classList.add("green");
+                $('#downvote').addClass("green");
             }
         }
         Shops.update(shopID, { $set: {
@@ -129,7 +129,7 @@ Template.displayedShopPage.helpers({
         return false
     },
     displayShopCategories: function(shopID){
-        var shopCategories = Shops.findOne({_id: shopID}).categories;
-        return shopCategories;
+        return Shops.findOne({_id: shopID}).categories;
+
     }
 });

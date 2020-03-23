@@ -23,12 +23,12 @@ Template.register.onRendered(function(){
         Meteor.call('checkIfUsernameIsTaken', {username: usernameInput.value}, function(error, result){
             if(result){
                 // Username already exist
-                document.querySelector('input#username').classList.remove("is-success");
-                document.querySelector('input#username').classList.add("is-danger");
+                $('input#username').addClass("is-danger");
+                document.querySelector('#usernameField p.help.is-danger').textContent = "Ce nom d'utilisateur n'est pas disponible";  // Adding a danger help message
             } else{
                 // Username doesn't exists
-                document.querySelector('input#username').classList.remove("is-danger");
-                document.querySelector('input#username').classList.add("is-success");
+                $('input#username').removeClass("is-danger");
+                document.querySelector('#usernameField p.help.is-danger').textContent = "";  // Removing danger help message
             }
         });
     }
@@ -41,18 +41,18 @@ Template.register.onRendered(function(){
             Meteor.call('checkIfEmailIsTaken', {email: emailInput.value}, function(error, result){
                 if(result){
                     // Email is already used by someone
-                    document.querySelector('input#email').classList.remove("is-success");
-                    document.querySelector('input#email').classList.add("is-danger");
+                    $('input#email').addClass("is-danger");
+                    document.querySelector('#emailField p.help.is-danger').textContent = "Cette adresse email est déjà utilisée par un autre compte";  // Adding a danger help message
                 } else{
                     // Email isn't in our database
-                    document.querySelector('input#email').classList.remove("is-danger");
-                    document.querySelector('input#email').classList.add("is-success");
+                    $('input#email').removeClass("is-danger");
+                    document.querySelector('#emailField p.help.is-danger').textContent = "";  // Removing danger help message
                 }
             });
         } else{
             // Value isn't a valid email adress
-            document.querySelector('input#email').classList.remove("is-success");
-            document.querySelector('input#email').classList.add("is-danger");
+            $('input#email').addClass("is-danger");
+            document.querySelector('#emailField p.help.is-danger').textContent = "Veuillez entrer une adresse email valide";  // Adding a danger help message
         }
     }
 });
@@ -63,10 +63,10 @@ Template.register.events({
         event.preventDefault();
         event.target.classList.add("is-loading");  // Add a loading effect to the button
         var form = new FormData(document.getElementById('register'));
-        var username = form.get('username');
-        var email = form.get('email');
-        var password = form.get('password');
-        var confirmPassword = form.get('confirmPassword');
+        const username = form.get('username');
+        const email = form.get('email');
+        const password = form.get('password');
+        const confirmPassword = form.get('confirmPassword');
 
         if(!(checkPasswordsInput(password, confirmPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
             // Error in passwords fields

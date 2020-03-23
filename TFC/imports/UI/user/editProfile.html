@@ -1,60 +1,65 @@
 <template name="editProfile">
-    <h2 class="title">Editer le profil</h2>
-    <form id="editProfileForm" style="width:fit-content;">
-        <label for="username">Nom d'utilisateur:</label>
-        <p class="control has-icons-left">
-            <input type="text" class="input" name="username" id="username" required/>
-            <span class="icon is-left">
-                <i class="fas fa-user-circle"></i>
-            </span>
-        </p>
-        <br><br>
-        <label for="firstName">Prénom:</label>
-        <input type="text" class="input" name="firstName" id="firstName">
-        <br><br>
-        <label for="lastName">Nom:</label>
-        <input type="text" class="input" name="lastName" id="lastName">
-        <br><br>
-        <label for="email">Email:</label>
-        <p class="control has-icons-left">
-            <input type="email" class="input" id="email" required disabled>
-            <span class="icon is-left">
-                <i class="fas fa-envelope"></i>
-            </span>
-        </p>
-        <br><br>
-        <label for="profilePictureFile">Changer de photo de profil :</label>
-        <div class="file has-name is-boxed">
-            <label class="file-label">
-                <input class="file-input" type="file" name="profilePictureFile" id="profilePictureFile" accept="image/*">
-                <span class="file-cta">
-                    <span class="file-icon">
-                        <i class="fas fa-file-image"></i>
-                    </span>
-                    <span class="file-label">Choisir un fichier…</span>
-                </span>
-                <span class="file-name" style="text-align: center;">Aucun fichier sélectionné</span>
-            </label>
-        </div>
-        <br><br>
-        <button type="button" id="showAdvancedEdition" class="button">Options avancées</button>
-        <div id="advancedEdition" style="display: none;">
-            <hr>
-            <label for="oldPassword">Mot de passe actuel:</label>
+    <div class="container has-text-center" style="width: fit-content;">
+        <h2 class="title">Editer le profil</h2>
+        <form id="editProfileForm">
+
+            <label for="username" class="label">Nom d'utilisateur :</label>
             <p class="control has-icons-left">
-                <input type="password" class="input" name="oldPassword" id="oldPassword" autocomplete="current-password">
+                <input type="text" class="input" name="username" id="username" required/>
                 <span class="icon is-left">
-                    <i class="fas fa-lock"></i>
+                    <i class="fas fa-user-circle"></i>
                 </span>
             </p>
+
+            <input type="text" class="input" name="firstName" id="firstName" placeholder="Prénom">
+
+            <input type="text" class="input" name="lastName" id="lastName" placeholder="Nom">
+
+            <label for="email" class="label">Email:</label>
+            <p class="control has-icons-left">
+                <input type="email" class="input" id="email" required disabled>
+                <span class="icon is-left">
+                    <i class="fas fa-envelope"></i>
+                </span>
+            </p>
+
+            <label for="profilePictureFile" class="label">Changer de photo de profil :</label>
+            <div class="file has-name is-boxed">
+                <label class="file-label">
+                    <input class="file-input" type="file" name="profilePictureFile" id="profilePictureFile" accept="image/*">
+                    <span class="file-cta">
+                        <span class="file-icon">
+                            <i class="fas fa-file-image"></i>
+                        </span>
+                        <span class="file-label">Choisir un fichier…</span>
+                    </span>
+                    <span class="file-name" style="text-align: center;">Aucun fichier sélectionné</span>
+                </label>
+            </div>
+
             <br><br>
-            <label for="newPassword">Nouveau mot de passe:</label>
-            <input type="password" class="input" name="newPassword" id="newPassword" autocomplete="new-password">
-            <br><br>
-            <label for="confirmNewPassword">Confirmer le mot de passe:</label>
-            <input type="password" class="input" name="confirmNewPassword" id="confirmNewPassword" autocomplete="new-password">
-            <br><br>
-        </div>
-        <button type="submit" class="button is-success">Valider</button>
-    </form>
+
+            <button type="button" id="showAdvancedEdition" class="button">Options avancées</button>
+            <div id="advancedEdition" style="display: none;">
+                <hr>
+
+                <label for="oldPassword" class="label">Mot de passe actuel:</label>
+                <p class="control has-icons-left">
+                    <input type="password" class="input" name="oldPassword" id="oldPassword" autocomplete="current-password">
+                    <span class="icon is-left">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                </p>
+
+                <label for="newPassword" class="label">Nouveau mot de passe:</label>
+                <input type="password" class="input" name="newPassword" id="newPassword" autocomplete="new-password">
+
+                <label for="confirmNewPassword" class="label">Confirmer le mot de passe:</label>
+                <input type="password" class="input" name="confirmNewPassword" id="confirmNewPassword" autocomplete="new-password">
+
+                <br><br>
+            </div>
+            <button type="submit" class="button is-success">Valider</button>
+        </form>
+    </div>
 </template>
