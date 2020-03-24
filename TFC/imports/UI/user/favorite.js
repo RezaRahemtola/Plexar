@@ -6,9 +6,9 @@ import { Template } from 'meteor/templating';
 import './favorite.html';
 
 // Database imports
-import { Favorites } from '../../bdd/favorites.js';
-import { Products } from '../../bdd/products.js';
-import { Shops } from '../../bdd/shops.js';
+import { Favorites } from '../../databases/favorites.js';
+import { Products } from '../../databases/products.js';
+import { Shops } from '../../databases/shops.js';
 
 Template.favorite.helpers({
     displayFavoriteProducts: function(){

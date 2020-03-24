@@ -2,14 +2,14 @@
 import { Meteor } from 'meteor/meteor';
 
 // Importing databases
-import '../imports/bdd/products.js';
-import '../imports/bdd/usersInformations.js';
-import '../imports/bdd/favorites.js';
-import '../imports/bdd/shops.js';
-import '../imports/bdd/images.js';
+import '../imports/databases/products.js';
+import '../imports/databases/usersInformations.js';
+import '../imports/databases/favorites.js';
+import '../imports/databases/shops.js';
+import '../imports/databases/images.js';
 
-import { Products } from '../imports/bdd/products.js';
-import { Shops } from '../imports/bdd/shops.js';
+import { Products } from '../imports/databases/products.js';
+import { Shops } from '../imports/databases/shops.js';
 
 Meteor.startup(() => {
     // code to run on server at startup

@@ -25,9 +25,9 @@
                     </a>
                     <a class="navbar-item" id="addProduct">Ajouter un produit</a>
                     <a class="navbar-item" id="addShop">Ajouter un magasin</a>
-                    <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-item has-dropdown is-hoverable" id="moreDropdown">
                         <a class="navbar-link">More</a>
-                        <div class="navbar-dropdown">
+                        <div class="navbar-dropdown is-hidden-mobile">
                             <a class="navbar-item">About</a>
                             <a class="navbar-item">Jobs</a>
                             <a class="navbar-item">Contact</a>
@@ -40,8 +40,9 @@
                 <div class="navbar-end">
                     <div class="navbar-item">
                             {{#if currentUser}}
+                                {{userT}}
                                 <!-- Displayed only when the user is logged in (display a profile dropdown)-->
-                                <div class="navbar-item has-dropdown is-hoverable">
+                                <div class="navbar-item has-dropdown is-hoverable" id="profileDropdown">
                                 {{#if hasProfilePicture}}
                                     <!-- Dropdown link with user's profile picture -->
                                     {{#each displayProfilePicture}}
@@ -58,7 +59,7 @@
                                     </a>
                                 {{/if}}
                                 <!-- Dropdown menu -->
-                                    <div class="navbar-dropdown is-right">
+                                    <div class="navbar-dropdown is-right is-hidden-mobile">
                                         <a class="navbar-item" id="favorite">
                                             <span class="icon"><i class="fas fa-bookmark"></i></span>
                                             <span>Mes favoris</span>
@@ -74,6 +75,16 @@
                                         </a>
                                     </div>
                                 </div>
+                                <script>
+                                    // Script to hide profile dropdown when in mobile mode
+                                    $("#profileDropdown .navbar-link").click(function(){
+                                        // If navbar is in mobile mode
+                                        if($(".navbar-burger").hasClass("is-active")){
+                                            // Toggle dropdown options display
+                                            $('#profileDropdown .navbar-dropdown').toggleClass("is-hidden-mobile");
+                                        }
+                                    });
+                                </script>
                             {{else}}
                                 <!-- Displayed when the user is NOT logged in-->
                                 <div class="buttons">

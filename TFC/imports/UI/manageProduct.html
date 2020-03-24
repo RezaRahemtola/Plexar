@@ -2,24 +2,30 @@
     <h3 class="title">Ajouter un produit</h3>
     <form id="newProduct">
 
-        <input name="productName" type="text" placeholder="Nom du produit" class="input" required>
-
-        <input name="productDescription" type="textarea" placeholder="Description du produit" class="input" required>
-        
-        <div class="file has-name is-boxed">
-            <label class="file-label">
-                <input class="file-input" type="file" name="productPictures" id="productPictures" accept="image/*" multiple>
-                <span class="file-cta">
-                    <span class="file-icon">
-                        <i class="fas fa-file-image"></i>
-                    </span>
-                    <span class="file-label">Choisir un fichier…</span>
-                </span>
-                <span class="file-name" style="text-align: center;">Aucun fichier sélectionné</span>
-            </label>
+        <div class="field">
+            <input name="productName" type="text" placeholder="Nom du produit" class="input" required>
         </div>
 
-        <div>
+        <div class="field">
+            <textarea name="productDescription" class="textarea" placeholder="Description du produit" required></textarea>
+        </div>
+
+        <div class="field">
+            <div class="file has-name is-boxed">
+                <label class="file-label">
+                    <input class="file-input" type="file" name="productPictures" id="productPictures" accept="image/*" multiple>
+                    <span class="file-cta">
+                        <span class="file-icon">
+                            <i class="fas fa-file-image"></i>
+                        </span>
+                        <span class="file-label">Choisir un fichier…</span>
+                    </span>
+                    <span class="file-name" style="text-align: center;">Aucun fichier sélectionné</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="field">
             <input type="checkbox" class="checkbox" id="cat1" name="category" value="1">
             <label for="cat1">Catégorie 1</label>
             <input type="checkbox" class="checkbox" id="cat2" name="category" value="2">

@@ -4,8 +4,8 @@ import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
 
 // Database import
-import { UsersInformations } from '../../bdd/usersInformations.js';
-import { Images } from '../../bdd/images.js';
+import { UsersInformations } from '../../databases/usersInformations.js';
+import { Images } from '../../databases/images.js';
 
 // HTML import
 import './editProfile.html';

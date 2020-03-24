@@ -6,10 +6,10 @@ import { Template } from 'meteor/templating';
 import './home.html';
 
 // Database imports
-import { Products } from '../bdd/products.js';
-import { Shops } from '../bdd/shops.js';
-import { UsersInformations } from '../bdd/usersInformations.js';
-import { Images } from '../bdd/images.js';
+import { Products } from '../databases/products.js';
+import { Shops } from '../databases/shops.js';
+import { UsersInformations } from '../databases/usersInformations.js';
+import { Images } from '../databases/images.js';
 
 
 Template.home.helpers({

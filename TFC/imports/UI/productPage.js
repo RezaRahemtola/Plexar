@@ -9,10 +9,10 @@ import './productPage.html';
 import './css/slideshow.css';
 
 // Database imports
-import { Products } from '../bdd/products.js';
-import { Favorites } from '../bdd/favorites.js';
-import { Images } from '../bdd/images.js';
-import { UsersInformations } from '../bdd/usersInformations.js';
+import { Products } from '../databases/products.js';
+import { Favorites } from '../databases/favorites.js';
+import { Images } from '../databases/images.js';
+import { UsersInformations } from '../databases/usersInformations.js';
 
 
 Template.productPage.helpers({

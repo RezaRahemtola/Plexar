@@ -10,8 +10,8 @@ import './css/image.css';
 import './css/banners.css';
 
 // Database imports
-import { Products } from '../bdd/products.js';
-import { Images } from '../bdd/images.js';
+import { Products } from '../databases/products.js';
+import { Images } from '../databases/images.js';
 
 
 Template.productBanner.helpers({

@@ -4,8 +4,8 @@ import { Template } from 'meteor/templating';
 import { Mongo } from 'meteor/mongo';
 
 // Database imports
-import { Products } from '../bdd/products.js';
-import { Shops } from '../bdd/shops.js';
+import { Products } from '../databases/products.js';
+import { Shops } from '../databases/shops.js';
 
 // HTML imports
 import './searchResults.html';

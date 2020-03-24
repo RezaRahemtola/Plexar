@@ -3,8 +3,8 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 // Database import
-import { Products } from '../bdd/products.js';
-import { Images } from '../bdd/images.js';
+import { Products } from '../databases/products.js';
+import { Images } from '../databases/images.js';
 
 // HTML import
 import './manageProduct.html';
@@ -12,7 +12,7 @@ import './functions/checkInputs.js';
 
 
 Template.manageProduct.onRendered(function(){
-    //Code to update file name from https://bulma.io/documentation/form/file/
+    // Code to update file name from https://bulma.io/documentation/form/file/
     const filesInput = document.querySelector('input#productPictures');  // Saving input in a variable
     filesInput.onchange = () => {
         const filesNumberDisplay = document.querySelector('span.file-name');  // Catching the file number display

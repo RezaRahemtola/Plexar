@@ -25,8 +25,8 @@ import './messages/header.js';
 import './messages/full.js';
 
 // Databases imports
-import { UsersInformations } from '../bdd/usersInformations.js';
-import { Images } from '../bdd/images.js';
+import { UsersInformations } from '../databases/usersInformations.js';
+import { Images } from '../databases/images.js';
 
 // Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page
@@ -58,9 +58,6 @@ Template.body.helpers({
     displayProfilePicture: function(){
         var profilePictureID = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;
         return Images.find({_id: profilePictureID});
-    },
-    username: function(){
-        return Meteor.user().username
     }
 });
 
@@ -128,11 +125,19 @@ Template.body.events({
 });
 
 // jQuery code to display nav menu when burger-menu is clicked (code from https://bulma.io/documentation/components/navbar/)
-$(document).ready(function() {
-  // Check for click events on the navbar burger icon
-  $(".navbar-burger").click(function() {
-      // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-      $(".navbar-burger").toggleClass("is-active");
-      $(".navbar-menu").toggleClass("is-active");
-  });
+$(document).ready(function(){
+    // Check for click events on the navbar burger icon
+    $(".navbar-burger").click(function(){
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+    });
+    // Check for click events on the navbar dropdown link
+    $("#moreDropdown .navbar-link").click(function(){
+        // If navbar is in mobile mode
+        if($(".navbar-burger").hasClass("is-active")){
+            // Toggle dropdown options display
+            $('#moreDropdown .navbar-dropdown').toggleClass("is-hidden-mobile");
+        }
+    });
 });

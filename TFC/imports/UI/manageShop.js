@@ -3,8 +3,8 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 // Database import
-import { Shops } from '../bdd/shops.js';
-import { Images } from '../bdd/images.js';
+import { Shops } from '../databases/shops.js';
+import { Images } from '../databases/images.js';
 
 // HTML import
 import './manageShop.html';

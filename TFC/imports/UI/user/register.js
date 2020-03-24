@@ -4,8 +4,8 @@ import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
 
 // Database imports
-import { UsersInformations } from '../../bdd/usersInformations.js';
-import { Favorites } from '../../bdd/favorites.js';
+import { UsersInformations } from '../../databases/usersInformations.js';
+import { Favorites } from '../../databases/favorites.js';
 
 // HTML import
 import './register.html';
