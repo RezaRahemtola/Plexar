@@ -24,7 +24,7 @@
     "testModule": "tests/main.js"
   },
   "devDependencies": {
-    "bulma": "^0.8.0",
+    "bulma": "^0.8.1",
     "node-sass": "^4.13.1"
   }
 }
