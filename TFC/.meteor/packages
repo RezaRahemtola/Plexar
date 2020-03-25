@@ -25,3 +25,4 @@ session@1.2.0
 jquery
 cfs:standard-packages
 cfs:filesystem
+email
