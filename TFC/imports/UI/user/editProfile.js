@@ -92,9 +92,9 @@ Template.editProfile.events({
             });
         }
 
-        if(document.getElementById('advancedEdition').style.display !== 'none'){
-            // Advanced edition is enabled
-            var oldPassword = form.get('oldPassword');  // Saving input in variable
+        var oldPassword = form.get('oldPassword');  // Saving input in variable
+        if(oldPassword.length > 0){
+            console.log(oldPassword);
             var newPassword = form.get('newPassword');  // Saving input in variable
             var confirmNewPassword = form.get('confirmNewPassword');  // Saving input in variable
             if(!(checkPasswordsInput(newPassword, confirmNewPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
@@ -113,6 +113,7 @@ Template.editProfile.events({
                 });
             }
         }
+
 
         var files = document.querySelector('input#profilePictureFile').files;  // Catching profile picture file in file input
         if(files.length > 0){
@@ -157,19 +158,5 @@ Template.editProfile.events({
                 clearInterval(intervalID);  // This interval is not required anymore, removing it
             }
         }, 200);
-    },
-    'click #showAdvancedEdition'(event){
-        event.preventDefault();
-        if(document.getElementById('advancedEdition').style.display == 'none'){  // Advanced options are hidden
-            document.getElementById('advancedEdition').style.display = 'inherit';  // Display advanced options
-            document.getElementById('oldPassword').required = true;  // Set the passwords inputs as required
-            document.getElementById('newPassword').required = true;  // Set the passwords inputs as required
-            document.getElementById('confirmNewPassword').required = true;  // Set the passwords inputs as required
-        } else{  // Advenced options are displayed
-            document.getElementById('advancedEdition').style.display = 'none';  // Hide advenced options
-            document.getElementById('oldPassword').required = false;  // Passwords inputs are no longer required
-            document.getElementById('newPassword').required = false;  // Passwords inputs are no longer required
-            document.getElementById('confirmNewPassword').required = false;  // Passwords inputs are no longer required
-        }
     }
 });

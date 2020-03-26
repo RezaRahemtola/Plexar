@@ -27,7 +27,7 @@
 
             <div class="field has-animated-label">
                 <div class="control has-icons-left">
-                    <input type="email" class="input has-animated-label" id="email" required disabled>
+                    <input type="email" class="input has-animated-label" id="email" placeholder=" " required disabled>
                     <label for="email" class="label is-animated">Email</label>
                     <span class="icon is-left">
                         <i class="fas fa-envelope"></i>
@@ -55,28 +55,30 @@
                 <label for="newsletter">Recevoir la newsletter</label>
             </div>
 
-            <br><br>
+            <hr>
 
-            <button type="button" id="showAdvancedEdition" class="button">Options avancées</button>
-            <div id="advancedEdition" style="display: none;">
-                <hr>
-
-                <label for="oldPassword" class="label">Mot de passe actuel:</label>
-                <p class="control has-icons-left">
-                    <input type="password" class="input" name="oldPassword" id="oldPassword" autocomplete="current-password">
+            <div class="field has-animated-label">
+                <div class="control has-icons-left">
+                    <input type="password" class="input has-animated-label" name="oldPassword" id="oldPassword" autocomplete="current-password" placeholder=" ">
+                    <label for="oldPassword" class="label is-animated">Mot de passe actuel</label>
                     <span class="icon is-left">
                         <i class="fas fa-lock"></i>
                     </span>
-                </p>
-
-                <label for="newPassword" class="label">Nouveau mot de passe:</label>
-                <input type="password" class="input" name="newPassword" id="newPassword" autocomplete="new-password">
-
-                <label for="confirmNewPassword" class="label">Confirmer le mot de passe:</label>
-                <input type="password" class="input" name="confirmNewPassword" id="confirmNewPassword" autocomplete="new-password">
-
-                <br><br>
+                </div>
             </div>
+
+            <div class="field has-animated-label">
+                <input type="password" class="input has-animated-label" name="newPassword" id="newPassword" autocomplete="new-password" placeholder=" ">
+                <label for="newPassword" class="label is-animated">Nouveau mot de passe</label>
+            </div>
+
+            <div class="field has-animated-label">
+                <input type="password" class="input has-animated-label" name="confirmNewPassword" id="confirmNewPassword" autocomplete="new-password" placeholder=" ">
+                <label for="confirmNewPassword" class="label is-animated">Confirmer le mot de passe</label>
+            </div>
+
+            <br><br>
+
             <button type="submit" class="button is-success">Valider</button>
         </form>
     </div>

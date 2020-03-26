@@ -19,11 +19,6 @@ import '../functions/checkInputs.js';
 
 Template.register.onRendered(function(){
 
-    $('label').click(function(){  // When a label is click
-        var labelID = $(this).attr('for');  // Get the content of for attribute (ID of the input)
-        $('input#'+labelID).focus();  // Focus this input
-    });
-
     // Live username verification
     const usernameInput = document.querySelector('input#username');  // Saving input in a variable
     usernameInput.oninput = () => {

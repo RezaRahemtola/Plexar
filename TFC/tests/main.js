@@ -18,4 +18,13 @@ describe("TFC", function () {
     });
   }
 });
- 
+
+
+/*
+
+$('label').click(function(){  // When a label is click
+    var labelID = $(this).attr('for');  // Get the content of for attribute (ID of the input)
+    $('input#'+labelID).focus();  // Focus this input
+});
+
+*/
