@@ -3,25 +3,38 @@
         <h2 class="title">Editer le profil</h2>
         <form id="editProfileForm">
 
-            <label for="username" class="label">Nom d'utilisateur :</label>
-            <p class="control has-icons-left">
-                <input type="text" class="input" name="username" id="username" required/>
-                <span class="icon is-left">
-                    <i class="fas fa-user-circle"></i>
-                </span>
-            </p>
+            <div class="field has-animated-label">
+                <div class="control has-icons-left">
+                    <input type="text" class="input has-animated-label" name="username" id="username" placeholder=" " required/>
+                    <label for="username" class="label is-animated">Nom d'utilisateur</label>
+                    <span class="icon is-left">
+                        <i class="fas fa-user-circle"></i>
+                    </span>
+                </div>
+            </div>
 
-            <input type="text" class="input" name="firstName" id="firstName" placeholder="Prénom">
+            <div class="field has-animated-label">
+                <input type="text" class="input has-animated-label" name="firstName" id="firstName" placeholder=" ">
+                <label for="firstName" class="label is-animated">Prénom</label>
+            </div>
 
-            <input type="text" class="input" name="lastName" id="lastName" placeholder="Nom">
 
-            <label for="email" class="label">Email:</label>
-            <p class="control has-icons-left">
-                <input type="email" class="input" id="email" required disabled>
-                <span class="icon is-left">
-                    <i class="fas fa-envelope"></i>
-                </span>
-            </p>
+            <div class="field has-animated-label">
+                <input type="text" class="input has-animated-label" name="lastName" id="lastName" placeholder=" ">
+                <label for="lastName" class="label is-animated">Nom</label>
+            </div>
+
+
+            <div class="field has-animated-label">
+                <div class="control has-icons-left">
+                    <input type="email" class="input has-animated-label" id="email" required disabled>
+                    <label for="email" class="label is-animated">Email</label>
+                    <span class="icon is-left">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                </div>
+            </div>
+
 
             <label for="profilePictureFile" class="label">Changer de photo de profil :</label>
             <div class="file has-name is-boxed">

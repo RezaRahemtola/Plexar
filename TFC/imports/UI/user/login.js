@@ -6,6 +6,9 @@ import { Accounts } from 'meteor/accounts-base';
 // HTML import
 import './login.html';
 
+// CSS import
+import '../css/animatedLabel.css';
+
 // Functions import
 import '../functions/checkInputs.js';
 
@@ -37,7 +40,7 @@ Template.login.events({
             }
         });
     },
-    'click .forgotPassword' (event){
+    'click #forgotPassword' (event){
         event.preventDefault();
         Session.set('userPage', 'forgotPassword');
     }

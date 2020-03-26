@@ -16,6 +16,7 @@ $success: #8cba51;  // Green
 // Inputs
 $input-focus-border-color: transparent;  // No border
 $input-focus-box-shadow-color: rgba(0, 0, 0, 0.25);  // Grey box-shadow when input is focused
+$input-placeholder-color: #909090;  // Shade of grey for placeholders
 
 // Images
 $dimensions: 16 24 32 48 64 96 128 150;  // Adding a 150x150 dimension for images
@@ -24,22 +25,6 @@ $dimensions: 16 24 32 48 64 96 128 150;  // Adding a 150x150 dimension for image
 $footer-padding: 0;
 $footer-background-color: #f3f3f3;  // Shade of grey
 
-
-body {
-  position: relative;
-  min-height: 100vh;  // Body takes full viewport height
-}
-
-#content-wrap {
-  padding-bottom: 10rem;  // Leave space for footer
-}
-
-.footer {
-    position: absolute;
-    bottom: 0;  // Position at the bottom
-    width: 100%;  // Footer takes full width
-    height: 10rem;  // Height of padding-bottom
-}
 
 
 // Import only what you need from Bulma

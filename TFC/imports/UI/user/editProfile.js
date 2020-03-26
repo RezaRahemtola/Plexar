@@ -10,6 +10,9 @@ import { Images } from '../../databases/images.js';
 // HTML import
 import './editProfile.html';
 
+// CSS import
+import '../css/animatedLabel.css';
+
 // Functions import
 import '../functions/checkInputs.js';
 

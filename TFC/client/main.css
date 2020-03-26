@@ -1,16 +1,3 @@
-body {
-  position: relative;
-  min-height: 100vh; }
-
-#content-wrap {
-  padding-bottom: 10rem; }
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 10rem; }
-
 @keyframes spinAround {
   from {
     transform: rotate(0deg); }
@@ -1133,13 +1120,13 @@ a.has-text-danger:hover, a.has-text-danger:focus {
   border-radius: 4px;
   color: inherit; }
   .input::-moz-placeholder, .textarea::-moz-placeholder, .select select::-moz-placeholder {
-    color: inherit; }
+    color: #909090; }
   .input::-webkit-input-placeholder, .textarea::-webkit-input-placeholder, .select select::-webkit-input-placeholder {
-    color: inherit; }
+    color: #909090; }
   .input:-moz-placeholder, .textarea:-moz-placeholder, .select select:-moz-placeholder {
-    color: inherit; }
+    color: #909090; }
   .input:-ms-input-placeholder, .textarea:-ms-input-placeholder, .select select:-ms-input-placeholder {
-    color: inherit; }
+    color: #909090; }
   .input:hover, .textarea:hover, .select select:hover, .is-hovered.input, .is-hovered.textarea, .select select.is-hovered {
     border-color: #b5b5b5; }
   .input:focus, .textarea:focus, .select select:focus, .is-focused.input, .is-focused.textarea, .select select.is-focused, .input:active, .textarea:active, .select select:active, .is-active.input, .is-active.textarea, .select select.is-active {

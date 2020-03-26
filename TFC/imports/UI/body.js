@@ -5,9 +5,11 @@ import { Template } from 'meteor/templating';
 // HTML import
 import './body.html';
 
-// CSS import
+// CSS imports
 import './css/navbar.css';
 import './css/image.css';
+import './css/footer.css';
+import './css/generic.css';
 
 // JS imports
 import './home.js';

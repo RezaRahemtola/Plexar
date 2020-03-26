@@ -1,0 +1,15 @@
+body {
+  position: relative;
+  min-height: 100vh;  /* Body takes full viewport height */
+}
+
+#content-wrap {
+  padding-bottom: 10rem;  /* Leave space for footer */
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;  /* Position at the bottom */
+    width: 100%;  /* Footer takes full width */
+    height: 10rem;  /* Height of padding-bottom */
+}

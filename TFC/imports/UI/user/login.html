@@ -2,26 +2,28 @@
     <h2 class="title">Connexion</h2>
     <form id="login">
 
-        <div class="field">
+        <div class="field has-animated-label">
             <p class="control has-icons-left">
-                <input class="input" type="email" name="email" placeholder="Email" required>
+                <input class="input has-animated-label" type="email" name="email" placeholder=" " required>
+                <label for="email" class="label is-animated">Email</label>
                 <span class="icon is-left">
                     <i class="fas fa-envelope"></i>
                 </span>
             </p>
         </div>
 
-        <div class="field">
+        <div class="field has-animated-label">
             <p class="control has-icons-left">
-                <input type="password" class="input" name="password" placeholder="Mot de passe" autocomplete="current-password" required>
+                <input type="password" class="input has-animated-label" name="password" placeholder=" " autocomplete="current-password" required>
+                <label for="password" class="label is-animated">Mot de passe</label>
                 <span class="icon is-left">
                     <i class="fas fa-lock"></i>
                 </span>
             </p>
-        </div>    
+        </div>
 
         <br>
-        <button class="button forgotPassword">Mot de passe oublié</button>
+        <button class="button" id="forgotPassword">Mot de passe oublié</button>
         <button type="submit" id="submitForm" class="button is-success">Valider</button>
     </form>
 
