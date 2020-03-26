@@ -102,8 +102,7 @@ Template.register.events({
                         // Creating empty favorites of the new user
                         Favorites.insert({
                             userId: Meteor.userId(),
-                            products: [],
-                            shops: []
+                            products: []
                         });
                         Session.set('userPage', '');  // Send the new user to default userprofile page
                     }

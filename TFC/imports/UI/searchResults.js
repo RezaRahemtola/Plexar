@@ -1,11 +1,9 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Mongo } from 'meteor/mongo';
 
 // Database imports
 import { Products } from '../databases/products.js';
-import { Shops } from '../databases/shops.js';
 
 // HTML imports
 import './searchResults.html';
@@ -57,19 +55,6 @@ Template.searchResults.helpers({
         var searchFilter = Session.get('searchFilter');  // Get search filter to sort the products array
         sortResults(searchedProducts, order=searchFilter);
         return searchedProducts  // Return the products array
-    },
-    displayShopsResults: function(){
-        Meteor.call('searchForShops', {text: Session.get("searchedText")}, function(error, result){
-            Session.set("searchedShopsID", result);  // Result is an array of shops ID, saving it in a Session variable
-        });
-        var searchedShops = []  // We will save the shops in an array
-        for (var shopID of Session.get("searchedShopsID")){
-            // For each shop ID we add the shop to the array
-            searchedShops.push(Shops.findOne({_id : shopID}))
-        }
-        var searchFilter = Session.get('searchFilter');  // Get search filter to sort the shops array
-        sortResults(searchedShops, order=searchFilter);
-        return searchedShops  // Return the shops array
     }
 });
 

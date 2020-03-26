@@ -15,12 +15,9 @@ import './css/generic.css';
 import './home.js';
 import './manageProduct.js';
 import './productPage.js';
-import './shopPage.js';
-import './manageShop.js';
 import './user/userProfile.js';
 import './searchResults.js';
 import './productBanner.js'
-import './shopBanner.js';
 
 // Messages imports
 import './messages/header.js';
@@ -33,7 +30,6 @@ import { Images } from '../databases/images.js';
 // Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page
 Session.set('formErrorMessage', null);  // No forms error for the moment
-Session.set("searchedShopsID", [] );  // No search for the moment
 Session.set("searchedProductsID", [] );  // No search for the moment
 Session.set('message', null);  // No message to display for the moment
 Session.set('searchFilters', '');  // No search filters for the moment
@@ -87,21 +83,11 @@ Template.body.events({
         event.preventDefault();
         Session.set('page', 'manageProduct');
     },
-    'click a#addShop'(event){
-        event.preventDefault();
-        Session.set('page', 'manageShop');
-    },
     'click .productBanner'(event){
         // When a product banner is clicked (like in search result or favorites)
         event.preventDefault();
         Session.set('currentProductID', event.currentTarget.id);  // Setting displayed product with value of the target
         Session.set('page', 'productPage');  // Redirecting to product page
-    },
-    'click .shopBanner'(event){
-        // When a shop banner is clicked (like in search result or favorites)
-        event.preventDefault();
-        Session.set('currentShopID', event.currentTarget.id);  // Setting displayed product with value of the target
-        Session.set('page', 'shopPage');  // Redirecting to product page
     },
     'click div.message-header button.delete'(event){
         // When the closing button of a message is clicked

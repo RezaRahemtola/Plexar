@@ -1,4 +1,4 @@
-.shopBanner p#description, .productBanner p#description{
+.productBanner p#description{
     max-height: 100px;
     overflow: hidden;
 }

@@ -7,7 +7,6 @@ import './home.html';
 
 // Database imports
 import { Products } from '../databases/products.js';
-import { Shops } from '../databases/shops.js';
 import { UsersInformations } from '../databases/usersInformations.js';
 import { Images } from '../databases/images.js';
 
@@ -15,9 +14,6 @@ import { Images } from '../databases/images.js';
 Template.home.helpers({
     productsCounter(){
         return Products.find().count();
-    },
-    shopsCounter(){
-        return Shops.find().count();
     }
 });
 
