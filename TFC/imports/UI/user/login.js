@@ -13,17 +13,6 @@ import '../css/animatedLabel.css';
 import '../functions/checkInputs.js';
 
 
-Template.login.onRendered(function(){
-    Session.set('formErrorMessage', null);  // Reseting formErrorMessage
-});
-
-
-Template.login.helpers({
-    formErrorMessage: function() {
-        return Session.get('formErrorMessage');
-  }
-});
-
 Template.login.events({
     'click #submitForm' (event){
         event.preventDefault();
@@ -33,7 +22,7 @@ Template.login.events({
         var password = form.get('password');
         Meteor.loginWithPassword(email, password, function(error){
             if(error){
-                Session.set('formErrorMessage', error.reason);
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});
                 event.target.classList.remove("is-loading");  // Remove the loading effect of the button
             } else{
                 Session.set('userPage', '');  // Send the logged user to userprofile page

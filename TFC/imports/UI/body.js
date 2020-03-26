@@ -29,7 +29,6 @@ import { Images } from '../databases/images.js';
 
 // Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page
-Session.set('formErrorMessage', null);  // No forms error for the moment
 Session.set("searchedProductsID", [] );  // No search for the moment
 Session.set('message', null);  // No message to display for the moment
 Session.set('searchFilters', '');  // No search filters for the moment

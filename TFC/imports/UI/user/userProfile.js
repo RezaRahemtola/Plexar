@@ -23,10 +23,7 @@ Template.userProfile.onRendered(function(){
 Template.userProfile.helpers({
     currentUserPage: function(){
         return Session.get('userPage');  // Return current page on user profile
-  },
-    formErrorMessage: function() {
-        return Session.get('formErrorMessage');
-    }
+  }
 });
 
 
