@@ -28,12 +28,10 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
         Meteor.call('checkIfUsernameIsTaken', {username: usernameInput.value}, function(error, result){
             if(result){
                 // Username already exist
-                $('input#username').removeClass("is-success");
                 $('input#username').addClass("is-danger");
             } else{
                 // Username doesn't exists
                 $('input#username').removeClass("is-danger");
-                $('input#username').addClass("is-success");
             }
         });
     }

@@ -72,3 +72,7 @@ body {
 // Layout
 @import "../node_modules/bulma/sass/layout/hero.sass";
 @import "../node_modules/bulma/sass/layout/footer.sass";
+
+// Importing extensions
+@import '../node_modules/bulma-checkradio/src/sass/index.sass';
+@import '../node_modules/bulma-switch/src/sass/index.sass';

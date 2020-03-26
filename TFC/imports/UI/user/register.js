@@ -70,10 +70,10 @@ Template.register.events({
 
         if(!(checkPasswordsInput(password, confirmPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
             // Error in passwords fields
-            document.getElementById('password').classList.add("is-danger");
-            document.getElementById('confirmPassword').classList.add("is-danger");
+            $('#password, #confirmPassword').addClass("is-danger");
             event.target.classList.remove("is-loading");  // Remove the loading effect of the button
         } else{
+            var newsletter = $('input[name="newsletter"]').is(':checked');
             // Creating the new user
             Accounts.createUser({
                 username: username,

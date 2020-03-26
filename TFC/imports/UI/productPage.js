@@ -55,8 +55,8 @@ Template.displayedProductPage.events({
     'click #removeFromFavoriteProducts'(event){
         // User wants to remove this product from it's favorites
         event.preventDefault();
-        var favoriteProducts = Favorites.findOne({userId :{$eq: Meteor.userId()}}).products;  // Getting favorite products of the current user in the db
-        const favoriteID = Favorites.findOne({userId :{$eq: Meteor.userId()}})._id;  // Getting line ID (needed to modify data)
+        var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
+        const favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         favoriteProducts.pop(Session.get('currentProductID'));  // Removing the product from the array
         Favorites.update(favoriteID, { $set: {
             // Updating the database with the modified array
