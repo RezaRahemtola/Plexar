@@ -18,11 +18,14 @@ import '../functions/checkInputs.js';
 
 
 Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
+
+    // Auto filling fields
     var userInformations = UsersInformations.findOne({userID: Meteor.userId()});
-    document.getElementById('username').value = Meteor.user().username;  // Auto fill username with current value
-    document.getElementById('email').value = Meteor.user().emails[0].address;  // Auto fill email with current value
-    document.getElementById('firstName').value = userInformations.firstName;  // Auto fill first name with current value
-    document.getElementById('lastName').value = userInformations.lastName;  // Auto fill last name with current value
+    document.getElementById('username').value = Meteor.user().username;
+    document.getElementById('email').value = Meteor.user().emails[0].address;
+    document.getElementById('firstName').value = userInformations.firstName;
+    document.getElementById('lastName').value = userInformations.lastName;
+    document.getElementById('newsletter').checked = userInformations.newsletter;
 
     // Live username verification
     const usernameInput = document.querySelector('input#username');  // Saving input in a variable
@@ -65,11 +68,13 @@ Template.editProfile.events({
         const form = new FormData(document.getElementById('editProfileForm'));
 
         // Updating non-sensitive informations in our database
+        var newsletterIsChecked = document.querySelector('input#newsletter').checked;
         var firstName = form.get('firstName');  // Saving input in variable
         var lastName = form.get('lastName');  // Saving input in variable
         UsersInformations.update(userInformationsID, { $set: {
             firstName: firstName,
             lastName: lastName,
+            newsletter: newsletterIsChecked
         }});
 
         // Username update

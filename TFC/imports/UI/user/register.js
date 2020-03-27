@@ -87,7 +87,7 @@ Template.register.events({
                         Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"}); // Output error if registration fails
                         event.target.classList.remove("is-loading");  // Remove the loading effect of the button
                     } else{
-                        Session.set('message', {type:"header", headerContent:"Votre compte a bien été créé", style:"is-success"});
+                        var newsletterIsChecked = document.getElementById('newsletter').checked;
                         // Inserting informations in the database
                         UsersInformations.insert({
                             userID: Meteor.userId(),
@@ -97,13 +97,15 @@ Template.register.events({
                             lastName: "",
                             profilePictureID: null,
                             upvotes: [],
-                            downvotes: []
+                            downvotes: [],
+                            newsletter: newsletterIsChecked
                         });
                         // Creating empty favorites of the new user
                         Favorites.insert({
                             userId: Meteor.userId(),
                             products: []
                         });
+                        Session.set('message', {type:"header", headerContent:"Votre compte a bien été créé", style:"is-success"});
                         Session.set('userPage', '');  // Send the new user to default userprofile page
                     }
 
