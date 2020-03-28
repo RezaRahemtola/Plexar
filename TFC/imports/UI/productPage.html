@@ -12,7 +12,7 @@
         }
     </style>
 
-    <div class="card" style="width: fit-content; width: -moz-fit-content;">
+    <div class="card width-fit-content">
         <header class="card-header">
             <div class="card-header-icon">
                 <span class="icon"><i class="fas fa-reply"></i></span>
@@ -98,9 +98,9 @@
                 {{/if}}
 
                 <div class="tags">
-                {{#each displayProductCategories _id}}
-                    <span class="tag is-link">{{this}}</span>
-                {{/each}}
+                    {{#each displayProductCategories _id}}
+                        <span class="tag is-link">{{this}}</span>
+                    {{/each}}
                 </div>
 
                 <button class="button">Partager la page du produit sur les réseaux sociaux</button>
