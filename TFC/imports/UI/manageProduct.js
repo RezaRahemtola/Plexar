@@ -25,13 +25,34 @@ Template.manageProduct.onRendered(function(){
             filesNumberDisplay.textContent = filesInput.files.length + " fichiers sélectionnés";  // Updating displayed value
         }
     }
+
+    // Dynamically check and show selected categories
+    var selectedCategories = [];  // Creating a array to store the categories
+    Session.set('selectedCategories', selectedCategories);  // Saving it in a Session variable to allow removing from events
+
+    const select = document.querySelector("select#categories");  // Catching the select element
+    select.onchange = () => {
+        var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
+        var selectedOption = select.value;  // Catch the value attribute of the selected option
+        if(selectedOption !== 'add' && !selectedCategories.includes(selectedOption)){
+            // The selected option isn't the default one and isn't already selected, displaying the category tag
+            var newElement = document.createElement("div");  // Creating a new element to contain the tag
+            newElement.className = "control";  // Adding a class for a better display
+            // Adding the tag in the div :
+            newElement.innerHTML = '<div class="tags has-addons"> <a class="tag is-link">'+selectedOption+'</a> <a class="tag is-delete"></a> </div>';
+            document.getElementById("categoryTags").appendChild(newElement);  // Inserting it in the category tags container
+            selectedCategories.push(selectedOption);  // Adding the category to the selected ones
+            Session.set('selectedCategories', selectedCategories);  // Updating the value of the Session variable
+        }
+        select.value = 'add';  // Reseting the select with the default value
+    }
 });
 
 
 Template.manageProduct.events({
     'click button#addProduct'(event){
         event.preventDefault();
-        const form = new FormData(document.getElementById('newProduct'));
+        var form = new FormData(document.getElementById('newProduct'));
         var formErrors = 0;  // No error for the moment
         var callbacksPending = 0;  // No callback is pending for the moment
 
@@ -45,18 +66,15 @@ Template.manageProduct.events({
                 var files = document.querySelector('input#productPictures').files;
                 if(checkFileInput(files=files, minLength=1, maxLength=5, type='image', maxMBSize=5)){
                     // Files are correct, catching categories
-                    const checkedCategories = document.querySelectorAll('input[name="category"]:checked');
-                    var productCategories = [];
-                    for(var category of checkedCategories){
-                        productCategories.push(category.value);
-                    }
+                    var selectedCategories = Session.get('selectedCategories');   // Catching the array of categories that are already selected
+                    // Inserting informations in the database :
                     callbacksPending++;  // Starting a call with a callback function
                     Products.insert({
                         name: productName,
                         description: productDescription,
                         imagesID: [],
                         score: 0,
-                        categories: productCategories
+                        categories: selectedCategories
                     }, function(error, addedProductID){
                             if(!error){
                                 // The product was successfully added, now let's add the images
@@ -125,11 +143,25 @@ Template.manageProduct.events({
                 }
             }
         });
+    },
+    'click a.tag.is-delete'(event){
+        // Link to delete a category tag is cliked
+        event.preventDefault();
+        console.log(event);
+        var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
+        // Catching the grand parent element of the delete link (delete link is inside tags div which is inside a control div) :
+        var tagToRemove = event.currentTarget.parentElement.parentElement;
+        // The catagory to remove is the text content of the tag (control div's first elem is tags div, and it's first elem is the tag) :
+        var categoryToRemove = tagToRemove.firstElementChild.firstElementChild.innerText;
+        var index = selectedCategories.indexOf(categoryToRemove);  // Catching the index of the category to delete
+        selectedCategories.splice(index, 1);  // Removing the category
+        Session.set('selectedCategories', selectedCategories);  // Updating the value of the Session variable
+        tagToRemove.parentNode.removeChild(tagToRemove);  // Removing the tag
     }
 });
 
-Template.manageProduct.helpers({
-    displayAllProducts: function(){
-        return Products.find();
-    }
+
+Template.manageProduct.onDestroyed(function(){
+    // Selected categories' Session variable isn't useful anymore, deleting it
+    delete Session.keys.selectedCategories;
 });

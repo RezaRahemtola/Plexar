@@ -7,8 +7,14 @@
             <label for="productName" class="label is-animated">Nom du produit</label>
         </div>
 
-        <div class="field">
-            <textarea name="productDescription" class="textarea" placeholder="Description du produit" required></textarea>
+        <div class="field has-animated-label">
+            <div class="control has-icons-left">
+                <textarea class="textarea has-animated-label" name="productDescription"  placeholder=" " required></textarea>
+                <label for="productDescription" class="label is-animated">Description du produit</label>
+                <span class="icon is-left">
+                    <i class="fas fa-file-alt"></i>
+                </span>
+            </div>
         </div>
 
         <div class="field">
@@ -27,12 +33,18 @@
         </div>
 
         <div class="field">
-            <input type="checkbox" class="is-checkradio" id="cat1" name="category" value="1">
-            <label for="cat1">Catégorie 1</label>
-            <input type="checkbox" class="is-checkradio" id="cat2" name="category" value="2">
-            <label for="cat2">Catégorie 2</label>
-            <input type="checkbox" class="is-checkradio" id="cat3" name="category" value="3">
-            <label for="cat3">Catégorie 3</label>
+            <div class="select">
+                <select id="categories">
+                    <option value="add" selected>Ajouter une catégorie</option>
+                    <option value="Catégorie 1">1</option>
+                    <option value="Catégorie 2">2</option>
+                    <option value="Catégorie 3">3</option>
+                    <option value='Catégorie 4'>4</option>
+                </select>
+            </div>
+
+            <div class="field is-grouped is-grouped-multiline" id="categoryTags"></div>
+            
         </div>
 
         <button id="addProduct" type="submit" class="button">Ajouter le produit !</button>
@@ -44,8 +56,4 @@
         <button id="deleteProduct" type="submit" class="button">Supprimer le produit</button>
     </form>
     <br>
-    <h3 class="title">Produits dans la database :</h3>
-    {{#each displayAllProducts}}
-        {{> productBanner}}
-    {{/each}}
 </template>
