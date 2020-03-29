@@ -16,7 +16,7 @@ Template.searchResults.onRendered(function(){
 
     // Catch sorting select changes to filter results
     const sortResults = document.querySelector("select#sortResults");
-    sortResults.onchange = () => {
+    sortResults.onchange = function(){
         var selectedOption = sortResults.value;  // Catch the value attribute of the selected option
         switch(selectedOption){
             case 'default':

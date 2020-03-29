@@ -12,7 +12,7 @@
         }
     </style>
 
-    <div class="card width-fit-content">
+    <div class="card width-fit-content" style="margin: auto;">
         <header class="card-header">
             <div class="card-header-icon">
                 <span class="icon"><i class="fas fa-reply"></i></span>
@@ -38,42 +38,40 @@
         <div class="card-image">
             <div class="slideshow">
                 {{#each displayProductImages}}
-                    <div class="slide">
-                        <img src="{{this.url}}" alt="Image du produit"/>
-                    </div>
+                    <img src="{{this.url}}" alt="Image du produit" class="image"/>
                 {{/each}}
                 {{#if moreThanOneImage}}
                     <!--At least 2 images, displaying next and previous image buttons-->
-                    <a class="previous" onclick="changeSlide(-1)">&#10094;</a>
-                    <a class="next" onclick="changeSlide(1)">&#10095;</a>
+                    <a class="previous no-select" onclick="changeImage(-1)">&#10094;</a>
+                    <a class="next no-select" onclick="changeImage(1)">&#10095;</a>
                 {{/if}}
                 <script>
                     // Slideshow script
 
                     // Showing the first image by default
-                    var slideIndex = 1;
-                    showSlide(slideIndex);
+                    var imageIndex = 1;
+                    showImage(imageIndex);
 
-                    function changeSlide(number){
+                    function changeImage(number){
                         // If number is 1 it will show next slide, if it's -1 it will show the previous
-                        showSlide(slideIndex += number);
+                        showImage(imageIndex += number);
                     }
 
-                    function showSlide(number) {
-                        var slides = document.getElementsByClassName("slide");
-                        if(number > slides.length){
+                    function showImage(number) {
+                        var images = document.querySelectorAll(".slideshow .image");
+                        if(number > images.length){
                             // User pressed next button in last slide, comming back to the first slide)
-                            slideIndex = 1;
+                            imageIndex = 1;
                         } else if(number < 1){
                             // User pressed previous button in first slide, going to the last slide
-                            slideIndex = slides.length;
+                            imageIndex = images.length;
                         }
-                        for(var i = 0; i < slides.length; i++){
+                        for(var i = 0; i < images.length; i++){
                             // Hide all the slides
-                            slides[i].style.display = "none";
+                            images[i].style.display = "none";
                         }
                         // Showing the desired slide (index starts at 0 so it's the index-1 slide)
-                        slides[slideIndex-1].style.display = "block";
+                        images[imageIndex-1].style.display = "block";
                     }
                 </script>
             </div>
@@ -85,12 +83,12 @@
                 </p>
                 {{score}}
                 {{#if currentUser}}
-                    <div class="productVote" id="upvote">
+                    <div class="productVote width-fit-content" id="upvote">
                         <span class="icon">
                             <i class="fas fa-angle-up"></i>
                         </span>
                     </div>
-                    <div class="productVote" id="downvote">
+                    <div class="productVote width-fit-content" id="downvote">
                         <span class="icon">
                             <i class="fas fa-angle-down"></i>
                         </span>
@@ -110,7 +108,7 @@
                 </button>
                 <button class="button">
                     <span class="icon"><i class="fas fa-edit"></i></span>
-                    Proposer une modification
+                    <p>Proposer une modification</p>
                 </button>
             </div>
         </div>

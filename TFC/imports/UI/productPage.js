@@ -31,10 +31,10 @@ Template.displayedProductPage.onRendered(function(){
         var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
         if(userUpvotes.includes(productID)){
             // Product has already been upvoted by the user
-            document.getElementById('upvote').classList.add("green");
+            $('#upvote').addClass("green");
         } else if(userDownvotes.includes(productID)){
             // User has already downvoted this product
-            document.getElementById('downvote').classList.add("green");
+            $('#downvote').addClass("green");
         }
     }
 });

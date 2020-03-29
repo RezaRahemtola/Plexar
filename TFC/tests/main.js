@@ -21,10 +21,25 @@ describe("TFC", function () {
 
 
 /*
-
 $('label').click(function(){  // When a label is click
     var labelID = $(this).attr('for');  // Get the content of for attribute (ID of the input)
     $('input#'+labelID).focus();  // Focus this input
 });
+*/
 
+
+/*
+var form = new FormData(document.getElementById('deleteProduct'));
+var productID = form.get('ID');
+var productImagesID = Products.findOne({_id: productID}).imagesID;  // Catching the shop images
+
+// Delete corresponding line in the databaset
+Products.remove(productID, function(error, result){
+    if(!error){
+        // Shop was successfully removed, we can now delete it's images
+        for(var imageID of productImagesID){
+            Images.remove(imageID);
+        }
+    }
+});
 */

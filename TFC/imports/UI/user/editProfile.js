@@ -29,7 +29,7 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 
     // Live username verification
     const usernameInput = document.querySelector('input#username');  // Saving input in a variable
-    usernameInput.oninput = () => {
+    usernameInput.oninput = function(){
         // When value of the input change, call a server method
         Meteor.call('checkIfUsernameIsTaken', {username: usernameInput.value}, function(error, result){
             if(result){
@@ -44,7 +44,7 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 
     //Code to update file name from https://bulma.io/documentation/form/file/
     const fileInput = document.querySelector('input#profilePictureFile');  // Saving input in a variable
-    fileInput.onchange = () => {
+    fileInput.onchange = function(){
         const fileName = document.querySelector('span.file-name');  //Catching the file name display
         if(fileInput.files.length === 0){
             // No file uploaded

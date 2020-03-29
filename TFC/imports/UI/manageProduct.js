@@ -8,6 +8,8 @@ import { Images } from '../databases/images.js';
 
 // HTML import
 import './manageProduct.html';
+
+// JS import
 import './functions/checkInputs.js';
 
 
@@ -16,14 +18,14 @@ Template.manageProduct.onRendered(function(){
     const productNameInput = document.querySelector('input#name');
     const nameCharDisplay = document.querySelector('span#nameCharCounter');
     nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
-    productNameInput.oninput = () => {
+    productNameInput.oninput = function(){
         nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
     }
 
     const productDescriptionInput = document.querySelector('textarea#description');
     const descriptionCharDisplay = document.querySelector('span#descriptionCharCounter');
     descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
-    productDescriptionInput.oninput = () => {
+    productDescriptionInput.oninput = function(){
         descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
     }
 
@@ -31,7 +33,7 @@ Template.manageProduct.onRendered(function(){
     // Code to update file name from https://bulma.io/documentation/form/file/
     const filesInput = document.querySelector('input#pictures');  // Saving input in a variable
     const filesNumberDisplay = document.querySelector('span.file-name');  // Catching the file number display
-    filesInput.onchange = () => {
+    filesInput.onchange = function(){
         if(filesInput.files.length === 0){
             filesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
         } else if(filesInput.files.length === 1){
@@ -47,7 +49,7 @@ Template.manageProduct.onRendered(function(){
     Session.set('selectedCategories', selectedCategories);  // Saving it in a Session variable to allow removing from events
 
     const select = document.querySelector("select#categories");  // Catching the select element
-    select.onchange = () => {
+    select.onchange = function(){
         var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
         var selectedOption = select.value;  // Catch the value attribute of the selected option
         if(selectedOption !== 'add' && !selectedCategories.includes(selectedOption)){
@@ -75,11 +77,11 @@ Template.manageProduct.events({
         // Check if the name is correctly formatted
         var productName = form.get('name');
         var currentInput = document.querySelector('input#name');
-        if(checkTextInput(text=productName, minLength=currentInput.minlength, maxLength=currentInput.maxlength)){
+        if(checkTextInput(text=productName, minLength=currentInput.minLength, maxLength=currentInput.maxLength)){
             // Product name is correct, checking the description
             var productDescription = form.get('description');
-            var currentInput = document.querySelector('textarea#description');
-            if(checkTextInput(text=productDescription, minLength=currentInput.minlength, maxLength=currentInput.maxlength)){
+            currentInput = document.querySelector('textarea#description');
+            if(checkTextInput(text=productDescription, minLength=currentInput.minLength, maxLength=currentInput.maxLength)){
                 // Description is correct, checking the file upload
                 var files = document.querySelector('input#pictures').files;
                 if(checkFileInput(files=files, minLength=1, maxLength=5, type='image', maxMBSize=5)){
@@ -145,22 +147,6 @@ Template.manageProduct.events({
                 clearInterval(intervalID);  // This interval is not required anymore, removing it
             }
         }, 200);
-    },
-    'click button#deleteProduct'(event){
-        event.preventDefault();
-        var form = new FormData(document.getElementById('deleteProduct'));
-        var productID = form.get('ID');
-        var productImagesID = Products.findOne({_id: productID}).imagesID;  // Catching the shop images
-
-        // Delete corresponding line in the databaset
-        Products.remove(productID, function(error, result){
-            if(!error){
-                // Shop was successfully removed, we can now delete it's images
-                for(var imageID of productImagesID){
-                    Images.remove(imageID);
-                }
-            }
-        });
     },
     'click a.tag.is-delete'(event){
         // Link to delete a category tag is cliked

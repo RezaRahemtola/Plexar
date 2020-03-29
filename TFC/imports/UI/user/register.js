@@ -21,7 +21,7 @@ Template.register.onRendered(function(){
 
     // Live username verification
     const usernameInput = document.querySelector('input#username');  // Saving input in a variable
-    usernameInput.oninput = () => {
+    usernameInput.oninput = function(){
         // When value of the input change, call a server method
         Meteor.call('checkIfUsernameIsTaken', {username: usernameInput.value}, function(error, result){
             if(result){
