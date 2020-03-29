@@ -12,10 +12,26 @@ import './functions/checkInputs.js';
 
 
 Template.manageProduct.onRendered(function(){
+
+    const productNameInput = document.querySelector('input#name');
+    const nameCharDisplay = document.querySelector('span#nameCharCounter');
+    nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
+    productNameInput.oninput = () => {
+        nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
+    }
+
+    const productDescriptionInput = document.querySelector('textarea#description');
+    const descriptionCharDisplay = document.querySelector('span#descriptionCharCounter');
+    descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
+    productDescriptionInput.oninput = () => {
+        descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
+    }
+
+
     // Code to update file name from https://bulma.io/documentation/form/file/
-    const filesInput = document.querySelector('input#productPictures');  // Saving input in a variable
+    const filesInput = document.querySelector('input#pictures');  // Saving input in a variable
+    const filesNumberDisplay = document.querySelector('span.file-name');  // Catching the file number display
     filesInput.onchange = () => {
-        const filesNumberDisplay = document.querySelector('span.file-name');  // Catching the file number display
         if(filesInput.files.length === 0){
             filesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
         } else if(filesInput.files.length === 1){
@@ -57,13 +73,15 @@ Template.manageProduct.events({
         var callbacksPending = 0;  // No callback is pending for the moment
 
         // Check if the name is correctly formatted
-        var productName = form.get('productName');
-        if(checkTextInput(text=productName, minLength=1, maxLength=70)){
+        var productName = form.get('name');
+        var currentInput = document.querySelector('input#name');
+        if(checkTextInput(text=productName, minLength=currentInput.minlength, maxLength=currentInput.maxlength)){
             // Product name is correct, checking the description
-            var productDescription = form.get('productDescription');
-            if(checkTextInput(text=productDescription, minLength=50, maxLength=1000)){
+            var productDescription = form.get('description');
+            var currentInput = document.querySelector('textarea#description');
+            if(checkTextInput(text=productDescription, minLength=currentInput.minlength, maxLength=currentInput.maxlength)){
                 // Description is correct, checking the file upload
-                var files = document.querySelector('input#productPictures').files;
+                var files = document.querySelector('input#pictures').files;
                 if(checkFileInput(files=files, minLength=1, maxLength=5, type='image', maxMBSize=5)){
                     // Files are correct, catching categories
                     var selectedCategories = Session.get('selectedCategories');   // Catching the array of categories that are already selected

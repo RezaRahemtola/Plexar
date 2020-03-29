@@ -3,31 +3,34 @@
     <form id="newProduct">
 
         <div class="field has-animated-label">
-            <input type="text" class="input has-animated-label" name="productName" id="productName" placeholder=" " required>
-            <label for="productName" class="label is-animated">Nom du produit</label>
+            <input type="text" class="input has-animated-label" name="name" id="name" minlength="1" maxlength="70" placeholder=" " required >
+            <label for="name" class="label is-animated">Nom du produit</label>
+            <span id="nameCharCounter" class="character-counter"></span>
         </div>
+
 
         <div class="field has-animated-label">
             <div class="control has-icons-left">
-                <textarea class="textarea has-animated-label" name="productDescription"  placeholder=" " required></textarea>
-                <label for="productDescription" class="label is-animated">Description du produit</label>
+                <textarea class="textarea has-animated-label" name="description" id="description" minlength="50" maxlength="1000" placeholder=" " required></textarea>
+                <label for="description" class="label is-animated">Description du produit</label>
                 <span class="icon is-left">
                     <i class="fas fa-file-alt"></i>
                 </span>
             </div>
+            <span id="descriptionCharCounter" class="character-counter"></span>
         </div>
 
         <div class="field">
             <div class="file has-name is-boxed">
                 <label class="file-label">
-                    <input class="file-input" type="file" name="productPictures" id="productPictures" accept="image/*" multiple>
+                    <input class="file-input" type="file" name="pictures" id="pictures" accept="image/*" multiple>
                     <span class="file-cta">
                         <span class="file-icon">
                             <i class="fas fa-file-image"></i>
                         </span>
                         <span class="file-label">Choisir un fichier…</span>
                     </span>
-                    <span class="file-name" style="text-align: center;">Aucun fichier sélectionné</span>
+                    <span class="file-name">Aucun fichier sélectionné</span>
                 </label>
             </div>
         </div>
@@ -44,7 +47,7 @@
             </div>
 
             <div class="field is-grouped is-grouped-multiline" id="categoryTags"></div>
-            
+
         </div>
 
         <button id="addProduct" type="submit" class="button">Ajouter le produit !</button>

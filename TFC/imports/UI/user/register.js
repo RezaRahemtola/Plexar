@@ -11,7 +11,7 @@ import { Favorites } from '../../databases/favorites.js';
 import './register.html';
 
 // CSS import
-import '../css/animatedLabel.css';
+import '../css/form.css';
 
 // Functions import
 import '../functions/checkInputs.js';
