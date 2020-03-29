@@ -9,6 +9,9 @@ import { Images } from '../databases/images.js';
 // HTML import
 import './manageProduct.html';
 
+// CSS import
+import './css/form.css';
+
 // JS import
 import './functions/checkInputs.js';
 
@@ -27,6 +30,7 @@ Template.manageProduct.onRendered(function(){
     descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
     productDescriptionInput.oninput = function(){
         descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
+        autoExpand(productDescriptionInput);
     }
 
 

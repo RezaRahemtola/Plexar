@@ -45,7 +45,7 @@ checkFileInput = function(files, minLength=1, maxLength=5, type='all', maxMBSize
         }
     }
     return false;
-}
+};
 
 
 
@@ -79,7 +79,7 @@ checkTextInput = function(text, minLength=1, maxLength=100){
         }
     }
     return false;
-}
+};
 
 
 
@@ -114,7 +114,7 @@ checkPasswordsInput = function(password, confirmPassword, minLength=6, maxLength
     // Password length isn't correct
     Session.set('message', {type:"header", headerContent:"La taille du mot de passe n'est pas correcte.", style:"is-danger"} );
     return false;
-}
+};
 
 
 
@@ -122,7 +122,7 @@ checkPasswordsInput = function(password, confirmPassword, minLength=6, maxLength
 /**
  * Check if a text match all criteria
  *
- *  @param  {string}     email   Content of the email input
+ *  @param  {string}  email   Content of the email input
  *
  *  @return {boolean}  true if the text matched all criteria, else false
  */
@@ -131,4 +131,26 @@ checkEmailInput = function(email){
         return true;
     }
     return false;
-}
+};
+
+
+
+
+/**
+ * Check a field height to auto expand it
+ *
+ *  @param  {Object}  field   The field to check
+ *
+ */
+autoExpand = function(field){
+    if(field.value.length === 0){
+        // If the field is empty, reset the style height to min-height
+        field.style.height = 3 + 'rem';
+    } else{
+        // Reset field height
+        field.style.height = 'inherit';
+
+        // Calculate the height based on the scroll height
+        field.style.height = field.scrollHeight + 'px';
+    }
+};

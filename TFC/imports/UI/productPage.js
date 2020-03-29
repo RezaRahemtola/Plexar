@@ -40,6 +40,9 @@ Template.displayedProductPage.onRendered(function(){
 });
 
 Template.displayedProductPage.events({
+    'click #return'(event){
+        Session.set('page', Session.get('lastPage'));
+    },
     'click #addToFavoriteProducts'(event){
         // User wants to add this product to it's favorites
         event.preventDefault();

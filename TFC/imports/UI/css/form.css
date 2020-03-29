@@ -3,14 +3,14 @@ div.field.has-animated-label {position:relative;}
 input.has-animated-label,
 textarea.has-animated-label {
     padding: 25px 12px 6px 40px !important;
-    height: 45px !important;
+    height: 45px;
     border:none !important;
     box-shadow: none !important;
     border-bottom: solid 1px #dedede !important;
 }
 
 label.is-animated {
-    cursor: text;  /* Display the same cursor than input */
+    cursor: text;  /* Display the same cursor than an input */
     color: #909090;
     position: absolute;
     top: 7px;
@@ -38,4 +38,15 @@ textarea:focus + label.is-animated, textarea.has-animated-label:not(:placeholder
 
 .file-name{
     text-align: center;;
+}
+
+.textarea, .input{
+    resize: none;  /* Remove the little UI element at the bottom right */
+    min-height: 3.2rem !important;  /* Good size to be just above the bottom of the field */
+    max-height: none !important;  /* No max-height so we can expand the file indefinitely */
+}
+
+/* Remove the scollbar */
+.textarea::-webkit-scrollbar{
+    display: none;
 }
