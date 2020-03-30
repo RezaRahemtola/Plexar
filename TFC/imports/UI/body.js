@@ -27,8 +27,12 @@ import './messages/full.js';
 import { UsersInformations } from '../databases/usersInformations.js';
 import { Images } from '../databases/images.js';
 
+// Alone Template
+import './credits.html';
+
 // Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page
+Session.set('lastPage', null);  // No last page (used for return button)
 Session.set("searchedProductsID", [] );  // No search for the moment
 Session.set('message', null);  // No message to display for the moment
 Session.set('searchFilters', '');  // No search filters for the moment
@@ -59,10 +63,8 @@ Template.body.helpers({
 });
 
 Template.body.events({
-    'click #home'(event){
-        event.preventDefault();
-        Session.set('page', 'home');  // Switch to home page
-    },
+
+    // Global events :
     'click .register'(event){
         event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page
@@ -78,10 +80,6 @@ Template.body.events({
         Session.set('page', 'home');  // Set the page to default
         Meteor.logout();  // Log out the user
     },
-    'click a#addProduct'(event){
-        event.preventDefault();
-        Session.set('page', 'manageProduct');
-    },
     'click .productBanner'(event){
         // When a product banner is clicked (like in search result or favorites)
         event.preventDefault();
@@ -94,21 +92,47 @@ Template.body.events({
         event.preventDefault();
         Session.set('message', null);  // Remove the message
     },
-    'click #editProfile' (event){
+
+
+    // Navbar events
+    'click #home'(event){
+        event.preventDefault();
+        Session.set('page', 'home');  // Switch to home page
+    },
+    'click a#addProduct'(event){
+        event.preventDefault();
+        Session.set('page', 'manageProduct');
+    },
+
+
+    // Profile dropdown events
+    'click #contributions'(event){
         event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page
-        Session.set('userPage', 'editProfile');
+        Session.set('userPage', 'contributions');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-        $("li#editProfile").addClass("is-active");  // Set the current tab as the active one
-
+        $("li#contributions").addClass("is-active");  // Set the current tab as the active one
     },
-    'click #favorite' (event){
+    'click #favorite'(event){
         event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'favorite');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#favorite").addClass("is-active");  // Set the current tab as the active one
+    },
+    'click #editProfile'(event){
+        event.preventDefault();
+        Session.set('page', 'userProfile');  // Switch to userProfile page
+        Session.set('userPage', 'editProfile');
+        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
+        $("li#editProfile").addClass("is-active");  // Set the current tab as the active one
+    },
 
+
+    // Footer events
+    'click #credits'(event){
+        event.preventDefault();
+        Session.set('page', 'credits');  // Switch to userProfile page
     }
 });
 

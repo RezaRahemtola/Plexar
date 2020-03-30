@@ -1,7 +1,6 @@
 @charset "utf-8";
 
 
-
 // Update Bulma's global variables
 
 
@@ -52,6 +51,7 @@ $footer-background-color: #f3f3f3;  // Shade of grey
 @import "../node_modules/bulma/sass/elements/image.sass";
 @import "../node_modules/bulma/sass/elements/notification.sass";
 @import "../node_modules/bulma/sass/elements/other.sass";
+@import "../node_modules/bulma/sass/elements/table.sass";
 @import "../node_modules/bulma/sass/elements/tag.sass";
 @import "../node_modules/bulma/sass/elements/title.sass";
 
@@ -63,3 +63,6 @@ $footer-background-color: #f3f3f3;  // Shade of grey
 @import '../node_modules/bulma-checkradio/src/sass/index.sass';
 @import '../node_modules/bulma-switch/src/sass/index.sass';
 @import '../node_modules/bulma-steps/src/sass/index.sass';
+
+// Importing fonts
+@import url('https://fonts.googleapis.com/css?family=Changa+One&display=swap');

@@ -13,7 +13,7 @@ import { Images } from '../databases/images.js';
 
 Template.home.helpers({
     productsCounter(){
-        return Products.find().count();
+        return Products.find().count().toLocaleString();  // toLocaleString() make a space where needed (1000 will be 1 000)
     }
 });
 
