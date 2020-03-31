@@ -10,7 +10,7 @@ import './userProfile.html';
 import './register.js';
 import './login.js';
 import './forgotPassword.js';
-import './editProfile.js';
+import './informations.js';
 import './favorite.js';
 import './contributions.js';
 
@@ -29,11 +29,11 @@ Template.userProfile.helpers({
 
 
 Template.userProfile.events({
-    'click #editProfile'(event){
+    'click #informations'(event){
         event.preventDefault();
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         event.currentTarget.classList.add("is-active");  // Set the current tab as the active one
-        Session.set('userPage', 'editProfile');
+        Session.set('userPage', 'informations');
     },
     'click #favorite'(event){
         event.preventDefault();

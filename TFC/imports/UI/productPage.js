@@ -31,10 +31,10 @@ Template.displayedProductPage.onRendered(function(){
         var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
         if(userUpvotes.includes(productID)){
             // Product has already been upvoted by the user
-            $('#upvote').addClass("green");
+            $('#upvote').addClass("has-text-primary");
         } else if(userDownvotes.includes(productID)){
             // User has already downvoted this product
-            $('#downvote').addClass("green");
+            $('#downvote').addClass("has-text-primary");
         }
     }
 });
@@ -79,19 +79,19 @@ Template.displayedProductPage.events({
                 // Product has already been upvoted, we remove the upvote
                 userUpvotes.pop(productID);
                 productScore--;
-                $('#upvote').removeClass("green");
+                $('#upvote').removeClass("has-text-primary");
             } else if(userDownvotes.includes(productID)){
                 // Product has already been downvoted, remove the downvote and set an upvote
                 userDownvotes.pop(productID);
                 userUpvotes.push(productID);
                 productScore += 2;  // Removing the downvote and adding an upvote
-                $('#upvote').addClass("green");
-                $('#downvote').removeClass("green");
+                $('#upvote').addClass("has-text-primary");
+                $('#downvote').removeClass("has-text-primary");
             } else{
                 // Product hasn't already been voted
                 userUpvotes.push(productID);
                 productScore++;
-                $('#upvote').addClass("green");
+                $('#upvote').addClass("has-text-primary");
             }
         } else{
             if(userUpvotes.includes(productID)){
@@ -99,18 +99,18 @@ Template.displayedProductPage.events({
                 userUpvotes.pop(productID);
                 userDownvotes.push(productID);
                 productScore -= 2;
-                $('#upvote').removeClass("green");
-                $('downvote').addClass("green");
+                $('#upvote').removeClass("has-text-primary");
+                $('downvote').addClass("has-text-primary");
             } else if(userDownvotes.includes(productID)){
                 // Product has already been downvoted, remove the downvote
                 userDownvotes.pop(productID);
                 productScore++;
-                $('#downvote').removeClass("green");
+                $('#downvote').removeClass("has-text-primary");
             } else{
                 // Product hasn't already been voted
                 userDownvotes.push(productID);
                 productScore--;
-                $('#downvote').addClass("green");
+                $('#downvote').addClass("has-text-primary");
             }
         }
         Products.update(productID, { $set: {

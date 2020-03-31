@@ -120,12 +120,12 @@ Template.body.events({
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#favorite").addClass("is-active");  // Set the current tab as the active one
     },
-    'click #editProfile'(event){
+    'click #informations'(event){
         event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page
-        Session.set('userPage', 'editProfile');
+        Session.set('userPage', 'informations');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-        $("li#editProfile").addClass("is-active");  // Set the current tab as the active one
+        $("li#informations").addClass("is-active");  // Set the current tab as the active one
     },
 
 

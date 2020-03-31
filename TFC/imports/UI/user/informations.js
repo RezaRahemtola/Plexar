@@ -8,7 +8,7 @@ import { UsersInformations } from '../../databases/usersInformations.js';
 import { Images } from '../../databases/images.js';
 
 // HTML import
-import './editProfile.html';
+import './informations.html';
 
 // CSS import
 import '../css/form.css';
@@ -17,7 +17,7 @@ import '../css/form.css';
 import '../functions/checkInputs.js';
 
 
-Template.editProfile.onRendered(function(){  // When the template is rendered on the screen
+Template.informations.onRendered(function(){  // When the template is rendered on the screen
 
     // Auto filling fields
     var userInformations = UsersInformations.findOne({userID: Meteor.userId()});
@@ -57,7 +57,7 @@ Template.editProfile.onRendered(function(){  // When the template is rendered on
 });
 
 
-Template.editProfile.events({
+Template.informations.events({
     'click button[type="submit"]' (event){
         event.preventDefault();
         const userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
