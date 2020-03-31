@@ -5,7 +5,7 @@
   to {
     transform: rotate(359deg); } }
 
-.delete, .is-unselectable, .file, .tabs, .button {
+.modal-close, .delete, .is-unselectable, .file, .tabs, .button {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -32,7 +32,7 @@
 .subtitle:not(:last-child) {
   margin-bottom: 1.5rem; }
 
-.delete {
+.modal-close, .delete {
   -moz-appearance: none;
   -webkit-appearance: none;
   background-color: rgba(10, 10, 10, 0.2);
@@ -53,7 +53,7 @@
   position: relative;
   vertical-align: top;
   width: 20px; }
-  .delete::before, .delete::after {
+  .modal-close::before, .delete::before, .modal-close::after, .delete::after {
     background-color: white;
     content: "";
     display: block;
@@ -62,31 +62,31 @@
     top: 50%;
     transform: translateX(-50%) translateY(-50%) rotate(45deg);
     transform-origin: center center; }
-  .delete::before {
+  .modal-close::before, .delete::before {
     height: 2px;
     width: 50%; }
-  .delete::after {
+  .modal-close::after, .delete::after {
     height: 50%;
     width: 2px; }
-  .delete:hover, .delete:focus {
+  .modal-close:hover, .delete:hover, .modal-close:focus, .delete:focus {
     background-color: rgba(10, 10, 10, 0.3); }
-  .delete:active {
+  .modal-close:active, .delete:active {
     background-color: rgba(10, 10, 10, 0.4); }
-  .is-small.delete {
+  .is-small.modal-close, .is-small.delete {
     height: 16px;
     max-height: 16px;
     max-width: 16px;
     min-height: 16px;
     min-width: 16px;
     width: 16px; }
-  .is-medium.delete {
+  .is-medium.modal-close, .is-medium.delete {
     height: 24px;
     max-height: 24px;
     max-width: 24px;
     min-height: 24px;
     min-width: 24px;
     width: 24px; }
-  .is-large.delete {
+  .is-large.modal-close, .is-large.delete {
     height: 32px;
     max-height: 32px;
     max-width: 32px;
@@ -106,7 +106,7 @@
   position: relative;
   width: 1em; }
 
-.is-overlay, .image.is-square img,
+.is-overlay, .modal, .modal-background, .image.is-square img,
 .image.is-square .has-ratio, .image.is-1by1 img,
 .image.is-1by1 .has-ratio, .image.is-5by4 img,
 .image.is-5by4 .has-ratio, .image.is-4by3 img,
@@ -3345,6 +3345,86 @@ button.dropdown-item {
     background-color: white; }
   .message-body pre code {
     background-color: transparent; }
+
+.modal {
+  align-items: center;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  position: fixed;
+  z-index: 40; }
+  .modal.is-active {
+    display: flex; }
+
+.modal-background {
+  background-color: rgba(10, 10, 10, 0.86); }
+
+.modal-content,
+.modal-card {
+  margin: 0 20px;
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+  position: relative;
+  width: 100%; }
+  @media screen and (min-width: 769px), print {
+    .modal-content,
+    .modal-card {
+      margin: 0 auto;
+      max-height: calc(100vh - 40px);
+      width: 640px; } }
+
+.modal-close {
+  background: none;
+  height: 40px;
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  width: 40px; }
+
+.modal-card {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px);
+  overflow: hidden;
+  -ms-overflow-y: visible; }
+
+.modal-card-head,
+.modal-card-foot {
+  align-items: center;
+  background-color: whitesmoke;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-start;
+  padding: 20px;
+  position: relative; }
+
+.modal-card-head {
+  border-bottom: 1px solid #dbdbdb;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px; }
+
+.modal-card-title {
+  color: #363636;
+  flex-grow: 1;
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  line-height: 1; }
+
+.modal-card-foot {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-top: 1px solid #dbdbdb; }
+  .modal-card-foot .button:not(:last-child) {
+    margin-right: 0.5em; }
+
+.modal-card-body {
+  -webkit-overflow-scrolling: touch;
+  background-color: white;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: auto;
+  padding: 20px; }
 
 .navbar {
   background-color: white;

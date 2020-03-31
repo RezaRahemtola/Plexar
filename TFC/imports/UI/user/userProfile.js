@@ -7,7 +7,6 @@ import { Accounts } from 'meteor/accounts-base';
 import './userProfile.html';
 
 // JS imports
-import './register.js';
 import './login.js';
 import './forgotPassword.js';
 import './informations.js';
@@ -31,20 +30,14 @@ Template.userProfile.helpers({
 Template.userProfile.events({
     'click #informations'(event){
         event.preventDefault();
-        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-        event.currentTarget.classList.add("is-active");  // Set the current tab as the active one
         Session.set('userPage', 'informations');
     },
     'click #favorite'(event){
         event.preventDefault();
-        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-        event.currentTarget.classList.add("is-active");  // Set the current tab as the active one
         Session.set('userPage', 'favorite');
     },
     'click #contributions'(event){
         event.preventDefault();
-        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-        event.currentTarget.classList.add("is-active");  // Set the current tab as the active one
         Session.set('userPage', 'contributions');
     }
 });

@@ -10,6 +10,7 @@ import './css/navbar.css';
 import './css/image.css';
 import './css/footer.css';
 import './css/generic.css';
+import './css/form.css';
 
 // JS imports
 import './home.js';
@@ -23,6 +24,9 @@ import './productBanner.js'
 import './messages/header.js';
 import './messages/full.js';
 
+// Modals imports
+import './modals/register.js';
+
 // Databases imports
 import { UsersInformations } from '../databases/usersInformations.js';
 import { Images } from '../databases/images.js';
@@ -35,6 +39,7 @@ Session.set('page', 'home');  // Site loads with home page
 Session.set('lastPage', null);  // No last page (used for return button)
 Session.set("searchedProductsID", [] );  // No search for the moment
 Session.set('message', null);  // No message to display for the moment
+Session.set('modal', null);  // No modal to display for the moment
 Session.set('searchFilters', '');  // No search filters for the moment
 
 
@@ -47,6 +52,12 @@ Template.body.helpers({
         if(message !== null){
             // There is a message to display
             return message.type  // Return the message to display
+        }
+    },
+    currentModal: function(){
+        var modal = Session.get('modal');
+        if(modal !== null){
+            return modal  // Return the modal to display
         }
     },
     hasProfilePicture: function(){
@@ -67,8 +78,7 @@ Template.body.events({
     // Global events :
     'click .register'(event){
         event.preventDefault();
-        Session.set('page', 'userProfile');  // Switch to userProfile page
-        Session.set('userPage', 'register');  // Set the user page to register
+        Session.set('modal', 'register');  // Display the register modal
     },
     'click .login'(event){
         event.preventDefault();
@@ -92,6 +102,11 @@ Template.body.events({
         event.preventDefault();
         Session.set('message', null);  // Remove the message
     },
+    'click .modal button.delete, click .modal-background'(event){
+        // When the closing button of a modal is clicked
+        event.preventDefault();
+        Session.set('modal', null);  // Remove the modal
+    },
 
 
     // Navbar events
@@ -105,7 +120,7 @@ Template.body.events({
     },
 
 
-    // Profile dropdown events
+    // Profile dropdown and user profile tabs events
     'click #contributions'(event){
         event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page

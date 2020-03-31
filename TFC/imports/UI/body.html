@@ -21,7 +21,7 @@
                         <span class="icon">
                             <i class="fas fa-home"></i>
                         </span>
-                        <p>Home</p>
+                        <p>Accueil</p>
                     </a>
                     <a class="navbar-item" id="addProduct">Ajouter un produit</a>
                     <div class="navbar-item has-dropdown is-hoverable" id="moreDropdown">
@@ -106,6 +106,7 @@
 
 
     {{> Template.dynamic template=currentMessage}}
+    {{> Template.dynamic template=currentModal}}  <!-- Template to display the current modal (if there's one) -->
     {{> Template.dynamic template=currentPage}} <!-- Affichage du template dynamique -->
 
 
