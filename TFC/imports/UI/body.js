@@ -10,7 +10,6 @@ import './css/navbar.css';
 import './css/image.css';
 import './css/footer.css';
 import './css/generic.css';
-import './css/form.css';
 
 // JS imports
 import './home.js';
@@ -77,68 +76,62 @@ Template.body.helpers({
 });
 
 Template.body.events({
+    'click .register, click .login, click .logout, click .productBanner, click div.message-header button.delete, click .modal button.delete, click .modal-background, click a#home, click a#addProduct, click #contributions, click #favorite, click #informations, click li#credits, click li#faq'(event){
+        // Prevent default action for all events
+        event.preventDefault();
+    },
+
 
     // Global events :
     'click .register'(event){
-        event.preventDefault();
         Session.set('modal', 'register');  // Display the register modal
     },
     'click .login'(event){
-        event.preventDefault();
         Session.set('modal', 'login');  // Display the login modal
     },
     'click .logout'(event){
-        event.preventDefault();
         Session.set('page', 'home');  // Set the page to default
         Meteor.logout();  // Log out the user
     },
     'click .productBanner'(event){
         // When a product banner is clicked (like in search result or favorites)
-        event.preventDefault();
         Session.set('currentProductID', event.currentTarget.id);  // Setting displayed product with value of the target
         Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
         Session.set('page', 'productPage');  // Redirecting to product page
     },
     'click div.message-header button.delete'(event){
         // When the closing button of a message is clicked
-        event.preventDefault();
         Session.set('message', null);  // Remove the message
     },
     'click .modal button.delete, click .modal-background'(event){
         // When the closing button of a modal is clicked
-        event.preventDefault();
         Session.set('modal', null);  // Remove the modal
     },
 
 
     // Navbar events
-    'click #home'(event){
-        event.preventDefault();
+    'click a#home'(event){
         Session.set('page', 'home');  // Switch to home page
     },
     'click a#addProduct'(event){
-        event.preventDefault();
         Session.set('page', 'manageProduct');
     },
 
 
     // Profile dropdown and user profile tabs events
     'click #contributions'(event){
-        event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'contributions');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#contributions").addClass("is-active");  // Set the current tab as the active one
     },
     'click #favorite'(event){
-        event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'favorite');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#favorite").addClass("is-active");  // Set the current tab as the active one
     },
     'click #informations'(event){
-        event.preventDefault();
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'informations');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
@@ -147,12 +140,10 @@ Template.body.events({
 
 
     // Footer events
-    'click #credits'(event){
-        event.preventDefault();
+    'click li#credits'(event){
         Session.set('page', 'credits');  // Switch to credits page
     },
-    'click #faq'(event){
-        event.preventDefault();
+    'click li#faq'(event){
         Session.set('page', 'faq');  // Switch to FAQ page
     }
 });

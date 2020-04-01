@@ -26,16 +26,17 @@ Template.userProfile.helpers({
 
 
 Template.userProfile.events({
-    'click #informations'(event){
+    'click #informations, click #favorite, click #contributions'(event){
+        // Prevent default action for all events
         event.preventDefault();
+    },
+    'click #informations'(event){
         Session.set('userPage', 'informations');
     },
     'click #favorite'(event){
-        event.preventDefault();
         Session.set('userPage', 'favorite');
     },
     'click #contributions'(event){
-        event.preventDefault();
         Session.set('userPage', 'contributions');
     }
 });

@@ -40,12 +40,15 @@ Template.displayedProductPage.onRendered(function(){
 });
 
 Template.displayedProductPage.events({
+    'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .productVote'(event){
+        // Prevent default action for all events
+        event.preventDefault();
+    },
     'click #return'(event){
         Session.set('page', Session.get('lastPage'));
     },
     'click #addToFavoriteProducts'(event){
         // User wants to add this product to it's favorites
-        event.preventDefault();
         var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
         const favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         favoriteProducts.push(Session.get('currentProductID'));  // Adding the product to the array
@@ -57,7 +60,6 @@ Template.displayedProductPage.events({
     },
     'click #removeFromFavoriteProducts'(event){
         // User wants to remove this product from it's favorites
-        event.preventDefault();
         var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
         const favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         favoriteProducts.pop(Session.get('currentProductID'));  // Removing the product from the array
