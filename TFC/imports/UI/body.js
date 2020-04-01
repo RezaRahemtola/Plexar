@@ -27,6 +27,7 @@ import './messages/full.js';
 // Modals imports
 import './modals/register.js';
 import './modals/login.js';
+import './modals/forgotPassword.js';
 
 // Databases imports
 import { UsersInformations } from '../databases/usersInformations.js';

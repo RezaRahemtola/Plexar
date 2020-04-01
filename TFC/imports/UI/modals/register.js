@@ -38,7 +38,7 @@ Template.register.onRendered(function(){
 
     // Live email validation
     const emailInput = document.querySelector('input#email');
-    emailInput.oninput = function(){
+    emailInput.onchange = function(){
         if(checkEmailInput(emailInput.value)){
             // Value looks like a valid email adress, checking if it's already taken
             Meteor.call('checkIfEmailIsTaken', {email: emailInput.value}, function(error, result){
@@ -64,7 +64,7 @@ Template.register.onRendered(function(){
 Template.register.events({
     'click #registerSubmit'(event){
         event.preventDefault();
-        event.target.classList.add("is-loading");  // Add a loading effect to the button
+        $(event.target).addClass("is-loading");  // Add a loading effect to the button
         var form = new FormData(document.getElementById('registerForm'));
         const username = form.get('username');
         const email = form.get('email');
@@ -74,7 +74,7 @@ Template.register.events({
         if(!(checkPasswordsInput(password, confirmPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
             // Error in passwords fields
             $('#password, #confirmPassword').addClass("is-danger");
-            event.target.classList.remove("is-loading");  // Remove the loading effect of the button
+            $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
         } else{
             var newsletter = $('input[name="newsletter"]').is(':checked');
             // Creating the new user
@@ -85,7 +85,7 @@ Template.register.events({
             }, function(error){
                     if(error){
                         Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"}); // Output error if registration fails
-                        event.target.classList.remove("is-loading");  // Remove the loading effect of the button
+                        $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
                     } else{
                         var newsletterIsChecked = document.getElementById('newsletter').checked;
                         // Inserting informations in the database

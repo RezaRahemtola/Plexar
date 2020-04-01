@@ -4,16 +4,13 @@ import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
 
 // HTML import
-import './login.html';
-
-// CSS import
-import '../css/form.css';
+import './forgotPassword.html';
 
 // Functions import
 import '../functions/checkInputs.js';
 
 
-Template.login.onRendered(function(){
+Template.forgotPassword.onRendered(function(){
     // Live email validation
     const emailInput = document.querySelector('input#email');
     emailInput.onchange = function(){
@@ -29,28 +26,25 @@ Template.login.onRendered(function(){
                 document.querySelector('#emailField p.help.is-danger').textContent = "";  // Removing danger help message
             }
         });
+
     }
 });
 
-
-Template.login.events({
-    'click #loginSubmit' (event){
+Template.forgotPassword.events({
+    'click #forgotPasswordSubmit' (event){
+        // When the form is submitted
         event.preventDefault();
         $(event.target).addClass("is-loading");  // Add a loading effect to the button
-        var form = new FormData(document.getElementById('loginForm'));
-        var email = form.get('email');
-        var password = form.get('password');
-        Meteor.loginWithPassword(email, password, function(error){
+        var form = new FormData(document.getElementById('forgotPassword'));  // Catching form data
+        var email = form.get('email');  // Catching email input
+        Accounts.forgotPassword({email: email}, function(error){
             if(error){
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});
                 $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
             } else{
-                Session.set('modal', null)  // Remove the login modal
+                Session.set('message', {type: "header", headerContent: "Un email pour réinitialiser votre mot de passe vous a été envoyé", style: "is-success"});  // Success message
+                Session.set('modal', null);  // Remove the modal
             }
         });
-    },
-    'click #forgotPassword' (event){
-        event.preventDefault();
-        Session.set('modal', 'forgotPassword');
     }
 });
