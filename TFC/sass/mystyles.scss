@@ -11,12 +11,13 @@ $navbar-item-img-max-height: 3rem;
 $primary: #e47312;  // Primary color in orange
 $link: #8cba51;  // Links in green
 $success: #8cba51;  // Green
-$danger: #DC310B;
+$danger: #DC310B;  // Shade of red
 
 // Inputs
 $input-focus-border-color: transparent;  // No border
 $input-focus-box-shadow-color: rgba(0, 0, 0, 0.25);  // Grey box-shadow when input is focused
 $input-placeholder-color: #909090;  // Shade of grey for placeholders
+$label-weight: inherit;
 
 // Images
 $dimensions: 16 24 32 48 64 96 128 150;  // Adding a 150x150 dimension for images

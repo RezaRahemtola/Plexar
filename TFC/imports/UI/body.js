@@ -26,6 +26,7 @@ import './messages/full.js';
 
 // Modals imports
 import './modals/register.js';
+import './modals/login.js';
 
 // Databases imports
 import { UsersInformations } from '../databases/usersInformations.js';
@@ -82,8 +83,7 @@ Template.body.events({
     },
     'click .login'(event){
         event.preventDefault();
-        Session.set('page', 'userProfile');  // Switch to userProfile page
-        Session.set('userPage', 'login');  // Set the user page to register
+        Session.set('modal', 'login');  // Display the login modal
     },
     'click .logout'(event){
         event.preventDefault();

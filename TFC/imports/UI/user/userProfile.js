@@ -7,7 +7,6 @@ import { Accounts } from 'meteor/accounts-base';
 import './userProfile.html';
 
 // JS imports
-import './login.js';
 import './forgotPassword.js';
 import './informations.js';
 import './favorite.js';

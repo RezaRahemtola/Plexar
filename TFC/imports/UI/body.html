@@ -46,9 +46,7 @@
                                     <!-- Dropdown link with user's profile picture -->
                                     {{#each displayProfilePicture}}
                                         <a class="navbar-link">
-                                            <figure class="image is-48x48">
-                                                <img src="{{this.url}}" alt="Photo de profil"/>
-                                            </figure>
+                                            <img src="{{this.url}}" alt="Photo de profil" class="image is-48x48"/>
                                         </a>
                                     {{/each}}
                                 {{else}}

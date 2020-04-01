@@ -1,0 +1,53 @@
+<template name="login">
+    <div class="modal is-active">
+        <div class="modal-background"></div>
+
+        <div class="modal-card">
+
+            <header class="modal-card-head">
+                <p class="modal-card-title">Connexion</p>
+                <button class="delete" aria-label="close"></button>
+            </header>
+
+            <section class="modal-card-body">
+
+                <form id="loginForm">
+
+                    <div class="field has-animated-label">
+                        <p class="control has-icons-left">
+                            <input class="input has-animated-label" type="email" name="email" id="email" placeholder=" " required>
+                            <label for="email" class="label is-animated">Email</label>
+                            <span class="icon is-left">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="field has-animated-label">
+                        <p class="control has-icons-left">
+                            <input type="password" class="input has-animated-label" name="password" id="password" placeholder=" " autocomplete="current-password" required>
+                            <label for="password" class="label is-animated">Mot de passe</label>
+                            <span class="icon is-left">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                        </p>
+                    </div>
+
+                    <br>
+                    <button class="button" id="forgotPassword">Mot de passe oublié</button>
+                </form>
+
+                <br>
+
+                <button class="button is-medium is-fullwidth has-background-success" id="loginSubmit">Se connecter</button>
+
+            </section>
+
+            <footer class="modal-card-foot">
+                <div class="card-footer-item">
+                    <p class="subtitle has-text-centered">Pas encore de compte ? <span class="link register">Inscrivez-vous</span> pour continuer</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+</template>

@@ -62,10 +62,10 @@ Template.register.onRendered(function(){
 
 
 Template.register.events({
-    'click #submitForm'(event){
+    'click #registerSubmit'(event){
         event.preventDefault();
         event.target.classList.add("is-loading");  // Add a loading effect to the button
-        var form = new FormData(document.getElementById('register'));
+        var form = new FormData(document.getElementById('registerForm'));
         const username = form.get('username');
         const email = form.get('email');
         const password = form.get('password');
@@ -105,8 +105,8 @@ Template.register.events({
                             userId: Meteor.userId(),
                             products: []
                         });
-                        Session.set('message', {type:"header", headerContent:"Votre compte a bien été créé", style:"is-success"});
-                        Session.set('userPage', '');  // Send the new user to default userprofile page
+                        Session.set('message', {type:"header", headerContent:"Votre compte a bien été créé", style:"is-success"});  // Display a success message
+                        Session.set('modal', null);  // Remove the modal
                     }
 
                 }

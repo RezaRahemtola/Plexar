@@ -1700,7 +1700,7 @@ a.has-text-danger:hover, a.has-text-danger:focus {
   color: #363636;
   display: block;
   font-size: 1rem;
-  font-weight: 700; }
+  font-weight: inherit; }
   .label:not(:last-child) {
     margin-bottom: 0.5em; }
   .label.is-small {
