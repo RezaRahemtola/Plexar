@@ -35,6 +35,7 @@ import { Images } from '../databases/images.js';
 
 // Alone Template
 import './credits.html';
+import './faq.html';
 
 // Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page
@@ -148,7 +149,11 @@ Template.body.events({
     // Footer events
     'click #credits'(event){
         event.preventDefault();
-        Session.set('page', 'credits');  // Switch to userProfile page
+        Session.set('page', 'credits');  // Switch to credits page
+    },
+    'click #faq'(event){
+        event.preventDefault();
+        Session.set('page', 'faq');  // Switch to FAQ page
     }
 });
 
