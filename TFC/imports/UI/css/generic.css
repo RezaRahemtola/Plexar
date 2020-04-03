@@ -1,5 +1,5 @@
 /* Disable text selection */
-.label, .navbar-item, .no-select {
+.label, .navbar-item {
   -webkit-touch-callout: none;  /* iOS Safari */
     -webkit-user-select: none;  /* Safari */
      -khtml-user-select: none;  /* Konqueror HTML */
@@ -8,6 +8,7 @@
             user-select: none;  /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
 }
+/* is-unselectable */
 
 .width-fit-content {
     width: -moz-fit-content;  /* Firefox */

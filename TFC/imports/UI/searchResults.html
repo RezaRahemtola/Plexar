@@ -1,31 +1,56 @@
 <template name="searchResults">
-    <form id="searchForm">
-        <div class="field has-addons">
-            <div class="control">
-                <input type="search" class="input is-rounded" id="searchBox" placeholder="Rechercher" value="{{getSearchQuery}}"/>
-            </div>
-            <div class="control">
-                <button type="submit" class="button is-rounded">
-                    <i class="fas fa-search"></i>
-                </button>
+
+    <nav class="panel">
+        <div class="panel-heading">
+            <form id="searchForm">
+                <div class="field has-addons width-fit-content" style="margin: 0 auto;">
+                    <div class="control">
+                        <input type="search" class="input is-rounded" id="searchBox" placeholder="Rechercher" value="{{getSearchQuery}}"/>
+                    </div>
+                    <div class="control">
+                        <button type="submit" class="button is-rounded">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <p class="panel-tabs">
+            <a class="is-active">All</a>
+            <a>Public</a>
+            <a>Private</a>
+        </p>
+
+        <div class="panel-block has-addons">
+            <button type="button" class="button is-static">Trier par :</button>
+            <div class="control has-icons-left">
+                <div class="select">
+                    <select id="sortResults">
+                        <option value="default" selected>Par défaut</option>
+                        <option value="A-Z">Ordre alphabétique</option>
+                        <option value="Z-A">Ordre alphabétique inversé</option>
+                        <option value='random'>Aléatoire</option>
+                    </select>
+                </div>
+                <div id="sortResultsIconContainer" class="icon is-left" style="color: black;">
+                </div>
             </div>
         </div>
-    </form>
-    <div class="field has-addons">
-        <button type="button" class="button is-static">Trier par :</button>
-        <div class="control has-icons-left">
-            <div class="select">
-                <select id="sortResults">
-                    <option value="default" selected>Par défaut</option>
-                    <option value="A-Z">Ordre alphabétique</option>
-                    <option value="Z-A">Ordre alphabétique inversé</option>
-                    <option value='random'>Aléatoire</option>
-                </select>
-            </div>
-            <div id="sortResultsIconContainer" class="icon is-left" style="color: black;">
-            </div>
+
+        <a class="panel-block">
+            <span class="panel-icon">
+                <i class="fas fa-book" aria-hidden="true"></i>
+            </span>
+            minireset.css
+        </a>
+
+        <div class="panel-block">
+            <button class="button is-primary is-fullwidth">
+                Reset all filters
+            </button>
         </div>
-    </div>
+</nav>
 
     {{#each displayProductsResults}}
         {{> productBanner}}

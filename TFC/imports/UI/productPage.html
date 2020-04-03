@@ -37,8 +37,8 @@
                 {{/each}}
                 {{#if moreThanOneImage}}
                     <!--At least 2 images, displaying next and previous image buttons-->
-                    <a class="previous no-select" onclick="changeImage(-1)">&#10094;</a>
-                    <a class="next no-select" onclick="changeImage(1)">&#10095;</a>
+                    <a class="previous is-unselectable" onclick="changeImage(-1)">&#10094;</a>
+                    <a class="next is-unselectable" onclick="changeImage(1)">&#10095;</a>
                 {{/if}}
                 <script>
                     // Slideshow script
