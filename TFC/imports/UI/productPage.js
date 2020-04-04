@@ -102,7 +102,7 @@ Template.displayedProductPage.events({
                 userDownvotes.push(productID);
                 productScore -= 2;
                 $('#upvote').removeClass("has-text-primary");
-                $('downvote').addClass("has-text-primary");
+                $('#downvote').addClass("has-text-primary");
             } else if(userDownvotes.includes(productID)){
                 // Product has already been downvoted, remove the downvote
                 userDownvotes.pop(productID);

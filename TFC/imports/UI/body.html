@@ -4,8 +4,8 @@
         <!-- Elements de l'en-tête -->
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item" href="https://bulma.io">
-                    <img src="https://bulma.io/images/bulma-logo.png">
+                <a class="navbar-item" id="home">
+                    <img src="logo.png" style="height: 36px" width="144">
                 </a>
 
                 <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
@@ -17,13 +17,9 @@
 
             <div id="mainNavbar" class="navbar-menu">
                 <div class="navbar-start">
-                    <a class="navbar-item" id="home">
-                        <span class="icon">
-                            <i class="fas fa-home"></i>
-                        </span>
-                        <p>Accueil</p>
-                    </a>
+
                     <a class="navbar-item" id="addProduct">Ajouter un produit</a>
+
                     <div class="navbar-item has-dropdown is-hoverable" id="moreDropdown">
                         <a class="navbar-link">More</a>
                         <div class="navbar-dropdown is-hidden-mobile">
@@ -34,42 +30,37 @@
                             <a class="navbar-item">Report an issue</a>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="navbar-end">
                     <div class="navbar-item">
                             {{#if currentUser}}
-                                {{userT}}
                                 <!-- Displayed only when the user is logged in (display a profile dropdown)-->
                                 <div class="navbar-item has-dropdown is-hoverable" id="profileDropdown">
-                                {{#if hasProfilePicture}}
                                     <!-- Dropdown link with user's profile picture -->
-                                    {{#each displayProfilePicture}}
-                                        <a class="navbar-link">
-                                            <img src="{{this.url}}" alt="Photo de profil" class="image is-48x48"/>
-                                        </a>
-                                    {{/each}}
-                                {{else}}
-                                    <!-- Dropdown link with default profile picture -->
                                     <a class="navbar-link">
-                                        <span><i class="fas fa-user icon is-large" id="userProfile"></i></span>
+                                        <img src={{displayProfilePicture}} alt="Photo de profil" class="image is-48x48"/>
                                     </a>
-                                {{/if}}
-                                <!-- Dropdown menu -->
+                                    <!-- Dropdown menu -->
                                     <div class="navbar-dropdown is-right is-hidden-mobile">
                                         <a class="navbar-item" id="favorite">
                                             <span class="icon"><i class="fas fa-bookmark"></i></span>
                                             <span>Mes favoris</span>
                                         </a>
+
                                         <a class="navbar-item" id="contributions">
                                             <span class="icon"><i class="fas fa-list"></i></span>
                                             <span>Mes contributions</span>
                                         </a>
+
                                         <a class="navbar-item" id="informations">
                                             <span class="icon"><i class="fas fa-user"></i></span>
                                             <span>Mes informations</span>
                                         </a>
+
                                         <hr class="navbar-divider">
+                                        
                                         <a class="navbar-item logout">
                                             <span class="icon"><i class="fas fa-power-off"></i></span>
                                             <span>Se déconnecter</span>
@@ -118,7 +109,7 @@
                     <div class="column">
                         <ul>
                             <!---->
-                            <li class="link" style="background: linear-gradient(180deg, #e47312, #e47312) no-repeat 0 1.4rem; width: fit-content; margin: auto;" id="about">A propos de Plexar</li>
+                            <li class="link" style="background: linear-gradient(180deg, #e47312, #e47312) no-repeat 0 1.4rem; width: fit-content; margin: auto;" id="">A propos de Plexar</li>
                             <li class="link" id="credits" style="background: linear-gradient(180deg, #e47312, #e47312) no-repeat 0 1.4rem; width: fit-content; margin: auto;">Crédits</li>
                         </ul>
                     </div>

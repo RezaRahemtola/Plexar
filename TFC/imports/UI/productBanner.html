@@ -2,15 +2,12 @@
     <article class="message is-info productBanner" id="{{_id}}">
         <div class="message-header">
             <p>{{name}}</p>
-            <p style="font: 1.8rem 'Changa One';">{{score}}</p>
+            <p style="font: 1.8rem 'Changa One';">{{score}} <i class="fas fa-heart" style="font-size: 1.5rem;"></i></p>
         </div>
         <div class="message-body">
+
             <div class="field has-addons">
-                <figure class="image is-150x150">
-                    {{#each displayProductFirstImage _id}}
-                        <img src="{{this.url}}" alt="Image du produit"/>
-                    {{/each}}
-                </figure>
+                <img src="{{displayProductFirstImage _id}}" alt="Image du produit" class="image is-150x150"/>
                 <p id="description">{{description}}</p>
             </div>
 

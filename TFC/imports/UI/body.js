@@ -62,16 +62,15 @@ Template.body.helpers({
             return modal  // Return the modal to display
         }
     },
-    hasProfilePicture: function(){
-        // Find the current user and return true if he has a profile picture
-        if(UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID !== null){
-            return true
-        }
-        return false
-    },
     displayProfilePicture: function(){
-        var profilePictureID = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;
-        return Images.find({_id: profilePictureID});
+        if(UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID !== null){
+            // The current user has a profile picture
+            var profilePictureID = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;  // Catch the picture ID
+            return Images.findOne({_id: profilePictureID}).url();  // Return the url of the image
+        } else{
+            // The current user doesn't have a profile picture, return the default one
+            return 'user.svg';
+        }
     }
 });
 
