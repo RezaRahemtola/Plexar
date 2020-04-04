@@ -99,7 +99,6 @@ Template.informations.events({
 
         var oldPassword = form.get('oldPassword');  // Saving input in variable
         if(oldPassword.length > 0){
-            console.log(oldPassword);
             var newPassword = form.get('newPassword');  // Saving input in variable
             var confirmNewPassword = form.get('confirmNewPassword');  // Saving input in variable
             if(!(checkPasswordsInput(newPassword, confirmNewPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){

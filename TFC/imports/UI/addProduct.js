@@ -7,7 +7,7 @@ import { Products } from '../databases/products.js';
 import { Images } from '../databases/images.js';
 
 // HTML import
-import './manageProduct.html';
+import './addProduct.html';
 
 // CSS import
 import './css/form.css';
@@ -16,7 +16,7 @@ import './css/form.css';
 import './functions/checkInputs.js';
 
 
-Template.manageProduct.onRendered(function(){
+Template.addProduct.onRendered(function(){
 
     const productNameInput = document.querySelector('input#name');
     const nameCharDisplay = document.querySelector('span#nameCharCounter');
@@ -71,7 +71,7 @@ Template.manageProduct.onRendered(function(){
 });
 
 
-Template.manageProduct.events({
+Template.addProduct.events({
     'click button#addProduct'(event){
         event.preventDefault();
         var form = new FormData(document.getElementById('newProduct'));
@@ -155,7 +155,6 @@ Template.manageProduct.events({
     'click a.tag.is-delete'(event){
         // Link to delete a category tag is cliked
         event.preventDefault();
-        console.log(event);
         var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
         // Catching the grand parent element of the delete link (delete link is inside tags div which is inside a control div) :
         var tagToRemove = event.currentTarget.parentElement.parentElement;
@@ -169,7 +168,7 @@ Template.manageProduct.events({
 });
 
 
-Template.manageProduct.onDestroyed(function(){
+Template.addProduct.onDestroyed(function(){
     // Selected categories' Session variable isn't useful anymore, deleting it
     delete Session.keys.selectedCategories;
 });

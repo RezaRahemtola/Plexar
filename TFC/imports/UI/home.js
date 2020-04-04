@@ -20,7 +20,9 @@ Template.home.helpers({
 Template.home.events({
     'submit form#searchForm'(event){
         event.preventDefault();
-        Session.set('searchedText', document.getElementById("searchBox").value);  // Storing search input value in a variable
+        var search = Session.get('search');
+        search.query = document.getElementById("searchBox").value
+        Session.set('search', search);  // Storing search input value in a variable
         Session.set('page', 'searchResults');  // Sending the user to the search results page
     }
 });
