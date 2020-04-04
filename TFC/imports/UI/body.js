@@ -145,6 +145,9 @@ Template.body.events({
     },
     'click li#faq'(event){
         Session.set('page', 'faq');  // Switch to FAQ page
+    },
+    'click li#about'(event){
+        Session.set('page', 'about');  // Switch to about page
     }
 });
 

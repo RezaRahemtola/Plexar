@@ -72,17 +72,20 @@
             </div>
         </div>
         <div class="card-content">
-            <div class="content">
+            <div>
                 <p>
                     Description : {{description}}
                 </p>
-                {{score}}
+
+                <p style="font: 40px 'Changa One';">{{score}}</p>
+
                 {{#if currentUser}}
                     <div class="productVote width-fit-content" id="upvote">
                         <span class="icon">
                             <i class="fas fa-angle-up"></i>
                         </span>
                     </div>
+
                     <div class="productVote width-fit-content" id="downvote">
                         <span class="icon">
                             <i class="fas fa-angle-down"></i>
@@ -100,10 +103,12 @@
                     <span class="icon"><i class="fas fa-share-alt"></i></span>
                     <p>Partager</p>
                 </button>
+
                 <button class="button has-text-danger">
                     <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
                     <p>Signaler</p>
                 </button>
+
                 <button class="button">
                     <span class="icon"><i class="fas fa-edit"></i></span>
                     <p>Proposer une modification</p>

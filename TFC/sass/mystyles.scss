@@ -12,6 +12,7 @@ $primary: #e47312;  // Primary color in orange
 $link: #8cba51;  // Links in green
 $success: #8cba51;  // Green
 $danger: #DC310B;  // Shade of red
+$info: #1283e4;
 
 // Inputs
 $input-focus-border-color: transparent;  // No border
@@ -44,7 +45,6 @@ $footer-background-color: #f3f3f3;  // Shade of grey
 @import "../node_modules/bulma/sass/components/message.sass";
 @import "../node_modules/bulma/sass/components/modal.sass";
 @import "../node_modules/bulma/sass/components/navbar.sass";
-@import "../node_modules/bulma/sass/components/panel.sass";
 @import "../node_modules/bulma/sass/components/tabs.sass";
 
 // Elements
