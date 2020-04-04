@@ -105,7 +105,7 @@ Template.addProduct.events({
                                 for(var file of files){
                                     // For each image, inserting it in the db
                                     callbacksPending++;  // Starting a call with a callback function
-                                    Images.insert(file, function (error, fileObj){
+                                    Images.insert(file, function(error, fileObj){
                                         if(!error){
                                             // Image was successfully inserted, linking it with the product
                                             var productImagesID = Products.findOne({_id: addedProductID}).imagesID;  // Catching the product images IDs array

@@ -15,15 +15,7 @@ import { Images } from '../databases/images.js';
 import { UsersInformations } from '../databases/usersInformations.js';
 
 
-Template.productPage.helpers({
-    displayProduct: function(){
-        // Return the product that corresponds to the one to display
-        return Products.find({_id: Session.get('currentProductID')});
-    }
-});
-
-
-Template.displayedProductPage.onRendered(function(){
+Template.productPage.onRendered(function(){
     if(Meteor.user()){
         var productID = Session.get('currentProductID');
         var productScore = Products.findOne({_id: productID}).score;
@@ -39,7 +31,7 @@ Template.displayedProductPage.onRendered(function(){
     }
 });
 
-Template.displayedProductPage.events({
+Template.productPage.events({
     'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .productVote'(event){
         // Prevent default action for all events
         event.preventDefault();
@@ -76,7 +68,7 @@ Template.displayedProductPage.events({
         var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
         var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
 
-        if(event.currentTarget.id === "upvote"){
+        if(event.currentTarget.id === 'upvote'){
             if(userUpvotes.includes(productID)){
                 // Product has already been upvoted, we remove the upvote
                 userUpvotes.pop(productID);
@@ -127,7 +119,11 @@ Template.displayedProductPage.events({
 })
 
 
-Template.displayedProductPage.helpers({
+Template.productPage.helpers({
+    displayProduct: function(){
+        // Return the product that corresponds to the one to display
+        return Products.find({_id: Session.get('currentProductID')});
+    },
     productInFavorites: function(){
         // Check if the given product ID is in the favorite products of the user
         var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Return the favorites of the current user
@@ -140,14 +136,14 @@ Template.displayedProductPage.helpers({
             // Filling the array with product's images
             productImages.push(Images.findOne({_id: imageID}));
         }
-        return productImages
+        return productImages;
     },
     moreThanOneImage: function(){
         var productImagesID = Products.findOne({_id: Session.get('currentProductID')}).imagesID;  // Return an array with IDs of the product images
         if(productImagesID.length > 1){
-            return true
+            return true;
         }
-        return false
+        return false;
     },
     displayProductCategories: function(productID){
         return Products.findOne({_id: productID}).categories;

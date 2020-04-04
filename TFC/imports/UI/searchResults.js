@@ -70,7 +70,7 @@ Template.searchResults.helpers({
         Meteor.call('searchForProducts', {text: Session.get("search").query}, function(error, result){
             Session.set("searchedProductsID", result);  // Result is an array of products ID, saving it in a Session variable
         });
-        var searchedProducts = []  // We will save the products in an array
+        var searchedProducts = [];  // We will save the products in an array
         var currentProduct;
         for (var productID of Session.get("searchedProductsID")){
             // For each product ID we add the product to the array

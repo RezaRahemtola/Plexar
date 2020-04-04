@@ -11,7 +11,7 @@ import { Products } from '../../databases/products.js';
 
 Template.favorite.helpers({
     displayFavoriteProducts: function(){
-        var favoriteProductsID = Favorites.findOne({userId: Meteor.userId()}).products  // Return an array with IDs of the products database
+        var favoriteProductsID = Favorites.findOne({userId: Meteor.userId()}).products;  // Return an array with IDs of the products database
         const favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
         var favoriteProducts = [];  // Creating an empty array of the products
         for(var productID of favoriteProductsID){

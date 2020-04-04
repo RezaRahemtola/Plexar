@@ -11,7 +11,7 @@ import '../imports/databases/images.js';
 
 import { Products } from '../imports/databases/products.js';
 
-Meteor.startup(() => {
+Meteor.startup(function(){
     // code to run on server at startup
     Products.rawCollection().createIndex({ name: "text", description: "text" });  // Creating text index to enable search in those fields of the db
     if (Meteor.settings && Meteor.settings.smtp){

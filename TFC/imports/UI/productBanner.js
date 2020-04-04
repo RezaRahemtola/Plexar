@@ -20,7 +20,6 @@ Template.productBanner.helpers({
         return Images.findOne({_id: firstImageID}).url();  // Return the url of the image
     },
     displayProductCategories: function(productID){
-        var productCategories = Products.findOne({_id: productID}).categories;
-        return productCategories;
+        return Products.findOne({_id: productID}).categories;
     }
 });

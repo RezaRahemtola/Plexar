@@ -12,7 +12,7 @@
 checkFileInput = function(files, minLength=1, maxLength=5, type='all', maxMBSize=5){
     if(files.length >= minLength && files.length <= maxLength){
         // Number of files is ok, checking for each file if the size is correct
-        var maxSize = maxMBSize*1000000  // File size is in bytes, converting maxSize (1 MegaByte = 1 000 000 bytes)
+        var maxSize = maxMBSize*1000000;  // File size is in bytes, converting maxSize (1 MegaByte = 1 000 000 bytes)
         for(var file of files){
             if(file.size > maxSize){
                 // One of the file is too big

@@ -1,119 +1,117 @@
 <template name="productPage">
     {{#each displayProduct}}
-        {{> displayedProductPage}}
-    {{/each}}
-</template>
-
-
-<template name="displayedProductPage">
-
-    <div class="card width-fit-content" style="margin: auto;">
-        <header class="card-header">
-            <div class="card-header-icon" id="return">
-                <span class="icon"><i class="fas fa-reply"></i></span>
-                <p>Retour</p>
-            </div>
-            <p class="card-header-title is-centered title is-3" style="margin-bottom: 0;">
-                {{name}}
-            </p>
-            <div class="card-header-icon">
-                {{#if currentUser}}
-                    <!-- Diplay favorites options only if the user is logged-->
-                    {{#if productInFavorites}}
-                        <!-- Product is already in the favorites, suggest to remove it -->
-                        <span class="icon" id="removeFromFavoriteProducts"><i class="fas fa-bookmark" style="color: green;"></i></span>
-                    {{else}}
-                        <!-- Product is not in the favorites, suggest to add it -->
-                        <span class="icon" id="addToFavoriteProducts"><i class="far fa-bookmark"></i></span>
-                    {{/if}}
-                {{/if}}
-            </div>
-        </header>
-        <br>
-        <div class="card-image">
-            <div class="slideshow">
-                {{#each displayProductImages}}
-                    <img src="{{this.url}}" alt="Image du produit" class="image"/>
-                {{/each}}
-                {{#if moreThanOneImage}}
-                    <!--At least 2 images, displaying next and previous image buttons-->
-                    <a class="previous is-unselectable" onclick="changeImage(-1)">&#10094;</a>
-                    <a class="next is-unselectable" onclick="changeImage(1)">&#10095;</a>
-                {{/if}}
-                <script>
-                    // Slideshow script
-
-                    // Showing the first image by default
-                    var imageIndex = 1;
-                    showImage(imageIndex);
-
-                    function changeImage(number){
-                        // If number is 1 it will show next slide, if it's -1 it will show the previous
-                        showImage(imageIndex += number);
-                    }
-
-                    function showImage(number) {
-                        var images = document.querySelectorAll(".slideshow .image");
-                        if(number > images.length){
-                            // User pressed next button in last slide, comming back to the first slide)
-                            imageIndex = 1;
-                        } else if(number < 1){
-                            // User pressed previous button in first slide, going to the last slide
-                            imageIndex = images.length;
-                        }
-                        for(var i = 0; i < images.length; i++){
-                            // Hide all the slides
-                            images[i].style.display = "none";
-                        }
-                        // Showing the desired slide (index starts at 0 so it's the index-1 slide)
-                        images[imageIndex-1].style.display = "block";
-                    }
-                </script>
-            </div>
-        </div>
-        <div class="card-content">
-            <div>
-                <p>
-                    Description : {{description}}
-                </p>
-
-                <p style="font: 40px 'Changa One';">{{score}}</p>
-
-                {{#if currentUser}}
-                    <div class="productVote width-fit-content" id="upvote">
-                        <span class="icon">
-                            <i class="fas fa-angle-up"></i>
-                        </span>
-                    </div>
-
-                    <div class="productVote width-fit-content" id="downvote">
-                        <span class="icon">
-                            <i class="fas fa-angle-down"></i>
-                        </span>
-                    </div>
-                {{/if}}
-
-                <div class="tags">
-                    {{#each displayProductCategories _id}}
-                        <span class="tag is-link">{{this}}</span>
-                    {{/each}}
+        <div class="card width-fit-content" style="margin: auto;">
+            <header class="card-header">
+                <div class="card-header-icon" id="return">
+                    <span class="icon"><i class="fas fa-reply"></i></span>
+                    <p>Retour</p>
                 </div>
+                <p class="card-header-title is-centered title is-3" style="margin-bottom: 0;">
+                    {{name}}
+                </p>
+                <div class="card-header-icon">
+                    {{#if currentUser}}
+                        <!-- Diplay favorites options only if the user is logged-->
+                        {{#if productInFavorites}}
+                            <!-- Product is already in the favorites, suggest to remove it -->
+                            <span class="icon" id="removeFromFavoriteProducts"><i class="fas fa-bookmark" style="color: green;"></i></span>
+                        {{else}}
+                            <!-- Product is not in the favorites, suggest to add it -->
+                            <span class="icon" id="addToFavoriteProducts"><i class="far fa-bookmark"></i></span>
+                        {{/if}}
+                    {{/if}}
+                </div>
+            </header>
+            <br>
+            <div class="card-image">
+                <div class="slideshow">
+                    {{#each displayProductImages}}
+                        <img src="{{this.url}}" alt="Image du produit" class="image"/>
+                    {{/each}}
+                    {{#if moreThanOneImage}}
+                        <!--At least 2 images, displaying next and previous image buttons-->
+                        <a class="previous is-unselectable" onclick="changeImage(-1)">&#10094;</a>
+                        <a class="next is-unselectable" onclick="changeImage(1)">&#10095;</a>
+                    {{/if}}
+                    <script>
+                        // Slideshow script
 
-                <button class="button">
-                    <span class="icon"><i class="fas fa-share-alt"></i></span>
-                    <p>Partager</p>
-                </button>
+                        // Showing the first image by default
+                        var imageIndex = 1;
+                        showImage(imageIndex);
 
-                <button class="button has-text-danger">
-                    <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
-                    <p>Signaler</p>
-                </button>
+                        function changeImage(number){
+                            // If number is 1 it will show next slide, if it's -1 it will show the previous
+                            showImage(imageIndex += number);
+                        }
 
-                <button class="button">
-                    <span class="icon"><i class="fas fa-edit"></i></span>
-                    <p>Proposer une modification</p>
-                </button>
+                        function showImage(number) {
+                            var images = document.querySelectorAll(".slideshow .image");
+                            if(number > images.length){
+                                // User pressed next button in last slide, comming back to the first slide)
+                                imageIndex = 1;
+                            } else if(number < 1){
+                                // User pressed previous button in first slide, going to the last slide
+                                imageIndex = images.length;
+                            }
+                            for(var i = 0; i < images.length; i++){
+                                // Hide all the slides
+                                images[i].style.display = "none";
+                            }
+                            // Showing the desired slide (index starts at 0 so it's the index-1 slide)
+                            images[imageIndex-1].style.display = "block";
+                        }
+                    </script>
+                </div>
+            </div>
+            <div class="card-content">
+                <div>
+                    <p>
+                        Description : {{description}}
+                    </p>
+
+
+
+                    {{#if currentUser}}
+                        <div class="columns width-fit-content">
+                            <div class="column has-text-primary" style="font: 40px 'Changa One'; margin: auto; padding-right: 0;">{{score}}</div>
+
+                            <div class="column">
+                                <span class="icon productVote" id="upvote" style="font-size: 30px">
+                                    <i class="fas fa-angle-up"></i>
+                                </span>
+
+                                <span class="icon productVote" id="downvote" style="font-size: 30px">
+                                    <i class="fas fa-angle-down"></i>
+                                </span>
+                            </div>
+                        </div>
+                    {{else}}
+                        <p class="has-text-primary" style="font: 2.5rem 'Changa One';">{{score}} <i class="fas fa-heart" style="font-size: 2rem;"></i></p>
+                    {{/if}}
+
+                    <div class="tags">
+                        {{#each displayProductCategories _id}}
+                            <span class="tag is-link">{{this}}</span>
+                        {{/each}}
+                    </div>
+
+                    <button class="button">
+                        <span class="icon"><i class="fas fa-share-alt"></i></span>
+                        <p>Partager</p>
+                    </button>
+
+                    <button class="button has-text-danger">
+                        <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
+                        <p>Signaler</p>
+                    </button>
+
+                    <button class="button">
+                        <span class="icon"><i class="fas fa-edit"></i></span>
+                        <p>Proposer une modification</p>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+    {{/each}}
 </template>

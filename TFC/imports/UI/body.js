@@ -54,13 +54,13 @@ Template.body.helpers({
         var message = Session.get('message');
         if(message !== null){
             // There is a message to display
-            return message.type  // Return the message to display
+            return message.type;  // Return the message to display
         }
     },
     currentModal: function(){
         var modal = Session.get('modal');
         if(modal !== null){
-            return modal  // Return the modal to display
+            return modal;  // Return the modal to display
         }
     },
     displayProfilePicture: function(){
@@ -156,8 +156,7 @@ $(document).ready(function(){
     // Check for click events on the navbar burger icon
     $(".navbar-burger").click(function(){
         // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-        $(".navbar-burger").toggleClass("is-active");
-        $(".navbar-menu").toggleClass("is-active");
+        $(".navbar-burger, .navbar-menu").toggleClass("is-active");
     });
     // Check for click events on the navbar dropdown link
     $("#moreDropdown .navbar-link").click(function(){
