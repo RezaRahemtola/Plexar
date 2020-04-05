@@ -41,7 +41,7 @@ Meteor.methods({
         return (Accounts.findUserByEmail(email)) ? true : false;
     },
     'searchForProducts'({text}){
-        var result = Products.find({$text: { $search: text}}).fetch();  // Return the matching products
+        var result = Products.find({$text: { $search: text}, pending: false}).fetch();  // Return the matching products that are not under moderation
         var productsID = [];  // To save server resources we will only return products IDs
         for (product of result){
             // For each product we add its ID to the array

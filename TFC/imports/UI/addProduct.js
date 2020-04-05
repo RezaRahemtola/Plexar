@@ -98,7 +98,8 @@ Template.addProduct.events({
                         description: productDescription,
                         imagesID: [],
                         score: 0,
-                        categories: selectedCategories
+                        categories: selectedCategories,
+                        pending: true
                     }, function(error, addedProductID){
                             if(!error){
                                 // The product was successfully added, now let's add the images

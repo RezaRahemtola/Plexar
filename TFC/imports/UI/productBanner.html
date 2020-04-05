@@ -1,9 +1,11 @@
 <template name="productBanner">
     <article class="message is-info productBanner" id="{{_id}}">
+
         <div class="message-header">
             <p>{{name}}</p>
             <p style="font: 1.8rem 'Changa One';">{{score}} <i class="fas fa-heart" style="font-size: 1.5rem;"></i></p>
         </div>
+
         <div class="message-body">
 
             <div class="field has-addons">
@@ -17,6 +19,12 @@
             {{/each}}
             </div>
 
+            {{#if underModeration _id}}
+                <div class="has-text-centered">
+                    <button class="button is-danger">Rejeter l'ajout</button>
+                    <button class="button is-success pendingAccepted" id="{{_id}}">Valider l'ajout</button>
+                </div>
+            {{/if}}
         </div>
     </article>
 </template>

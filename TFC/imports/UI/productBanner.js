@@ -21,5 +21,13 @@ Template.productBanner.helpers({
     },
     displayProductCategories: function(productID){
         return Products.findOne({_id: productID}).categories;
+    },
+    underModeration: function(productID){
+        // TODO: check if current user is an admin/power users
+        var isPending = Products.findOne({_id: productID}).pending;
+        if(Session.get('page') === 'pending' && isPending){
+            return true;
+        }
+        return false;
     }
 });

@@ -17,7 +17,8 @@ import './addProduct.js';
 import './productPage.js';
 import './user/userProfile.js';
 import './searchResults.js';
-import './productBanner.js'
+import './productBanner.js';
+import './pending.js';
 
 // Messages imports
 import './messages/header.js';
@@ -43,7 +44,7 @@ Session.set("searchedProductsID", [] );  // No search for the moment
 Session.set('message', null);  // No message to display for the moment
 Session.set('modal', null);  // No modal to display for the moment
 Session.set('searchFilters', '');  // No search filters for the moment
-Session.set('search', {categories: [], sort: 'popularity'});
+Session.set('search', {query: "", categories: [], sort: 'popularity'});
 
 
 Template.body.helpers({
@@ -113,8 +114,14 @@ Template.body.events({
     'click a#home'(event){
         Session.set('page', 'home');  // Switch to home page
     },
+    'click a#search'(event){
+        Session.set('page', 'searchResults');
+    },
     'click a#addProduct'(event){
         Session.set('page', 'addProduct');
+    },
+    'click a#pending'(event){
+        Session.set('page', 'pending');
     },
 
 
