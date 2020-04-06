@@ -7,22 +7,26 @@ import './pending.html';
 
 // Database import
 import { Products } from '../databases/products.js';
+import { Moderation } from '../databases/moderation.js';
 
 
 Template.pending.helpers({
     displayPending: function(){
-        return Products.find({pending: true});
+        var elements = Moderation.find();
+        var products = [];
+        for(var element of elements){
+            products.push(Products.findOne({_id: element.elementId}))
+        }
+        return products;
     }
 });
 
 
 Template.pending.events({
-    'click .pendingAccepted'(event){
+    'click .moderationAccepted'(event){
         // TODO: Vefier que l'user est legitime d'accepter un pending
         event.preventDefault();
-        var productID = event.currentTarget.id;
-        Products.update(productID, { $set: {
-            pending: false
-        }});
+        var moderationId = event.currentTarget.id;
+        Moderation.remove(moderationId);
     }
 });

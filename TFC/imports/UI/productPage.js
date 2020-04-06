@@ -12,6 +12,7 @@ import './css/slideshow.css';
 import { Products } from '../databases/products.js';
 import { Favorites } from '../databases/favorites.js';
 import { Images } from '../databases/images.js';
+import { Moderation } from '../databases/moderation.js';
 import { UsersInformations } from '../databases/usersInformations.js';
 
 
@@ -32,7 +33,7 @@ Template.productPage.onRendered(function(){
 });
 
 Template.productPage.events({
-    'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .productVote'(event){
+    'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .productVote, click .report'(event){
         // Prevent default action for all events
         event.preventDefault();
     },
@@ -117,14 +118,13 @@ Template.productPage.events({
         }});
     },
     'click .report'(event){
-        event.preventDefault();
         // TODO: En fonction du nombre de points/admin de l'user, instant valider le report et effectuer l'action correspondante
-        var productID = event.currentTarget.id;
+        var productId = event.currentTarget.id;
         // TODO: Demander de choisir raison du signalement puis afficher message de succès du signalement
-        Products.update(productID, { $set: {
-            // Set the product as pending
-            pending: true
-        }});
+        Moderation.insert({
+            elementId: productId,
+            reason: "Signalement page produit"
+        });
         Session.set('page', 'searchResults');
     }
 })

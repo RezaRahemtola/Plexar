@@ -9,8 +9,10 @@ import '../imports/databases/usersInformations.js';
 import '../imports/databases/contributions.js';
 import '../imports/databases/favorites.js';
 import '../imports/databases/images.js';
+import '../imports/databases/moderation.js';
 
 import { Products } from '../imports/databases/products.js';
+import { Moderation } from '../imports/databases/moderation.js';
 
 Meteor.startup(function(){
     // code to run on server at startup
@@ -42,11 +44,14 @@ Meteor.methods({
         return (Accounts.findUserByEmail(email)) ? true : false;
     },
     'searchForProducts'({text}){
-        var result = Products.find({$text: { $search: text}, pending: false}).fetch();  // Return the matching products that are not under moderation
+        var result = Products.find({$text: { $search: text}}).fetch();  // Return the matching products that are not under moderation
         var productsID = [];  // To save server resources we will only return products IDs
-        for (product of result){
+        for (var product of result){
             // For each product we add its ID to the array
-            productsID.push(product._id);
+            if(!Moderation.findOne({elementId: product._id})){
+                // The product is not under moderation
+                productsID.push(product._id);
+            }
         }
         return productsID  // return array of productsID
     },

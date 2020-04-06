@@ -6,6 +6,7 @@ import { Template } from 'meteor/templating';
 import { Products } from '../databases/products.js';
 import { Images } from '../databases/images.js';
 import { Contributions } from '../databases/contributions.js';
+import { Moderation } from '../databases/moderation.js';
 
 // HTML import
 import './addProduct.html';
@@ -18,56 +19,57 @@ import './functions/checkInputs.js';
 
 
 Template.addProduct.onRendered(function(){
-
-    const productNameInput = document.querySelector('input#name');
-    const nameCharDisplay = document.querySelector('span#nameCharCounter');
-    nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
-    productNameInput.oninput = function(){
+    if(Meteor.user()){
+        const productNameInput = document.querySelector('input#name');
+        const nameCharDisplay = document.querySelector('span#nameCharCounter');
         nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
-    }
+        productNameInput.oninput = function(){
+            nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
+        }
 
-    const productDescriptionInput = document.querySelector('textarea#description');
-    const descriptionCharDisplay = document.querySelector('span#descriptionCharCounter');
-    descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
-    productDescriptionInput.oninput = function(){
+        const productDescriptionInput = document.querySelector('textarea#description');
+        const descriptionCharDisplay = document.querySelector('span#descriptionCharCounter');
         descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
-        autoExpand(productDescriptionInput);
-    }
-
-
-    // Code to update file name from https://bulma.io/documentation/form/file/
-    const filesInput = document.querySelector('input#pictures');  // Saving input in a variable
-    const filesNumberDisplay = document.querySelector('span.file-name');  // Catching the file number display
-    filesInput.onchange = function(){
-        if(filesInput.files.length === 0){
-            filesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-        } else if(filesInput.files.length === 1){
-            filesNumberDisplay.textContent = filesInput.files.length + " fichier sélectionné";  // Updating displayed value
-        } else{
-            // At least 2 files
-            filesNumberDisplay.textContent = filesInput.files.length + " fichiers sélectionnés";  // Updating displayed value
+        productDescriptionInput.oninput = function(){
+            descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
+            autoExpand(productDescriptionInput);
         }
-    }
 
-    // Dynamically check and show selected categories
-    var selectedCategories = [];  // Creating a array to store the categories
-    Session.set('selectedCategories', selectedCategories);  // Saving it in a Session variable to allow removing from events
 
-    const select = document.querySelector("select#categories");  // Catching the select element
-    select.onchange = function(){
-        var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
-        var selectedOption = select.value;  // Catch the value attribute of the selected option
-        if(selectedOption !== 'add' && !selectedCategories.includes(selectedOption)){
-            // The selected option isn't the default one and isn't already selected, displaying the category tag
-            var newElement = document.createElement("div");  // Creating a new element to contain the tag
-            newElement.className = "control";  // Adding a class for a better display
-            // Adding the tag in the div :
-            newElement.innerHTML = '<div class="tags has-addons"> <a class="tag is-link">'+selectedOption+'</a> <a class="tag is-delete"></a> </div>';
-            document.getElementById("categoryTags").appendChild(newElement);  // Inserting it in the category tags container
-            selectedCategories.push(selectedOption);  // Adding the category to the selected ones
-            Session.set('selectedCategories', selectedCategories);  // Updating the value of the Session variable
+        // Code to update file name from https://bulma.io/documentation/form/file/
+        const filesInput = document.querySelector('input#pictures');  // Saving input in a variable
+        const filesNumberDisplay = document.querySelector('span.file-name');  // Catching the file number display
+        filesInput.onchange = function(){
+            if(filesInput.files.length === 0){
+                filesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+            } else if(filesInput.files.length === 1){
+                filesNumberDisplay.textContent = filesInput.files.length + " fichier sélectionné";  // Updating displayed value
+            } else{
+                // At least 2 files
+                filesNumberDisplay.textContent = filesInput.files.length + " fichiers sélectionnés";  // Updating displayed value
+            }
         }
-        select.value = 'add';  // Reseting the select with the default value
+
+        // Dynamically check and show selected categories
+        var selectedCategories = [];  // Creating a array to store the categories
+        Session.set('selectedCategories', selectedCategories);  // Saving it in a Session variable to allow removing from events
+
+        const select = document.querySelector("select#categories");  // Catching the select element
+        select.onchange = function(){
+            var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
+            var selectedOption = select.value;  // Catch the value attribute of the selected option
+            if(selectedOption !== 'add' && !selectedCategories.includes(selectedOption)){
+                // The selected option isn't the default one and isn't already selected, displaying the category tag
+                var newElement = document.createElement("div");  // Creating a new element to contain the tag
+                newElement.className = "control";  // Adding a class for a better display
+                // Adding the tag in the div :
+                newElement.innerHTML = '<div class="tags has-addons"> <a class="tag is-link">'+selectedOption+'</a> <a class="tag is-delete"></a> </div>';
+                document.getElementById("categoryTags").appendChild(newElement);  // Inserting it in the category tags container
+                selectedCategories.push(selectedOption);  // Adding the category to the selected ones
+                Session.set('selectedCategories', selectedCategories);  // Updating the value of the Session variable
+            }
+            select.value = 'add';  // Reseting the select with the default value
+        }
     }
 });
 
@@ -99,8 +101,7 @@ Template.addProduct.events({
                         description: productDescription,
                         imagesID: [],
                         score: 0,
-                        categories: selectedCategories,
-                        pending: true
+                        categories: selectedCategories
                     }, function(error, addedProductID){
                             if(!error){
                                 // The product was successfully added, now let's add the images
@@ -123,10 +124,24 @@ Template.addProduct.events({
                                         callbacksPending--;  // End of callback function
                                     });
                                 }
-                                var contribution = {type: 'Ajout', element: productName, createdAt: new Date().toISOString()}
-                                Contributions.insert({
-                                    userId: Meteor.userId(),
-                                    content: contribution
+                                callbacksPending++;  // Starting a call with a callback function
+                                Moderation.insert({
+                                    elementId: addedProductID,
+                                    reason: "Proposition d'ajout"
+                                }, function(error, addedModerationId){
+                                    if(!error){
+                                        Contributions.insert({
+                                            userId: Meteor.userId(),
+                                            type: 'Ajout',
+                                            elementId: addedProductID,
+                                            createdAt: new Date().toISOString(),
+                                            moderationId: addedModerationId
+                                        });
+                                    } else{
+                                        // There was an error while adding the moderation
+                                        formErrors++;
+                                    }
+                                    callbacksPending--;  // End of callback function
                                 });
                             } else{
                                 // There was an error while adding the product

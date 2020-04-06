@@ -12,6 +12,7 @@ import './css/banners.css';
 // Database imports
 import { Products } from '../databases/products.js';
 import { Images } from '../databases/images.js';
+import { Moderation } from '../databases/moderation.js';
 
 
 Template.productBanner.helpers({
@@ -24,10 +25,13 @@ Template.productBanner.helpers({
     },
     underModeration: function(productID){
         // TODO: check if current user is an admin/power users
-        var isPending = Products.findOne({_id: productID}).pending;
-        if(Session.get('page') === 'pending' && isPending){
+        var isUnderModeration = (Moderation.findOne({elementId: productID})) ? true : false;
+        if(Session.get('page') === 'pending' && isUnderModeration){
             return true;
         }
         return false;
+    },
+    displayModerationControls: function(productID){
+        return [Moderation.findOne({elementId: productID})];
     }
 });

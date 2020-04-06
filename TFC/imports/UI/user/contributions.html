@@ -6,14 +6,16 @@
                 <th>Date</th>
                 <th>Type</th>
                 <th>Élément concerné</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
             {{#each displayContribution}}
                 <tr>
-                    <td>{{content.createdAt}}</td>
-                    <td>{{content.type}}</td>
-                    <td>{{content.element}}</td>
+                    <td>{{date}}</td>
+                    <td>{{type}}</td>
+                    <td class="productBanner" id="{{elementId}}">{{elementName}}</td>
+                    <td class="{{statusStyle}}">{{status}}</td>
                 </tr>
             {{/each}}
         </tbody>
