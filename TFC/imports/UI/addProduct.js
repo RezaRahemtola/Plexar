@@ -5,6 +5,7 @@ import { Template } from 'meteor/templating';
 // Database import
 import { Products } from '../databases/products.js';
 import { Images } from '../databases/images.js';
+import { Contributions } from '../databases/contributions.js';
 
 // HTML import
 import './addProduct.html';
@@ -122,6 +123,11 @@ Template.addProduct.events({
                                         callbacksPending--;  // End of callback function
                                     });
                                 }
+                                var contribution = {type: 'Ajout', element: productName, createdAt: new Date().toISOString()}
+                                Contributions.insert({
+                                    userId: Meteor.userId(),
+                                    content: contribution
+                                });
                             } else{
                                 // There was an error while adding the product
                                 formErrors++;

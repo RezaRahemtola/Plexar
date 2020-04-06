@@ -6,6 +6,7 @@ import { Email } from 'meteor/email';
 // Importing databases
 import '../imports/databases/products.js';
 import '../imports/databases/usersInformations.js';
+import '../imports/databases/contributions.js';
 import '../imports/databases/favorites.js';
 import '../imports/databases/images.js';
 
