@@ -1,0 +1,43 @@
+<template name="report">
+    <div class="modal is-active">
+        <div class="modal-background"></div>
+
+        <div class="modal-card">
+
+            <header class="modal-card-head">
+                <p class="modal-card-title">Signaler</p>
+                <button class="delete" aria-label="close"></button>
+            </header>
+
+            <section class="modal-card-body">
+                <h5 class="title is-5">Quelle erreur voulez-vous signaler ?</h5>
+                <form id="reportForm">
+
+                    <div class="field">
+                        <input class="is-checkradio" type="radio" name="reportReason" id="duplicate">
+                        <label for="duplicate">Le produit est référencé plusieurs fois (doublon)</label>
+                    </div>
+
+                    <div class="field">
+                        <input class="is-checkradio" type="radio" name="reportReason" id="offTopic">
+                        <label for="offTopic">Ce produit n'a rien à faire ici</label>
+                    </div>
+
+                    <div class="field">
+                        <input class="is-checkradio" type="radio" name="reportReason" id="incorrectInformations">
+                        <label for="incorrectInformations">Les informations sont incorrectes (si vous êtes en mesure de les corriger, merci de le faire via le bouton 'Proposer des modifications')</label>
+                    </div>
+
+                </form>
+
+            </section>
+
+            <footer class="modal-card-foot">
+                <div class="card-footer-item">
+                    <button class="button is-medium is-outlined">Annuler</button>
+                    <button class="button is-medium has-background-primary" id="reportSubmit">Signaler</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+</template>

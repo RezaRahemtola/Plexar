@@ -125,17 +125,21 @@ Template.addProduct.events({
                                     });
                                 }
                                 callbacksPending++;  // Starting a call with a callback function
+                                // Adding the product to the moderation database
                                 Moderation.insert({
+                                    userId: Meteor.userId(),
                                     elementId: addedProductID,
                                     reason: "Proposition d'ajout"
                                 }, function(error, addedModerationId){
                                     if(!error){
+                                        // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
                                         Contributions.insert({
                                             userId: Meteor.userId(),
                                             type: 'Ajout',
                                             elementId: addedProductID,
                                             createdAt: new Date().toISOString(),
-                                            moderationId: addedModerationId
+                                            moderationId: addedModerationId,
+                                            points: 10
                                         });
                                     } else{
                                         // There was an error while adding the moderation

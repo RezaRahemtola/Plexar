@@ -18,7 +18,6 @@ import './productPage.js';
 import './user/userProfile.js';
 import './searchResults.js';
 import './productBanner.js';
-import './pending.js';
 
 // Messages imports
 import './messages/header.js';
@@ -28,6 +27,7 @@ import './messages/full.js';
 import './modals/register.js';
 import './modals/login.js';
 import './modals/forgotPassword.js';
+import './modals/report.js';
 
 // Databases imports
 import { UsersInformations } from '../databases/usersInformations.js';
@@ -120,9 +120,6 @@ Template.body.events({
     'click a#addProduct'(event){
         Session.set('page', 'addProduct');
     },
-    'click a#pending'(event){
-        Session.set('page', 'pending');
-    },
 
 
     // Profile dropdown and user profile tabs events
@@ -143,6 +140,12 @@ Template.body.events({
         Session.set('userPage', 'informations');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#informations").addClass("is-active");  // Set the current tab as the active one
+    },
+    'click #moderation'(event){
+        Session.set('page', 'userProfile');  // Switch to userProfile page
+        Session.set('userPage', 'moderation');
+        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
+        $("li#moderation").addClass("is-active");  // Set the current tab as the active one
     },
 
 

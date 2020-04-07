@@ -26,7 +26,7 @@ Template.productBanner.helpers({
     underModeration: function(productID){
         // TODO: check if current user is an admin/power users
         var isUnderModeration = (Moderation.findOne({elementId: productID})) ? true : false;
-        if(Session.get('page') === 'pending' && isUnderModeration){
+        if(Session.get('userPage') === 'moderation' && isUnderModeration){
             return true;
         }
         return false;

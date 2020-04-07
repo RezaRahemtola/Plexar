@@ -7,9 +7,10 @@ import { Accounts } from 'meteor/accounts-base';
 import './userProfile.html';
 
 // JS imports
-import './informations.js';
-import './favorite.js';
 import './contributions.js';
+import './favorite.js';
+import './informations.js';
+import './moderation.js';
 
 
 Template.userProfile.onRendered(function(){
@@ -26,7 +27,7 @@ Template.userProfile.helpers({
 
 
 Template.userProfile.events({
-    'click #informations, click #favorite, click #contributions'(event){
+    'click #informations, click #favorite, click #contributions, click #moderation'(event){
         // Switching tabs
         event.preventDefault();
         Session.set('userPage', event.currentTarget.id);

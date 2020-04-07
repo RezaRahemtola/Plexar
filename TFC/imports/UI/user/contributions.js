@@ -5,7 +5,7 @@ import { Template } from 'meteor/templating';
 // HTML import
 import './contributions.html';
 
-// Database import
+// Database imports
 import { Contributions } from '../../databases/contributions.js';
 import { Products } from '../../databases/products.js';
 import { Moderation } from '../../databases/moderation.js';
@@ -25,25 +25,26 @@ Template.contributions.helpers({
             if(month < 10){ month = '0' + month; }
             createdAtFormatted = date+ '/' +month+ '/' +year;  // Updating the document with the new creation date
 
-            var elementName = Products.findOne({_id: doc.elementId}).name;
+            var elementName = Products.findOne({_id: doc.elementId}).name;  // Find the element name with the id
 
             if(!Moderation.findOne({_id: doc.moderationId})){
-                // The contribution isn't under moderation
+                // The contribution isn't under moderation, setting the corresponding status
                 var status = 'Validé';
                 var statusStyle = 'is-success';
             } else{
-                // Contribution is under moderation
+                // Contribution is under moderation, setting the corresponding status
                 var status = 'En attente de validation';
                 var statusStyle = 'is-warning';
             }
-            
-             // Pushing the new document
+
+             // Pushing the new document to the array
             userContributions.push({type: doc.type,
                                     date: createdAtFormatted,
                                     elementId: doc.elementId,
                                     elementName: elementName,
                                     status: status,
-                                    statusStyle: statusStyle
+                                    statusStyle: statusStyle,
+                                    points: doc.points
             });
         });
         return userContributions;
