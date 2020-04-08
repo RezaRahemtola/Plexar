@@ -1,57 +1,90 @@
 <template name="addProduct">
-    <h3 class="title">Ajouter un produit</h3>
+    <div class="container" style="border: ridge grey 0.1rem; border-bottom: none;">
+        <h3 class="title has-text-centered">Ajouter un produit</h3>
+    </div>
     {{#if currentUser}}
-        <form id="newProduct">
+        <form id="newProduct" class="container" style="border: ridge grey 0.1rem; padding: 0.8rem;">
 
-            <div class="field has-animated-label">
-                <input type="text" class="input has-animated-label" name="name" id="name" minlength="1" maxlength="70" placeholder=" " required >
-                <label for="name" class="label is-animated">Nom du produit</label>
-                <span id="nameCharCounter" class="character-counter"></span>
-            </div>
+            <section class="section">
+                <h4 class="title is-4 has-text-centered">Informations</h4>
 
-
-            <div class="field has-animated-label">
-                <div class="control has-icons-left">
-                    <textarea class="textarea has-animated-label" name="description" id="description" minlength="50" maxlength="1000" placeholder=" " required></textarea>
-                    <label for="description" class="label is-animated">Description du produit</label>
-                    <span class="icon is-left">
-                        <i class="fas fa-file-alt"></i>
-                    </span>
+                <div class="field has-animated-label">
+                    <input type="text" class="input has-animated-label" name="name" id="name" minlength="1" maxlength="70" placeholder=" " required >
+                    <label for="name" class="label is-animated">Nom du produit</label>
+                    <span id="nameCharCounter" class="character-counter"></span>
                 </div>
-                <span id="descriptionCharCounter" class="character-counter"></span>
-            </div>
 
-            <div class="field">
-                <div class="file has-name is-boxed">
-                    <label class="file-label">
-                        <input class="file-input" type="file" name="pictures" id="pictures" accept="image/*" multiple>
-                        <span class="file-cta">
-                            <span class="file-icon">
-                                <i class="fas fa-file-image"></i>
-                            </span>
-                            <span class="file-label">Choisir un fichier…</span>
+
+                <div class="field has-animated-label">
+                    <div class="control has-icons-left">
+                        <textarea class="textarea has-animated-label" name="description" id="description" minlength="50" maxlength="1000" placeholder=" " required></textarea>
+                        <label for="description" class="label is-animated">Description du produit</label>
+                        <span class="icon is-left">
+                            <i class="fas fa-file-alt"></i>
                         </span>
-                        <span class="file-name">Aucun fichier sélectionné</span>
-                    </label>
+                    </div>
+                    <span id="descriptionCharCounter" class="character-counter"></span>
                 </div>
-            </div>
+            </section>
 
-            <div class="field">
-                <div class="select">
-                    <select id="categories">
-                        <option value="add" selected disabled hidden>Ajouter une catégorie</option>
-                        <option value="Alimentation">Alimentation</option>
-                        <option value="Informatique">Informatique</option>
-                        <option value="Catégorie 3">3</option>
-                        <option value='Catégorie 4'>4</option>
-                    </select>
+            <section class="section" style="border-top: solid grey 0.1rem;">
+                <h4 class="title is-4 has-text-centered">Images</h4>
+
+                <div class="columns">
+                    <div class="column field has-text-centered">
+                        <span>Image de couverture</span>
+                        <div class="file has-name is-boxed width-fit-content" style="margin: auto;">
+                            <label class="file-label">
+                                <input class="file-input" type="file" name="coverImage" id="coverImage" accept="image/*">
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-file-image"></i>
+                                    </span>
+                                    <span class="file-label">Choisir un fichier…</span>
+                                </span>
+                                <span class="coverImage file-name">Aucun fichier sélectionné</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="column field has-text-centered">
+                        <span>Images supplémentaires (4 maximum)</span>
+                        <div class="file has-name is-boxed width-fit-content" style="margin: auto;">
+                            <label class="file-label">
+                                <input class="file-input" type="file" name="images" id="images" accept="image/*" multiple>
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-file-image"></i>
+                                    </span>
+                                    <span class="file-label">Choisir un fichier…</span>
+                                </span>
+                                <span class="images file-name">Aucun fichier sélectionné</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
+            </section>
 
-                <div class="field is-grouped is-grouped-multiline" id="categoryTags"></div>
+            <section class="section" style="border-top: solid grey 0.1rem;">
+                <h4 class="title is-4 has-text-centered">Catégories</h4>
 
-            </div>
+                <div class="field">
+                    <div class="select width-fit-content" style="margin: 0 auto; display: block;">
+                        <select id="categories">
+                            <option value="add" selected disabled hidden>Ajouter une catégorie</option>
+                            <option value="Alimentation">Alimentation</option>
+                            <option value="Beauté & Hygiène">Beauté & Hygiène</option>
+                            <option value="Informatique">Informatique</option>
+                            <option value='Catégorie 4'>4</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="field is-grouped is-grouped-multiline width-fit-content" id="categoryTags" style="margin: 1rem auto;"></div>
+                </div>
+            </section>
 
-            <button id="addProduct" type="submit" class="button is-success">Ajouter le produit !</button>
+
+            <button class="button is-success is-medium is-fullwidth" id="addProduct" type="submit" >Ajouter le produit !</button>
         </form>
     {{else}}
         <p class="subtitle"><span class="register link has-text-weight-semibold">Inscrivez-vous</span> ou <span class="login link has-text-weight-semibold">connectez-vous</span> pour continuer.</p>

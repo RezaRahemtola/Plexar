@@ -32,7 +32,7 @@ Template.productPage.onRendered(function(){
 });
 
 Template.productPage.events({
-    'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .productVote, click .report'(event){
+    'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .productVote, click .report, click .suggestChanges'(event){
         // Prevent default action for all events
         event.preventDefault();
     },
@@ -124,6 +124,18 @@ Template.productPage.events({
         } else{
             // User is logged in
             Session.set('modal', 'report');
+        }
+    },
+    'click .suggestChanges'(event){
+        // TODO: En fonction du nombre de points/admin de l'user, instant valider la modification
+        if(!Meteor.user()){
+            // User isn't logged in
+            Session.set('modal', 'register');
+        } else{
+            // User is logged in
+            Session.set('currentProductID', event.currentTarget.id);  // Setting displayed product with value of the target
+            Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
+            Session.set('page', 'editProduct');
         }
     }
 })

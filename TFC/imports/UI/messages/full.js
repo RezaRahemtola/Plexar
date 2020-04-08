@@ -7,21 +7,15 @@ import './full.html';
 
 Template.header.helpers({
     style: function(){
-        var message = Session.get('message');
-        return message.style;
+        return Session.get('message').style;
     },
     headerContent: function(){
-        var message = Session.get('message');
-        return message.headerContent;
+        return Session.get('message').headerContent;
     },
     bodyContent: function(){
-        var message = Session.set('message');
-        return message.bodyContent;
+        return Session.get('message').bodyContent;
     },
     messageToDisplay: function(){
-        if(Session.get('message') !== null){
-            return true;
-        }
-        return false;
+        return Session.get('message');
     }
 });

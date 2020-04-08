@@ -61,6 +61,17 @@ Template.register.onRendered(function(){
 });
 
 
+Template.register.helpers({ 
+    messageToDisplay: function(){
+        var message = Session.get('message');
+        if(message !== null){
+            // There is a message to display
+            return message.type;  // Return the message to display
+        }
+    }
+});
+
+
 Template.register.events({
     'click #registerSubmit'(event){
         event.preventDefault();

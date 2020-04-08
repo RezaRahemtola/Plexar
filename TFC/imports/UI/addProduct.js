@@ -37,13 +37,24 @@ Template.addProduct.onRendered(function(){
 
 
         // Code to update file name from https://bulma.io/documentation/form/file/
-        const filesInput = document.querySelector('input#pictures');  // Saving input in a variable
-        const filesNumberDisplay = document.querySelector('span.file-name');  // Catching the file number display
+        const coverImageInput = document.querySelector('input#coverImage');  // Saving input in a variable
+        const coverImageNumberDisplay = document.querySelector('span.coverImage.file-name');  // Catching the file number display
+        coverImageInput.onchange = function(){
+            if(coverImageInput.files.length === 0){
+                coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+            } else if(coverImageInput.files.length === 1){
+                coverImageNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+            }
+        }
+
+        // Code to update file name from https://bulma.io/documentation/form/file/
+        const filesInput = document.querySelector('input#images');  // Saving input in a variable
+        const filesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display
         filesInput.onchange = function(){
             if(filesInput.files.length === 0){
                 filesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
             } else if(filesInput.files.length === 1){
-                filesNumberDisplay.textContent = filesInput.files.length + " fichier sélectionné";  // Updating displayed value
+                filesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
             } else{
                 // At least 2 files
                 filesNumberDisplay.textContent = filesInput.files.length + " fichiers sélectionnés";  // Updating displayed value
@@ -90,72 +101,98 @@ Template.addProduct.events({
             currentInput = document.querySelector('textarea#description');
             if(checkTextInput(text=productDescription, minLength=currentInput.minLength, maxLength=currentInput.maxLength)){
                 // Description is correct, checking the file upload
-                var files = document.querySelector('input#pictures').files;
-                if(checkFileInput(files=files, minLength=1, maxLength=5, type='image', maxMBSize=5)){
-                    // Files are correct, catching categories
-                    var selectedCategories = Session.get('selectedCategories');   // Catching the array of categories that are already selected
-                    // Inserting informations in the database :
-                    callbacksPending++;  // Starting a call with a callback function
-                    Products.insert({
-                        name: productName,
-                        description: productDescription,
-                        imagesID: [],
-                        score: 0,
-                        categories: selectedCategories
-                    }, function(error, addedProductID){
-                            if(!error){
-                                // The product was successfully added, now let's add the images
-                                for(var file of files){
-                                    // For each image, inserting it in the db
+                var coverImage = document.querySelector('input#coverImage').files;
+                if(checkFileInput(files=coverImage, minLength=1, maxLength=1, type='image', maxMBSize=5)){
+                    // Cover image file is correct, checking other images
+                    var otherImages = document.querySelector('input#images').files;
+                    if(checkFileInput(files=otherImages, minLength=0, maxLength=4, type='image', maxMBSize=5)){
+                        // Files are correct, catching categories
+                        var selectedCategories = Session.get('selectedCategories');   // Catching the array of categories that are already selected
+                        // Inserting informations in the database :
+                        callbacksPending++;  // Starting a call with a callback function
+                        Products.insert({
+                            name: productName,
+                            description: productDescription,
+                            imagesID: [],
+                            score: 0,
+                            categories: selectedCategories
+                        }, function(error, addedProductID){
+                                if(!error){
+                                    // The product was successfully added, now let's add the images
+                                    for(var image of coverImage){
+                                        // Inserting the cover image in the db
+                                        callbacksPending++;  // Starting a call with a callback function
+                                        Images.insert(image, function(error, fileObj){
+                                            if(!error){
+                                                // Image was successfully inserted, linking it with the product
+                                                var productImagesID = Products.findOne({_id: addedProductID}).imagesID;  // Catching the product images IDs array
+                                                productImagesID.push(fileObj._id);  // Adding inserted image ID to the array
+                                                // Updating the db with the new array
+                                                Products.update(addedProductID, { $set: {
+                                                    imagesID: productImagesID
+                                                }});
+                                            } else{
+                                                // There was an error while inserting the file in Images db
+                                                formErrors++;
+                                            }
+                                            callbacksPending--;  // End of callback function
+                                        });
+                                    }
+                                    for(var file of otherImages){
+                                        // For each image, inserting it in the db
+                                        callbacksPending++;  // Starting a call with a callback function
+                                        Images.insert(file, function(error, fileObj){
+                                            if(!error){
+                                                // Image was successfully inserted, linking it with the product
+                                                var productImagesID = Products.findOne({_id: addedProductID}).imagesID;  // Catching the product images IDs array
+                                                productImagesID.push(fileObj._id);  // Adding inserted image ID to the array
+                                                // Updating the db with the new array
+                                                Products.update(addedProductID, { $set: {
+                                                    imagesID: productImagesID
+                                                }});
+                                            } else{
+                                                // There was an error while inserting the file in Images db
+                                                formErrors++;
+                                            }
+                                            callbacksPending--;  // End of callback function
+                                        });
+                                    }
                                     callbacksPending++;  // Starting a call with a callback function
-                                    Images.insert(file, function(error, fileObj){
+                                    // Adding the product to the moderation database
+                                    Moderation.insert({
+                                        userId: Meteor.userId(),
+                                        elementId: addedProductID,
+                                        reason: "Proposition d'ajout"
+                                    }, function(error, addedModerationId){
                                         if(!error){
-                                            // Image was successfully inserted, linking it with the product
-                                            var productImagesID = Products.findOne({_id: addedProductID}).imagesID;  // Catching the product images IDs array
-                                            productImagesID.push(fileObj._id);  // Adding inserted image ID to the array
-                                            // Updating the db with the new array
-                                            Products.update(addedProductID, { $set: {
-                                                imagesID: productImagesID
-                                            }});
+                                            // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
+                                            Contributions.insert({
+                                                userId: Meteor.userId(),
+                                                type: 'Ajout',
+                                                elementId: addedProductID,
+                                                createdAt: new Date().toISOString(),
+                                                moderationId: addedModerationId,
+                                                points: 10
+                                            });
                                         } else{
-                                            // There was an error while inserting the file in Images db
+                                            // There was an error while adding the moderation
                                             formErrors++;
                                         }
                                         callbacksPending--;  // End of callback function
                                     });
+                                } else{
+                                    // There was an error while adding the product
+                                    formErrors++;
                                 }
-                                callbacksPending++;  // Starting a call with a callback function
-                                // Adding the product to the moderation database
-                                Moderation.insert({
-                                    userId: Meteor.userId(),
-                                    elementId: addedProductID,
-                                    reason: "Proposition d'ajout"
-                                }, function(error, addedModerationId){
-                                    if(!error){
-                                        // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
-                                        Contributions.insert({
-                                            userId: Meteor.userId(),
-                                            type: 'Ajout',
-                                            elementId: addedProductID,
-                                            createdAt: new Date().toISOString(),
-                                            moderationId: addedModerationId,
-                                            points: 10
-                                        });
-                                    } else{
-                                        // There was an error while adding the moderation
-                                        formErrors++;
-                                    }
-                                    callbacksPending--;  // End of callback function
-                                });
-                            } else{
-                                // There was an error while adding the product
-                                formErrors++;
+                                callbacksPending--;  // End of callback function
                             }
-                            callbacksPending--;  // End of callback function
-                        }
-                    );
+                        );
+                    } else{
+                        // Cover image doesn't match all criteria
+                        formErrors++;
+                    }
                 } else{
-                    // File doesn't match all criteria
+                    // Other images doesn't match all criteria
                     formErrors++;
                 }
             } else{

@@ -10,7 +10,7 @@
             </header>
 
             <section class="modal-card-body">
-
+                {{> Template.dynamic template=messageToDisplay}}  <!-- Display the current message (if there's one) -->
                 <form id="registerForm">
                     <div class="field has-animated-label" id="usernameField">
                         <div class="control has-icons-left">

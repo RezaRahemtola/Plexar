@@ -53,15 +53,15 @@ Template.body.helpers({
     },
     currentMessage: function(){
         var message = Session.get('message');
-        if(message !== null){
-            // There is a message to display
+        var modal = Session.get('modal');
+        if(message !== null && modal === null){
+            // There is a message to display and no modal is active
             return message.type;  // Return the message to display
         }
     },
     currentModal: function(){
-        var modal = Session.get('modal');
-        if(modal !== null){
-            return modal;  // Return the modal to display
+        if(Session.get('modal') !== null){
+            return Session.get('modal');  // Return the modal to display
         }
     },
     displayProfilePicture: function(){
@@ -104,7 +104,7 @@ Template.body.events({
         // When the closing button of a message is clicked
         Session.set('message', null);  // Remove the message
     },
-    'click .modal button.delete, click .modal-background'(event){
+    'click .modal-card-head .delete, click .modal-background'(event){
         // When the closing button of a modal is clicked
         Session.set('modal', null);  // Remove the modal
     },
