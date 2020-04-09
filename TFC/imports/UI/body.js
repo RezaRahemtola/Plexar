@@ -18,6 +18,7 @@ import './productPage.js';
 import './user/userProfile.js';
 import './searchResults.js';
 import './productBanner.js';
+import './editProduct.js';
 
 // Messages imports
 import './messages/header.js';

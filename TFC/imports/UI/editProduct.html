@@ -1,9 +1,9 @@
-<template name="addProduct">
+<template name="editProduct">
     <div class="container" style="border: ridge grey 0.1rem; border-bottom: none;">
-        <h3 class="title has-text-centered">Ajouter un produit</h3>
+        <h3 class="title has-text-centered">Modifier le produit</h3>
     </div>
     {{#if currentUser}}
-        <form id="newProduct" class="container" style="border: ridge grey 0.1rem; padding: 0.8rem;">
+        <form class="container" style="border: ridge grey 0.1rem; padding: 0.8rem;">
 
             <section class="section">
                 <h4 class="title is-4 has-text-centered">Informations</h4>
@@ -83,8 +83,7 @@
                 </div>
             </section>
 
-
-            <button class="button is-success is-medium is-fullwidth" id="addProduct" type="submit" >Ajouter le produit !</button>
+            <button class="button is-success is-medium is-fullwidth" id="addProduct" type="submit">Valider les modifications</button>
         </form>
     {{else}}
         <p class="subtitle"><span class="register link has-text-weight-semibold">Inscrivez-vous</span> ou <span class="login link has-text-weight-semibold">connectez-vous</span> pour continuer.</p>
