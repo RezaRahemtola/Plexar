@@ -44,8 +44,9 @@ Session.set('lastPage', null);  // No last page (used for return button)
 Session.set("searchedProductsID", [] );  // No search for the moment
 Session.set('message', null);  // No message to display for the moment
 Session.set('modal', null);  // No modal to display for the moment
-Session.set('searchFilters', '');  // No search filters for the moment
 Session.set('search', {query: "", categories: [], sort: 'popularity'});
+Session.set('coverImageId', null);
+Session.set('otherImagesId', []);
 
 
 Template.body.helpers({

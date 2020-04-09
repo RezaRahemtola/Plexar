@@ -36,28 +36,65 @@ Template.addProduct.onRendered(function(){
         }
 
 
+        Session.set('coverImageId', null);
         // Code to update file name from https://bulma.io/documentation/form/file/
         const coverImageInput = document.querySelector('input#coverImage');  // Saving input in a variable
         const coverImageNumberDisplay = document.querySelector('span.coverImage.file-name');  // Catching the file number display
         coverImageInput.onchange = function(){
             if(coverImageInput.files.length === 0){
                 coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+                if(Session.get('coverImageId')){
+                    // There was a cover image before and it was removed
+                    Images.remove(Session.get('coverImageId'));  // Remove the image from the db
+                    var coverImageContainer = document.querySelector('.cover-image');  // Catch the image container
+                    coverImageContainer.parentNode.removeChild(coverImageContainer);  // Remove the image container
+                    Session.set('coverImageId', null);
+                }
             } else if(coverImageInput.files.length === 1){
-                coverImageNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+                if(checkFileInput(files=coverImageInput.files, minLength=1, maxLength=1, type='image', maxMBSize=5)){
+                    // File input is correct
+                    coverImageNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+                    if(Session.get('coverImageId')){
+                        // There was already a cover image and it was replaced
+                        Images.remove(Session.get('coverImageId'));  // Remove the old image from the db
+                        Session.set('coverImageId', null);
+                    }
+                    Images.insert(coverImageInput.files[0], function(error, fileObj){
+                        if(!error){
+                            Session.set('coverImageId', fileObj._id);
+                        }
+                    });
+                }
             }
         }
 
+        Session.set('otherImagesId', []);
         // Code to update file name from https://bulma.io/documentation/form/file/
-        const filesInput = document.querySelector('input#images');  // Saving input in a variable
-        const filesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display
-        filesInput.onchange = function(){
-            if(filesInput.files.length === 0){
-                filesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-            } else if(filesInput.files.length === 1){
-                filesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+        const imagesInput = document.querySelector('input#images');  // Saving input in a variable
+        const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display
+        imagesInput.onchange = function(){
+            if(imagesInput.files.length === 0){
+                imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+            } else if(imagesInput.files.length === 1){
+                imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
             } else{
                 // At least 2 files
-                filesNumberDisplay.textContent = filesInput.files.length + " fichiers sélectionnés";  // Updating displayed value
+                imagesNumberDisplay.textContent = imagesInput.files.length + " fichiers sélectionnés";  // Updating displayed value
+            }
+            if(imagesInput.files.length >= 1){
+                // There is at least one uploaded file
+                if(checkFileInput(files=imagesInput.files, minLength=0, maxLength=4-Session.get('otherImagesId').length, type='image', maxMBSize=5)){
+                    // Files are correct, adding them to the db
+                    for(var image of imagesInput.files){
+                        Images.insert(image, function(error, fileObj){
+                            if(!error){
+                                var otherImagesId = Session.get('otherImagesId');  // Catching the array of images
+                                otherImagesId.push(fileObj._id)  // Adding it the new image
+                                Session.set('otherImagesId', otherImagesId);  // Updating the value
+                            }
+                        });
+                    }
+                }
             }
         }
 
@@ -85,6 +122,56 @@ Template.addProduct.onRendered(function(){
 });
 
 
+Template.addProduct.helpers({
+    displayCoverImage: function(){
+        // Display the cover image
+        if(Session.get('coverImageId') !== null){
+            // If there is a cover image
+            var coverImageId = Session.get('coverImageId');  // Catchin the image id
+            const coverImageColumn = document.querySelector('div.columns').firstElementChild;  // Catching the element in which we will insert the image
+            var imageUrl = Images.findOne({_id: coverImageId}).url();  // Find the image url in the db
+            if(imageUrl !== null){
+                // If the image url is accessible (there is a latency between the update of the Session variable with the id and the accessibility of the image and it's url)
+                if(document.querySelector('.cover-image') === null){
+                    // No cover image for the moment, we can create a new element
+                    var imageContainer = document.createElement('div');
+                    imageContainer.id = coverImageId;  // Set the image id to the container's to remove the image after
+                    imageContainer.classList += "cover-image width-fit-content";  // Adding class and style to display it correctly
+                    imageContainer.style.position = 'relative';
+                    imageContainer.style.display = 'inline-block';
+                    imageContainer.innerHTML = '<img src='+imageUrl+' class="image is-128x128"><button class="delete" style="position: absolute; top: 0; right: 0;"></button>';
+                    coverImageColumn.appendChild(imageContainer);  // Add the element to the document
+                } else{
+                    // Already a cover image, only updating the src with the new url
+                    document.querySelector('.cover-image img').src = imageUrl;
+                }
+            }
+        }
+    },
+    displayOtherImages: function(){
+        // Display the other images
+        var otherImagesId = Session.get('otherImagesId');  // Catching the array of images id
+        const otherImagesColumn = document.querySelector('div.columns').lastElementChild;  // Catching the element in which we will insert the image
+        for(var imageId of otherImagesId){
+            // For each image id, we display it if it's not already displayed and if it hasn't been removed of the db by the delete button
+            if(!document.getElementById(imageId) && Images.findOne({_id: imageId})){
+                var imageUrl = Images.findOne({_id: imageId}).url();  // Find the image url in the db
+                if(imageUrl !== null){
+                    // If the image url is accessible (there is a latency between the update of the Session variable with the id and the accessibility of the image and it's url)
+                    var imageContainer = document.createElement('div');  // We create a new element
+                    imageContainer.id = imageId;  // Set the image id to the container's to remove the image after
+                    imageContainer.classList += "other-image width-fit-content";  // Adding class and style to display it correctly
+                    imageContainer.style.position = 'relative';
+                    imageContainer.style.display = 'inline-block';
+                    imageContainer.innerHTML = '<img src='+imageUrl+' class="image is-128x128"><button class="delete" style="position: absolute; top: 0; right: 0;"></button>';
+                    otherImagesColumn.appendChild(imageContainer);  // Add the element to the document
+                }
+            }
+        }
+    }
+});
+
+
 Template.addProduct.events({
     'click button#addProduct'(event){
         event.preventDefault();
@@ -100,12 +187,18 @@ Template.addProduct.events({
             var productDescription = form.get('description');
             currentInput = document.querySelector('textarea#description');
             if(checkTextInput(text=productDescription, minLength=currentInput.minLength, maxLength=currentInput.maxLength)){
-                // Description is correct, checking the file upload
-                var coverImage = document.querySelector('input#coverImage').files;
-                if(checkFileInput(files=coverImage, minLength=1, maxLength=1, type='image', maxMBSize=5)){
-                    // Cover image file is correct, checking other images
-                    var otherImages = document.querySelector('input#images').files;
-                    if(checkFileInput(files=otherImages, minLength=0, maxLength=4, type='image', maxMBSize=5)){
+                // Description is correct, checking the images
+                if(Images.findOne({_id: Session.get('coverImageId')})){
+                    // Cover image is in the db, checking other images
+                    var otherImagesId = Session.get('otherImagesId');
+                    var correctImages = 0;
+                    for(var imageId of otherImagesId){
+                        // For each image id, checking if it's in the db
+                        if(Images.findOne({_id: imageId})){
+                            correctImages++;
+                        }
+                    }
+                    if(correctImages === Session.get('otherImagesId').length){
                         // Files are correct, catching categories
                         var selectedCategories = Session.get('selectedCategories');   // Catching the array of categories that are already selected
                         // Inserting informations in the database :
@@ -118,45 +211,19 @@ Template.addProduct.events({
                             categories: selectedCategories
                         }, function(error, addedProductID){
                                 if(!error){
-                                    // The product was successfully added, now let's add the images
-                                    for(var image of coverImage){
-                                        // Inserting the cover image in the db
-                                        callbacksPending++;  // Starting a call with a callback function
-                                        Images.insert(image, function(error, fileObj){
-                                            if(!error){
-                                                // Image was successfully inserted, linking it with the product
-                                                var productImagesID = Products.findOne({_id: addedProductID}).imagesID;  // Catching the product images IDs array
-                                                productImagesID.push(fileObj._id);  // Adding inserted image ID to the array
-                                                // Updating the db with the new array
-                                                Products.update(addedProductID, { $set: {
-                                                    imagesID: productImagesID
-                                                }});
-                                            } else{
-                                                // There was an error while inserting the file in Images db
-                                                formErrors++;
-                                            }
-                                            callbacksPending--;  // End of callback function
-                                        });
+                                    // The product was successfully added, now let's add the images id
+                                    var productImagesId = Products.findOne({_id: addedProductID}).imagesID;  // Catching the product images IDs array
+                                    var coverImageId = Session.get('coverImageId');
+                                    var otherImagesId = Session.get('otherImagesId');
+                                    productImagesId.push(coverImageId);  // Adding the cover image to the array
+                                    for(var imageId of otherImagesId){
+                                        // For each image, adding it to the array
+                                        productImagesId.push(imageId);
                                     }
-                                    for(var file of otherImages){
-                                        // For each image, inserting it in the db
-                                        callbacksPending++;  // Starting a call with a callback function
-                                        Images.insert(file, function(error, fileObj){
-                                            if(!error){
-                                                // Image was successfully inserted, linking it with the product
-                                                var productImagesID = Products.findOne({_id: addedProductID}).imagesID;  // Catching the product images IDs array
-                                                productImagesID.push(fileObj._id);  // Adding inserted image ID to the array
-                                                // Updating the db with the new array
-                                                Products.update(addedProductID, { $set: {
-                                                    imagesID: productImagesID
-                                                }});
-                                            } else{
-                                                // There was an error while inserting the file in Images db
-                                                formErrors++;
-                                            }
-                                            callbacksPending--;  // End of callback function
-                                        });
-                                    }
+                                    // Updating the db with the new array
+                                    Products.update(addedProductID, { $set: {
+                                        imagesID: productImagesId
+                                    }});
                                     callbacksPending++;  // Starting a call with a callback function
                                     // Adding the product to the moderation database
                                     Moderation.insert({
@@ -187,9 +254,6 @@ Template.addProduct.events({
                                 callbacksPending--;  // End of callback function
                             }
                         );
-                    } else{
-                        // Cover image doesn't match all criteria
-                        formErrors++;
                     }
                 } else{
                     // Other images doesn't match all criteria
@@ -227,6 +291,27 @@ Template.addProduct.events({
         selectedCategories.splice(index, 1);  // Removing the category
         Session.set('selectedCategories', selectedCategories);  // Updating the value of the Session variable
         tagToRemove.parentNode.removeChild(tagToRemove);  // Removing the tag
+    },
+    'click div.cover-image button.delete'(event){
+        // When the delete button of a cover image is clicked
+        event.preventDefault();
+        document.querySelector('input#coverImage').value = null;  // Reset the value of the input
+        document.querySelector('span.coverImage.file-name').textContent = "Aucun fichier sélectionné";  // Updating displayed value
+        Images.remove(event.currentTarget.parentElement.id);  // Remove the image from the db
+        Session.set('coverImageId', null);  // Update cover image id
+        var imageContainer = event.currentTarget.parentElement;  // Image container is the parent element of the delete button
+        imageContainer.parentNode.removeChild(imageContainer);  // Removing image container
+    },
+    'click div.other-image button.delete'(event){
+        // When the delete button of an other image is clicked
+        event.preventDefault();
+        var imageId = event.currentTarget.parentElement.id;  // Current image id is the id of the container (parent element)
+        Images.remove(imageId);  // Remove the image from the db
+        var otherImagesId = Session.get('otherImagesId');  // Catch the array of images
+        otherImagesId.pop(imageId);  // Removing the image id
+        Session.set('otherImagesId', otherImagesId);  // Updating the value
+        var imageContainer = event.currentTarget.parentElement;  // Image container is the parent element of the delete button
+        imageContainer.parentNode.removeChild(imageContainer);  // Removing image container
     }
 });
 
@@ -234,4 +319,7 @@ Template.addProduct.events({
 Template.addProduct.onDestroyed(function(){
     // Selected categories' Session variable isn't useful anymore, deleting it
     delete Session.keys.selectedCategories;
+    // TODO: Si template fermé sans submit le form, supprimer les images de la db
+    Session.set('coverImageId', null);
+    Session.set('otherImagesId', []);
 });
