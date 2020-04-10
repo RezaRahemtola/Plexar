@@ -13,7 +13,7 @@ import './functions/sortResults.js';
 
 
 Template.searchResults.onRendered(function(){
-
+    Session.set("searchedProductsID", []);
     // Catch sorting select changes to filter results
     const sortResults = document.querySelector("select#sortResults");
     sortResults.onchange = function(){

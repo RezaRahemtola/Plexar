@@ -24,9 +24,9 @@
         {{#if underModeration _id}}
             {{#each displayModerationControls _id}}
                 <div class="has-text-centered">
-                    <p>Raison : {{reason}}</p>
-                    <button class="button is-danger">Rejeter</button>
-                    <button class="button is-success moderationAccepted" id="{{_id}}">Valider</button>
+                    <p>Raison : <br> {{reasonText}}</p>
+                    <button class="button is-danger">{{rejectText}}</button>
+                    <button class="button is-success moderationAccepted" id="{{_id}}">{{approveText}}</button>
                 </div>
             {{/each}}
         {{/if}}

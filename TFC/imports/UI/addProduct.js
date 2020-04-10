@@ -43,13 +43,6 @@ Template.addProduct.onRendered(function(){
         coverImageInput.onchange = function(){
             if(coverImageInput.files.length === 0){
                 coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-                if(Session.get('coverImageId')){
-                    // There was a cover image before and it was removed
-                    Images.remove(Session.get('coverImageId'));  // Remove the image from the db
-                    var coverImageContainer = document.querySelector('.cover-image');  // Catch the image container
-                    coverImageContainer.parentNode.removeChild(coverImageContainer);  // Remove the image container
-                    Session.set('coverImageId', null);
-                }
             } else if(coverImageInput.files.length === 1){
                 if(checkFileInput(files=coverImageInput.files, minLength=1, maxLength=1, type='image', maxMBSize=5)){
                     // File input is correct
@@ -73,14 +66,6 @@ Template.addProduct.onRendered(function(){
         const imagesInput = document.querySelector('input#images');  // Saving input in a variable
         const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display
         imagesInput.onchange = function(){
-            if(imagesInput.files.length === 0){
-                imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-            } else if(imagesInput.files.length === 1){
-                imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
-            } else{
-                // At least 2 files
-                imagesNumberDisplay.textContent = imagesInput.files.length + " fichiers sélectionnés";  // Updating displayed value
-            }
             if(imagesInput.files.length >= 1){
                 // There is at least one uploaded file
                 if(checkFileInput(files=imagesInput.files, minLength=0, maxLength=4-Session.get('otherImagesId').length, type='image', maxMBSize=5)){
@@ -91,10 +76,18 @@ Template.addProduct.onRendered(function(){
                                 var otherImagesId = Session.get('otherImagesId');  // Catching the array of images
                                 otherImagesId.push(fileObj._id)  // Adding it the new image
                                 Session.set('otherImagesId', otherImagesId);  // Updating the value
+                                if(otherImagesId.length === 1){
+                                    imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+                                } else{
+                                    // At least 2 files
+                                    imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";  // Updating displayed value
+                                }
                             }
                         });
                     }
                 }
+            } else{
+                imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
             }
         }
 
@@ -229,7 +222,7 @@ Template.addProduct.events({
                                     Moderation.insert({
                                         userId: Meteor.userId(),
                                         elementId: addedProductID,
-                                        reason: "Proposition d'ajout"
+                                        reason: "newProduct"
                                     }, function(error, addedModerationId){
                                         if(!error){
                                             // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
@@ -274,7 +267,7 @@ Template.addProduct.events({
             if(callbacksPending === 0 && formErrors === 0){
                 // All callbacks were completed without any error, displaying a success message
                 Session.set('message', {type: "header", headerContent: "Produit ajouté avec succès !", style:"is-success"} );
-                Session.set('userPage', '');
+                Session.set('page', 'home');
                 clearInterval(intervalID);  // This interval is not required anymore, removing it
             }
         }, 200);
@@ -312,6 +305,15 @@ Template.addProduct.events({
         Session.set('otherImagesId', otherImagesId);  // Updating the value
         var imageContainer = event.currentTarget.parentElement;  // Image container is the parent element of the delete button
         imageContainer.parentNode.removeChild(imageContainer);  // Removing image container
+        const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display to update the value
+        if(otherImagesId.length === 0){
+            imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+        }else if(otherImagesId.length === 1){
+            imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+        } else{
+            // At least 2 files
+            imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";  // Updating displayed value
+        }
     }
 });
 
