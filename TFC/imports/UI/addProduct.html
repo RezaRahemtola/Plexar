@@ -45,7 +45,12 @@
                                 <span class="coverImage file-name">Aucun fichier sélectionné</span>
                             </label>
                         </div>
-                        {{displayCoverImage}}
+                        {{#each displayCoverImage}}
+                            <div id="{{_id}}" class="cover-image width-fit-content" style="position: relative; display: inline-block;">
+                                <img src="{{this.url}}" class="image is-128x128">
+                                <button class="delete" style="position: absolute; top: 0; right: 0;"></button>
+                            </div>
+                        {{/each}}
                     </div>
 
                     <div class="column field has-text-centered">
@@ -62,7 +67,12 @@
                                 <span class="images file-name">Aucun fichier sélectionné</span>
                             </label>
                         </div>
-                        {{displayOtherImages}}
+                        {{#each displayOtherImages}}
+                            <div id="{{_id}}" class="other-image width-fit-content" style="position: relative; display: inline-block;">
+                                <img src="{{this.url}}" class="image is-128x128">
+                                <button class="delete" style="position: absolute; top: 0; right: 0;"></button>
+                            </div>
+                        {{/each}}
                     </div>
                 </div>
             </section>

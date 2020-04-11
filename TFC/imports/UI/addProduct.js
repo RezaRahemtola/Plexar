@@ -118,49 +118,18 @@ Template.addProduct.onRendered(function(){
 Template.addProduct.helpers({
     displayCoverImage: function(){
         // Display the cover image
-        if(Session.get('coverImageId') !== null){
-            // If there is a cover image
-            var coverImageId = Session.get('coverImageId');  // Catchin the image id
-            const coverImageColumn = document.querySelector('div.columns').firstElementChild;  // Catching the element in which we will insert the image
-            var imageUrl = Images.findOne({_id: coverImageId}).url();  // Find the image url in the db
-            if(imageUrl !== null){
-                // If the image url is accessible (there is a latency between the update of the Session variable with the id and the accessibility of the image and it's url)
-                if(document.querySelector('.cover-image') === null){
-                    // No cover image for the moment, we can create a new element
-                    var imageContainer = document.createElement('div');
-                    imageContainer.id = coverImageId;  // Set the image id to the container's to remove the image after
-                    imageContainer.classList += "cover-image width-fit-content";  // Adding class and style to display it correctly
-                    imageContainer.style.position = 'relative';
-                    imageContainer.style.display = 'inline-block';
-                    imageContainer.innerHTML = '<img src='+imageUrl+' class="image is-128x128"><button class="delete" style="position: absolute; top: 0; right: 0;"></button>';
-                    coverImageColumn.appendChild(imageContainer);  // Add the element to the document
-                } else{
-                    // Already a cover image, only updating the src with the new url
-                    document.querySelector('.cover-image img').src = imageUrl;
-                }
-            }
-        }
+        var coverImageId = Session.get('coverImageId');  // Catchin the image id
+        return Images.find({_id: coverImageId})  // Find the image url in the db
     },
     displayOtherImages: function(){
         // Display the other images
         var otherImagesId = Session.get('otherImagesId');  // Catching the array of images id
-        const otherImagesColumn = document.querySelector('div.columns').lastElementChild;  // Catching the element in which we will insert the image
+        var otherImages = [];
         for(var imageId of otherImagesId){
             // For each image id, we display it if it's not already displayed and if it hasn't been removed of the db by the delete button
-            if(!document.getElementById(imageId) && Images.findOne({_id: imageId})){
-                var imageUrl = Images.findOne({_id: imageId}).url();  // Find the image url in the db
-                if(imageUrl !== null){
-                    // If the image url is accessible (there is a latency between the update of the Session variable with the id and the accessibility of the image and it's url)
-                    var imageContainer = document.createElement('div');  // We create a new element
-                    imageContainer.id = imageId;  // Set the image id to the container's to remove the image after
-                    imageContainer.classList += "other-image width-fit-content";  // Adding class and style to display it correctly
-                    imageContainer.style.position = 'relative';
-                    imageContainer.style.display = 'inline-block';
-                    imageContainer.innerHTML = '<img src='+imageUrl+' class="image is-128x128"><button class="delete" style="position: absolute; top: 0; right: 0;"></button>';
-                    otherImagesColumn.appendChild(imageContainer);  // Add the element to the document
-                }
-            }
+            otherImages.push(Images.findOne({_id: imageId}));
         }
+        return otherImages;
     }
 });
 
@@ -292,8 +261,6 @@ Template.addProduct.events({
         document.querySelector('span.coverImage.file-name').textContent = "Aucun fichier sélectionné";  // Updating displayed value
         Images.remove(event.currentTarget.parentElement.id);  // Remove the image from the db
         Session.set('coverImageId', null);  // Update cover image id
-        var imageContainer = event.currentTarget.parentElement;  // Image container is the parent element of the delete button
-        imageContainer.parentNode.removeChild(imageContainer);  // Removing image container
     },
     'click div.other-image button.delete'(event){
         // When the delete button of an other image is clicked
@@ -301,14 +268,15 @@ Template.addProduct.events({
         var imageId = event.currentTarget.parentElement.id;  // Current image id is the id of the container (parent element)
         Images.remove(imageId);  // Remove the image from the db
         var otherImagesId = Session.get('otherImagesId');  // Catch the array of images
-        otherImagesId.pop(imageId);  // Removing the image id
+        var index = otherImagesId.indexOf(imageId);
+        if(index !== -1){
+            otherImagesId.splice(index, 1);  // Removing the image id
+        }
         Session.set('otherImagesId', otherImagesId);  // Updating the value
-        var imageContainer = event.currentTarget.parentElement;  // Image container is the parent element of the delete button
-        imageContainer.parentNode.removeChild(imageContainer);  // Removing image container
         const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display to update the value
         if(otherImagesId.length === 0){
             imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-        }else if(otherImagesId.length === 1){
+        } else if(otherImagesId.length === 1){
             imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
         } else{
             // At least 2 files

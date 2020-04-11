@@ -34,12 +34,17 @@ Template.moderation.events({
                 console.log('new');
                 break;
             case 'duplicate':
-                // Duplicate approved, removing the product
-                Products.remove(currentModeration.elementId);
-                break;
             case 'offTopic':
-                // Off topic approved, removing the product
-                Products.remove(currentModeration.elementId);
+                // Duplicate or off topic approved, removing the product
+                var productImagesID = Products.findOne({_id: currentModeration.elementId}).imagesID;  // Catching the product images
+                Products.remove(currentModeration.elementId, function(error, result){
+                    if(!error){
+                        // The product was successfully removed, we can now delete it's images
+                        for(var imageID of productImagesID){
+                            Images.remove(imageID);
+                        }
+                    }
+                });
                 break;
         }
         Moderation.remove(moderationId);
