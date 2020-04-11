@@ -8,6 +8,7 @@ import './moderation.html';
 // Database import
 import { Products } from '../../databases/products.js';
 import { Moderation } from '../../databases/moderation.js';
+import { Images } from '../../databases/moderation.js';
 
 
 Template.moderation.helpers({
