@@ -1,13 +1,9 @@
 <template name="editProduct">
     <header class="card-header container" style="border: ridge grey 0.1rem; border-bottom: none;">
-        <div class="card-header-icon" id="return">
-            <span class="icon"><i class="fas fa-reply"></i></span>
-            <p>Retour</p>
-        </div>
         <h3 class="card-header-title title is-3 is-centered" style="margin-bottom: 0;">Modifier le produit</h3>
     </header>
     {{#if currentUser}}
-        <form class="container" style="border: ridge grey 0.1rem; padding: 0.8rem;">
+        <form class="container" id="editProduct" style="border: ridge grey 0.1rem; padding: 0.8rem;">
 
             <section class="section">
                 <h4 class="title is-4 has-text-centered">Informations</h4>
@@ -49,6 +45,12 @@
                                 <span class="coverImage file-name">Aucun fichier sélectionné</span>
                             </label>
                         </div>
+                        {{#each displayCoverImage}}
+                            <div id="{{_id}}" class="cover-image width-fit-content" style="position: relative; display: inline-block;">
+                                <img src="{{this.url}}" class="image is-128x128">
+                                <button class="delete" style="position: absolute; top: 0; right: 0;"></button>
+                            </div>
+                        {{/each}}
                     </div>
 
                     <div class="column field has-text-centered">
@@ -65,6 +67,12 @@
                                 <span class="images file-name">Aucun fichier sélectionné</span>
                             </label>
                         </div>
+                        {{#each displayOtherImages}}
+                            <div id="{{_id}}" class="other-image width-fit-content" style="position: relative; display: inline-block;">
+                                <img src="{{this.url}}" class="image is-128x128">
+                                <button class="delete" style="position: absolute; top: 0; right: 0;"></button>
+                            </div>
+                        {{/each}}
                     </div>
                 </div>
             </section>
@@ -87,7 +95,7 @@
                 </div>
             </section>
 
-            <button class="button is-success is-medium is-fullwidth" id="addProduct" type="submit">Valider les modifications</button>
+            <button class="button is-success is-medium is-fullwidth" id="submitModifications" type="submit">Valider les modifications</button>
         </form>
     {{else}}
         <p class="subtitle"><span class="register link has-text-weight-semibold">Inscrivez-vous</span> ou <span class="login link has-text-weight-semibold">connectez-vous</span> pour continuer.</p>
