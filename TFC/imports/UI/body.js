@@ -16,6 +16,7 @@ import './home.js';
 import './addProduct.js';
 import './productPage.js';
 import './user/userProfile.js';
+import './moderation/moderation.js';
 import './searchResults.js';
 import './productBanner.js';
 import './editProduct.js';
@@ -144,10 +145,7 @@ Template.body.events({
         $("li#informations").addClass("is-active");  // Set the current tab as the active one
     },
     'click #moderation'(event){
-        Session.set('page', 'userProfile');  // Switch to userProfile page
-        Session.set('userPage', 'moderation');
-        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-        $("li#moderation").addClass("is-active");  // Set the current tab as the active one
+        Session.set('page', 'moderation');  // Switch to moderation page
     },
 
 

@@ -1,4 +1,4 @@
-<template name="productBanner">
+<template name="moderationBanner">
     <article class="message is-info">
         <div class="productBanner" id="{{_id}}">
             <div class="message-header">
@@ -21,5 +21,20 @@
             </div>
         </div>
 
+        {{#if underModeration _id}}
+            {{#each displayModerationControls _id}}
+                <div class="has-text-centered">
+                    <p>Raison : <br> {{reasonText}}</p>
+                    <button class="button is-danger">{{rejectText}}</button>
+                    <button class="button is-success moderationAccepted" id="{{_id}}">{{approveText}}</button>
+                </div>
+            {{/each}}
+            {{#each editModeration _id}}
+                <br>
+                <div class="has-text-centered">
+                    <button class="button seeEdit" id="{{_id}}">Voir les modifications</button>
+                </div>
+            {{/each}}
+        {{/if}}
     </article>
 </template>

@@ -10,6 +10,7 @@ import '../imports/databases/contributions.js';
 import '../imports/databases/favorites.js';
 import '../imports/databases/images.js';
 import '../imports/databases/moderation.js';
+import '../imports/databases/editedProducts.js';
 
 import { Products } from '../imports/databases/products.js';
 import { Moderation } from '../imports/databases/moderation.js';
@@ -17,7 +18,7 @@ import { Moderation } from '../imports/databases/moderation.js';
 Meteor.startup(function(){
     // code to run on server at startup
     Products.rawCollection().createIndex({ name: "text", description: "text" });  // Creating text index to enable search in those fields of the db
-    if (Meteor.settings && Meteor.settings.smtp){
+    if(Meteor.settings && Meteor.settings.smtp){
         const { username, password, host, port, isSecure } = Meteor.settings.smtp;
         const scheme = isSecure ? 'smtps' : 'smtp';
         process.env.MAIL_URL = `${scheme}://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}:${port}`;

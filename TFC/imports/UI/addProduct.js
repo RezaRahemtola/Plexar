@@ -41,7 +41,7 @@ Template.addProduct.onRendered(function(){
         const coverImageInput = document.querySelector('input#coverImage');  // Saving input in a variable
         const coverImageNumberDisplay = document.querySelector('span.coverImage.file-name');  // Catching the file number display
         coverImageInput.onchange = function(){
-            if(coverImageInput.files.length === 0){
+            if(coverImageInput.files.length === 0 && Session.get('coverImageId') === null){
                 coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
             } else if(coverImageInput.files.length === 1){
                 if(checkFileInput(files=coverImageInput.files, minLength=1, maxLength=1, type='image', maxMBSize=5)){
@@ -118,15 +118,15 @@ Template.addProduct.onRendered(function(){
 Template.addProduct.helpers({
     displayCoverImage: function(){
         // Display the cover image
-        var coverImageId = Session.get('coverImageId');  // Catchin the image id
-        return Images.find({_id: coverImageId})  // Find the image url in the db
+        var coverImageId = Session.get('coverImageId');  // Catching the image id
+        return Images.find({_id: coverImageId})  // Find and return the corresponding image in the db
     },
     displayOtherImages: function(){
         // Display the other images
         var otherImagesId = Session.get('otherImagesId');  // Catching the array of images id
         var otherImages = [];
         for(var imageId of otherImagesId){
-            // For each image id, we display it if it's not already displayed and if it hasn't been removed of the db by the delete button
+            // For each image id, we add it to the images array
             otherImages.push(Images.findOne({_id: imageId}));
         }
         return otherImages;
@@ -161,7 +161,7 @@ Template.addProduct.events({
                         }
                     }
                     if(correctImages === Session.get('otherImagesId').length){
-                        // Files are correct, catching categories
+                        // All images are correct, catching categories
                         var selectedCategories = Session.get('selectedCategories');   // Catching the array of categories that are already selected
                         // Inserting informations in the database :
                         callbacksPending++;  // Starting a call with a callback function

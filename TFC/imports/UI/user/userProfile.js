@@ -10,7 +10,6 @@ import './userProfile.html';
 import './contributions.js';
 import './favorite.js';
 import './informations.js';
-import './moderation.js';
 
 
 Template.userProfile.onRendered(function(){
@@ -27,9 +26,13 @@ Template.userProfile.helpers({
 
 
 Template.userProfile.events({
-    'click #informations, click #favorite, click #contributions, click #moderation'(event){
+    'click #informations, click #favorite, click #contributions'(event){
         // Switching tabs
         event.preventDefault();
         Session.set('userPage', event.currentTarget.id);
+    },
+    'click #moderation'(event){
+        event.preventDefault();
+        Session.set('page', 'moderation');
     }
 });

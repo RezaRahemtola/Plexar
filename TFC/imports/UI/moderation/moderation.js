@@ -5,8 +5,12 @@ import { Template } from 'meteor/templating';
 // HTML import
 import './moderation.html';
 
+// JS import
+import './moderationBanner.js';
+
 // Database import
 import { Products } from '../../databases/products.js';
+import { EditedProducts } from '../../databases/editedProducts.js';
 import { Moderation } from '../../databases/moderation.js';
 import { Images } from '../../databases/moderation.js';
 
@@ -32,7 +36,6 @@ Template.moderation.events({
         switch(currentModeration.reason){
             case 'newProduct':
                 // New product accepted, it's already in the Products db so we only need to remove it from Moderation
-                console.log('new');
                 break;
             case 'duplicate':
             case 'offTopic':
