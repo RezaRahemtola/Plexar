@@ -38,6 +38,7 @@ import { Images } from '../databases/images.js';
 // Alone Template
 import './credits.html';
 import './faq.html';
+import './about.html';
 
 // Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page
