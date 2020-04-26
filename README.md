@@ -20,3 +20,8 @@ meteor add cfs:standard-packages
 meteor add cfs:filesystem
 
 meteor update
+
+
+Pour lancer l'app avec les settings (adresse email) :
+
+meteor --settings server/config/settings.json
