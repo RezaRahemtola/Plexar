@@ -20,12 +20,10 @@ Meteor.startup(function(){
         const scheme = isSecure ? 'smtps' : 'smtp';
         process.env.MAIL_URL = `${scheme}://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}:${port}`;
     }
-    Accounts.config({
+    /*Accounts.config({
         sendVerificationEmail: true
     });
+    Accounts.onEmailVerificationLink = function(token, done){
+        Accounts.verifyEmail(token);
+    };*/
 });
-
-
-Accounts.onEmailVerificationLink = function(token, done){
-    Accounts.verifyEmail(token);
-};

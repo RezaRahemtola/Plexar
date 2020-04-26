@@ -69,10 +69,10 @@ Template.body.helpers({
         }
     },
     displayProfilePicture: function(){
-        if(UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID !== null){
+        if(Meteor.userId() && UsersInformations.findOne({userID: Meteor.userId()}) && UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID !== null){
             // The current user has a profile picture
-            var profilePictureID = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;  // Catch the picture ID
-            return Images.findOne({_id: profilePictureID}).url();  // Return the url of the image
+            var profilePictureId = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;  // Catch the picture ID
+            return Images.findOne({_id: profilePictureId}).url();  // Return the url of the image
         } else{
             // The current user doesn't have a profile picture, return the default one
             return 'user.svg';

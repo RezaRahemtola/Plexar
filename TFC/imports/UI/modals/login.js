@@ -9,9 +9,6 @@ import './login.html';
 // CSS import
 import '../css/form.css';
 
-// Functions import
-import '../functions/checkInputs.js';
-
 
 Template.login.onRendered(function(){
     // Live email validation

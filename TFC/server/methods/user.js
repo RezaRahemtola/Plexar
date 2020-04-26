@@ -2,8 +2,14 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Email } from 'meteor/email';
-// Importing databases
 
+// Importing databases
+import { Rules } from '../rules.js';
+import { UsersInformations } from '../../imports/databases/usersInformations.js';
+import { Favorites } from '../../imports/databases/favorites.js';
+
+// Importing functions
+import '../functions/checkInputs.js';
 
 Meteor.methods({
     'changeUsername'({newUsername}){
@@ -23,5 +29,26 @@ Meteor.methods({
     },
     'sendVerificationEmail'(){
         Accounts.sendVerificationEmail(Meteor.userId());
+    },
+    'createNewUser'({username, email, newsletterIsChecked}){
+        // Inserting informations in the database
+        UsersInformations.insert({
+            userID: Meteor.userId(),
+            username: username,
+            email: email,
+            firstName: "",
+            lastName: "",
+            profilePictureID: null,
+            upvotes: [],
+            downvotes: [],
+            newsletter: newsletterIsChecked
+        });
+        // Creating empty favorites of the new user
+        Favorites.insert({
+            userId: Meteor.userId(),
+            products: []
+        });
+        // User was successfully created
+        return true;
     }
 });

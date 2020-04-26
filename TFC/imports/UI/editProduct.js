@@ -15,9 +15,6 @@ import './editProduct.html';
 // CSS import
 import './css/form.css';
 
-// JS import
-import './functions/checkInputs.js';
-
 Session.set('editedCoverImageId', null);
 Session.set('editedOtherImagesId', []);
 
@@ -33,7 +30,7 @@ Template.editProduct.onRendered(function(){
         if(result){
             // The rule was returned succesfully, we apply it
 
-            // Defining product name contants
+            // Defining product name constants
             const productNameInput = document.querySelector('input#name');
             const nameCharDisplay = document.querySelector('span#nameCharCounter');
             productNameInput.value = product.name;  // Setting the input value with the current product name
@@ -47,11 +44,18 @@ Template.editProduct.onRendered(function(){
                 nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
             }
 
-            // Defining product description contants
+            // Defining product description constants
             const productDescriptionInput = document.querySelector('textarea#description');
             const descriptionCharDisplay = document.querySelector('span#descriptionCharCounter');
             productDescriptionInput.value = product.description;  // Setting the input value with the current product description
-            autoExpand(productDescriptionInput);  // Auto expand the field to display the text correctly
+            // Auto expand the field to display the text correctly
+            // Sending mandatory informations only to preserve server resources
+            fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
+            Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
+                if(!error && result){
+                    productDescriptionInput.style.height = result;
+                }
+            });
             // Setting input min and max length
             productDescriptionInput.minLength = result.description.minLength;
             productDescriptionInput.maxLength = result.description.maxLength;
@@ -60,87 +64,115 @@ Template.editProduct.onRendered(function(){
             productDescriptionInput.oninput = function(){
                 // When a char is added or removed, updating the displayed value
                 descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
-                autoExpand(productDescriptionInput);
-            }
-        }
-    });
-
-
-    // Cover image
-    var coverImageId = product.imagesID.splice(0, 1);  // Cover image Id is the first (splice remove it from the list so we can use it after for other images)
-    Session.set('coverImageId', coverImageId[0]);
-    Session.set('editedCoverImageId', coverImageId[0]);  // For the moment, the cover image of the edited product is the same than the actual product
-    const coverImageInput = document.querySelector('input#coverImage');  // Saving input in a variable
-    const coverImageNumberDisplay = document.querySelector('span.coverImage.file-name');  // Catching the file number display
-    if(Session.get('editedCoverImageId') === null){
-        coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-    } else if(Session.get('editedCoverImageId')){
-        coverImageNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
-    }
-    // Event listener
-    coverImageInput.onchange = function(){
-        if(coverImageInput.files.length === 0 && Session.get('editedCoverImageId') === null){
-            coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-        } else if(coverImageInput.files.length === 1){
-            if(checkFileInput(files=coverImageInput.files, minLength=1, maxLength=1, type='image', maxMBSize=5)){
-                // File input is correct
-                coverImageNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
-                if(Session.get('editedCoverImageId')){
-                    // There was already a cover image and it was replaced
-                    if(Session.get('editedCoverImageId') !== Session.get('coverImageId')){
-                        // The replaced cover image wasn't the one of the actual product, we can delete it
-                        Images.remove(Session.get('editedCoverImageId'));  // Remove the old image from the db
-                    }
-                    Session.set('editedCoverImageId', null);  // Reseting the value of the cover image
-                }
-                Images.insert(coverImageInput.files[0], function(error, fileObj){
-                    if(!error){
-                        Session.set('editedCoverImageId', fileObj._id);
+                // Auto expand the field to display the text correctly
+                // Sending mandatory informations only to preserve server resources
+                fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
+                Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
+                    if(!error && result){
+                        productDescriptionInput.style.height = result;
                     }
                 });
             }
-        }
-    }
 
-    // Other images
-    Session.set('otherImagesId', product.imagesID);
-    Session.set('editedOtherImagesId', product.imagesID);  // For the moment, the images of the edited product are the same than the actual product
-    const imagesInput = document.querySelector('input#images');  // Saving input in a variable
-    const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display to update the value
-    if(product.imagesID.length === 0){
-        imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-    } else if(product.imagesID.length === 1){
-        imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
-    } else{
-        // At least 2 files
-        imagesNumberDisplay.textContent = product.imagesID.length + " fichiers sélectionnés";  // Updating displayed value
-    }
-    // Event listener
-    imagesInput.onchange = function(){
-        if(imagesInput.files.length >= 1){
-            // There is at least one uploaded file
-            if(checkFileInput(files=imagesInput.files, minLength=0, maxLength=4-Session.get('editedOtherImagesId').length, type='image', maxMBSize=5)){
-                // Files are correct, adding them to the db
-                for(var image of imagesInput.files){
-                    Images.insert(image, function(error, fileObj){
-                        if(!error){
-                            var otherImagesId = Session.get('editedOtherImagesId');  // Catching the array of images
-                            otherImagesId.push(fileObj._id)  // Adding it the new image
-                            Session.set('editedOtherImagesId', otherImagesId);  // Updating the value
-                            if(otherImagesId.length === 1){
-                                imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
-                            } else{
-                                // At least 2 files
-                                imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";  // Updating displayed value
+            // Defining cover image constants
+            const coverImageInput = document.querySelector('input#coverImage');  // Saving input in a variable
+            const coverImageNumberDisplay = document.querySelector('span.coverImage.file-name');  // Catching the file number display
+            // Setting current cover image
+            var coverImageId = product.imagesID.splice(0, 1)[0];  // Cover image Id is the first (splice remove it from the list so we can use it after for other images)
+            Session.set('coverImageId', coverImageId);  // Setting the reactive variable with this value
+            Session.set('editedCoverImageId', coverImageId);  // For the moment, the cover image of the edited product is the same than the actual product
+            // Displaying file counter and creating an event listener
+            if(Session.get('editedCoverImageId') === null){
+                coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+            } else if(Session.get('editedCoverImageId')){
+                coverImageNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+            }
+            coverImageInput.onchange = function(){
+                if(coverImageInput.files.length === 0 && Session.get('editedCoverImageId') === null){
+                    coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+                } else{
+                    // There is at least one uploaded file, we transform them to pass it to the server (File object can't be pass)
+                    var serverFiles = [];
+                    for(file of coverImageInput.files){
+                        serverFiles.push({size: file.size, type: file.type});
+                    }
+                    Meteor.call('checkProductCoverImageInput', {files: serverFiles}, function(error, result){
+                        if(error){
+                            // There is an error
+                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                        } else{
+                            // File input is correct
+                            coverImageNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+                            if(Session.get('editedCoverImageId')){
+                                // There was already a cover image and it was replaced
+                                if(Session.get('editedCoverImageId') !== Session.get('coverImageId')){
+                                    // The replaced cover image wasn't the one of the actual product, we can delete it
+                                    Images.remove(Session.get('editedCoverImageId'));  // Remove the old image from the db
+                                }
+                                Session.set('editedCoverImageId', null);  // Reseting the value of the cover image
                             }
+                            Images.insert(coverImageInput.files[0], function(error, fileObj){
+                                if(!error){
+                                    Session.set('editedCoverImageId', fileObj._id);
+                                }
+                            });
                         }
                     });
                 }
             }
-        } else{
-            imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+
+            // Defining other images constants
+            const imagesInput = document.querySelector('input#images');  // Saving input in a variable
+            const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display to update the value
+            Session.set('otherImagesId', product.imagesID);  // Set the original product other images
+            Session.set('editedOtherImagesId', product.imagesID);  // For the moment, the images of the edited product are the same than the actual product
+            // Displaying file counter and creating an event listener
+            if(product.imagesID.length === 0){
+                imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+            } else if(product.imagesID.length === 1){
+                imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+            } else{
+                // At least 2 files
+                imagesNumberDisplay.textContent = product.imagesID.length + " fichiers sélectionnés";  // Updating displayed value
+            }
+            // Event listener
+            imagesInput.onchange = function(){
+                if(imagesInput.files.length >= 1){
+                    // There is at least one uploaded file, we transform them to pass it to the server (File object can't be pass)
+                    var serverFiles = [];
+                    for(file of imagesInput.files){
+                        serverFiles.push({size: file.size, type: file.type});
+                    }
+                    Meteor.call('checkProductOtherImagesInput', {files: serverFiles, numberOfUploadedImages: Session.get('editedOtherImagesId').length}, function(error, result){
+                        if(error){
+                            // There is an error
+                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                        } else{
+                            // Files are correct, adding them to the db
+                            for(var image of imagesInput.files){
+                                Images.insert(image, function(error, fileObj){
+                                    if(!error){
+                                        var otherImagesId = Session.get('editedOtherImagesId');  // Catching the array of images
+                                        otherImagesId.push(fileObj._id)  // Adding it the new image
+                                        Session.set('editedOtherImagesId', otherImagesId);  // Updating the value
+                                        if(otherImagesId.length === 1){
+                                            imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+                                        } else{
+                                            // At least 2 files
+                                            imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";  // Updating displayed value
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else{
+                    imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+                }
+            }
         }
-    }
+    });
+
 
     // Categories
     Session.set('selectedCategories', product.categories);  // Updating the selected categories with product's ones
@@ -250,94 +282,102 @@ Template.editProduct.events({
 
         // Check if the name is correctly formatted
         var productName = form.get('name');
-        var currentInput = document.querySelector('input#name');
-        if(checkTextInput(text=productName, minLength=currentInput.minLength, maxLength=currentInput.maxLength)){
-            // Product name is correct, checking the description
-            var productDescription = form.get('description');
-            currentInput = document.querySelector('textarea#description');
-            if(checkTextInput(text=productDescription, minLength=currentInput.minLength, maxLength=currentInput.maxLength)){
-                // Description is correct, checking the images
-                if(Images.findOne({_id: Session.get('editedCoverImageId')})){
-                    // Cover image is in the db, checking the images
-                    var otherImagesId = Session.get('editedOtherImagesId');
-                    var correctImages = 0;
-                    for(var imageId of otherImagesId){
-                        // For each image id, checking if it's in the db
-                        if(Images.findOne({_id: imageId})){
-                            correctImages++;
-                        }
-                    }
-                    if(correctImages === Session.get('editedOtherImagesId').length){
-                        // All images are correct, catching categories
-                        var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
-                        var originalProduct = Products.findOne({_id: Session.get('currentProductID')});
-                        // Inserting informations in the database :
-                        callbacksPending++;  // Starting a call with a callback function
-                        EditedProducts.insert({
-                            originalId: originalProduct._id,
-                            name: productName,
-                            description: productDescription,
-                            imagesID: [],
-                            score: originalProduct.score,
-                            categories: selectedCategories
-                        }, function(error, addedProductId){
-                                if(!error){
-                                    // The product was successfully added, now let's add the images id
-                                    var editedProductImages = EditedProducts.findOne({_id: addedProductId}).imagesID;  // Catching the product images IDs array
-                                    var editedCoverImage = Session.get('editedCoverImageId');
-                                    var editedOtherImages = Session.get('editedOtherImagesId');
-                                    editedProductImages.push(editedCoverImage);  // Adding the cover image to the array
-                                    for(var imageId of editedOtherImages){
-                                        // For each image, adding it to the array
-                                        editedProductImages.push(imageId);
-                                    }
-                                    // Updating the db with the new array
-                                    EditedProducts.update(addedProductId, { $set: {
-                                        imagesID: editedProductImages
-                                    }});
-                                    callbacksPending++;  // Starting a call with a callback function
-                                    // Adding the product to the moderation database
-                                    Moderation.insert({
-                                        userId: Meteor.userId(),
-                                        elementId: Session.get('currentProductID'),
-                                        reason: "editProduct"
-                                    }, function(error, addedModerationId){
+        callbacksPending++;  // Starting a call with a callback function
+        Meteor.call('checkProductNameInput', {text: productName}, function(error, result){
+            if(error){
+                // Product name doesn't match all criteria
+                formErrors++;
+                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+            } else{
+                // Product name is correct, checking the description
+                var productDescription = form.get('description');
+                callbacksPending++;  // Starting a call with a callback function
+                Meteor.call('checkProductDescriptionInput', {text: productDescription}, function(error, result){
+                    if(error){
+                        // Product description doesn't match all criteria
+                        formErrors++;
+                        Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+                    } else{
+                        // Description is correct, checking the images
+                        if(Images.findOne({_id: Session.get('editedCoverImageId')})){
+                            // Cover image is in the db, checking the images
+                            var otherImagesId = Session.get('editedOtherImagesId');
+                            var correctImages = 0;
+                            for(var imageId of otherImagesId){
+                                // For each image id, checking if it's in the db
+                                if(Images.findOne({_id: imageId})){
+                                    correctImages++;
+                                }
+                            }
+                            if(correctImages === Session.get('editedOtherImagesId').length){
+                                // All images are correct, catching categories
+                                var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
+                                var originalProduct = Products.findOne({_id: Session.get('currentProductID')});
+                                // Inserting informations in the database :
+                                callbacksPending++;  // Starting a call with a callback function
+                                EditedProducts.insert({
+                                    originalId: originalProduct._id,
+                                    name: productName,
+                                    description: productDescription,
+                                    imagesID: [],
+                                    score: originalProduct.score,
+                                    categories: selectedCategories
+                                }, function(error, addedProductId){
                                         if(!error){
-                                            // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
-                                            Contributions.insert({
+                                            // The product was successfully added, now let's add the images id
+                                            var editedProductImages = EditedProducts.findOne({_id: addedProductId}).imagesID;  // Catching the product images IDs array
+                                            var editedCoverImage = Session.get('editedCoverImageId');
+                                            var editedOtherImages = Session.get('editedOtherImagesId');
+                                            editedProductImages.push(editedCoverImage);  // Adding the cover image to the array
+                                            for(var imageId of editedOtherImages){
+                                                // For each image, adding it to the array
+                                                editedProductImages.push(imageId);
+                                            }
+                                            // Updating the db with the new array
+                                            EditedProducts.update(addedProductId, { $set: {
+                                                imagesID: editedProductImages
+                                            }});
+                                            callbacksPending++;  // Starting a call with a callback function
+                                            // Adding the product to the moderation database
+                                            Moderation.insert({
                                                 userId: Meteor.userId(),
-                                                type: 'Proposition de modifications',
-                                                elementId: addedProductId,
-                                                createdAt: new Date().toISOString(),
-                                                moderationId: addedModerationId,
-                                                points: 10
+                                                elementId: Session.get('currentProductID'),
+                                                reason: "editProduct"
+                                            }, function(error, addedModerationId){
+                                                if(!error){
+                                                    // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
+                                                    Contributions.insert({
+                                                        userId: Meteor.userId(),
+                                                        type: 'Proposition de modifications',
+                                                        elementId: addedProductId,
+                                                        createdAt: new Date().toISOString(),
+                                                        moderationId: addedModerationId,
+                                                        points: 10
+                                                    });
+                                                } else{
+                                                    // There was an error while adding the moderation
+                                                    formErrors++;
+                                                }
+                                                callbacksPending--;  // End of callback function
                                             });
                                         } else{
-                                            // There was an error while adding the moderation
+                                            // There was an error while adding the product
                                             formErrors++;
                                         }
                                         callbacksPending--;  // End of callback function
-                                    });
-                                } else{
-                                    // There was an error while adding the product
-                                    formErrors++;
-                                }
-                                callbacksPending--;  // End of callback function
+                                    }
+                                );
                             }
-                        );
+                        } else{
+                            // Other images doesn't match all criteria
+                            formErrors++;
+                        }
                     }
-                } else{
-                    // Other images doesn't match all criteria
-                    formErrors++;
-                }
-            } else{
-                // Product description doesn't match all criteria
-                formErrors++;
+                    callbacksPending--;  // End of callback function
+                });
             }
-        } else{
-            // Product name doesn't match all criteria
-            formErrors++;
-        }
+            callbacksPending--;  // End of callback function
+        });
 
 
         // Waiting for all callbacks to complete (to see if an error is raised)

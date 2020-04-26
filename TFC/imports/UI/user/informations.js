@@ -13,9 +13,6 @@ import './informations.html';
 // CSS import
 import '../css/form.css';
 
-// Functions import
-import '../functions/checkInputs.js';
-
 
 Template.informations.onRendered(function(){  // When the template is rendered on the screen
 
@@ -101,57 +98,73 @@ Template.informations.events({
         if(oldPassword.length > 0){
             var newPassword = form.get('newPassword');  // Saving input in variable
             var confirmNewPassword = form.get('confirmNewPassword');  // Saving input in variable
-            if(!(checkPasswordsInput(newPassword, confirmNewPassword, minLength=6, maxLength=100, forbiddenChars=[' ']))){
-                // Error in passwords fields
-                formErrors++;
-                $('input#newPassword, input#confirmNewPassword').addClass("is-danger");  // Adding a red border to those fields
-            } else{
-                // No error
-                callbacksPending++;  // Starting a call with a callback function
-                Accounts.changePassword(oldPassword, newPassword, function(error){
-                    if(error){
-                        formErrors++;
-                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Set the error message with given error reason
-                    }
-                    callbacksPending--;  // End of callback function
-                });
-            }
+            callbacksPending++;  // Starting a call with a callback function
+            Meteor.call('checkPasswordsInput', {password: newPassword, confirmPassword: confirmNewPassword}, function(error, result){
+                if(error){
+                    // There is an error in password field
+                    formErrors++;
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    $('input#newPassword, input#confirmNewPassword').addClass("is-danger");  // Adding a red border to those fields
+                } else{
+                    // No error
+                    callbacksPending++;  // Starting a call with a callback function
+                    Accounts.changePassword(oldPassword, newPassword, function(error){
+                        if(error){
+                            formErrors++;
+                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Set the error message with given error reason
+                        }
+                        callbacksPending--;  // End of callback function
+                    });
+                }
+                callbacksPending--;  // End of callback function
+            });
         }
 
 
         var files = document.querySelector('input#profilePictureFile').files;  // Catching profile picture file in file input
         if(files.length > 0){
-            // There's an uploaded file, user wants to update it's profile picture
-            if(checkFileInput(files=files, minLength=1, maxLength=1, type='image', maxMBSize=5)){
-                callbacksPending++;  // Starting a call with a callback function
-                Images.insert(files[0], function (error, fileObj){
-                    if(!error){
-                        // Image was successfully inserted, linking it with user's informations
-                        callbacksPending++;  // Starting a call with a callback function
-                        UsersInformations.update(userInformationsID, { $set: {
-                            profilePictureID: fileObj._id
-                        }}, function(error, result){
-                                if(!error){
-                                    // Image was successfully linked, we can now remove the old profile picture
-                                    Images.remove(currentProfilePictureID);
-                                } else{
-                                    // There was an error while linking the image with user's informations
-                                    formErrors++;
-                                    Images.remove(fileObj._id);  // Removing the new picture
-                                }
-                                callbacksPending--;  // End of callback function
-                            });
-                    } else{
-                        // There was an error while inserting the file in Images db
-                        formErrors++;
-                    }
-                    callbacksPending--;  // End of callback function
-                });
-            } else{
-                // File doesn't match all criteria
-                formErrors++;
+            // There's an uploaded file,
+            // There is at least one uploaded file, user wants to update it's profile picture, transform it to pass it to the server (File object can't be pass)
+            var serverFiles = [];
+            for(file of files){
+                serverFiles.push({size: file.size, type: file.type});
             }
+            callbacksPending++;  // Starting a call with a callback function
+            Meteor.call('checkProfilePictureInput', {files: serverFiles}, function(error, result){
+                if(error){
+                    // There is an error
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    formErrors++;  // File doesn't match all criteria
+                } else{
+                    // File input is correct, inserting it to the db
+                    Images.insert(files[0], function (error, fileObj){
+                        if(!error){
+                            // Image was successfully inserted, linking it with user's informations
+                            callbacksPending++;  // Starting a call with a callback function
+                            UsersInformations.update(userInformationsID, { $set: {
+                                profilePictureID: fileObj._id
+                            }}, function(error, result){
+                                    if(!error){
+                                        // Image was successfully linked, we can now remove the old profile picture
+                                        Images.remove(currentProfilePictureID);
+                                    } else{
+                                        // There was an error while linking the image with user's informations
+                                        formErrors++;
+                                        Images.remove(fileObj._id);  // Removing the new picture
+                                    }
+                                    callbacksPending--;  // End of callback function
+                                });
+                        } else{
+                            // There was an error while inserting the file in Images db
+                            formErrors++;
+                        }
+
+                    });
+                }
+                callbacksPending--;  // End of callback function
+            });
         }
+
 
         // Waiting for all callbacks to complete (to see if an error is raised)
         var intervalID = setInterval(function(){

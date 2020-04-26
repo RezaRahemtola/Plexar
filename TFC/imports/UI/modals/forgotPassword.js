@@ -6,9 +6,6 @@ import { Accounts } from 'meteor/accounts-base';
 // HTML import
 import './forgotPassword.html';
 
-// Functions import
-import '../functions/checkInputs.js';
-
 
 Template.forgotPassword.onRendered(function(){
     // Live email validation
