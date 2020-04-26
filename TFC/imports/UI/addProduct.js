@@ -20,20 +20,40 @@ import './functions/checkInputs.js';
 
 Template.addProduct.onRendered(function(){
     if(Meteor.user()){
-        const productNameInput = document.querySelector('input#name');
-        const nameCharDisplay = document.querySelector('span#nameCharCounter');
-        nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
-        productNameInput.oninput = function(){
-            nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
-        }
+        // User is logged in, creating all dynamic functions
 
-        const productDescriptionInput = document.querySelector('textarea#description');
-        const descriptionCharDisplay = document.querySelector('span#descriptionCharCounter');
-        descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
-        productDescriptionInput.oninput = function(){
-            descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
-            autoExpand(productDescriptionInput);
-        }
+        Meteor.call('getRuleValue', {rulePath: 'Rules.product'}, function(error, result){
+            if(result){
+                // The rule was returned succesfully, we apply it
+
+                // Defining product name contants
+                const productNameInput = document.querySelector('input#name');
+                const nameCharDisplay = document.querySelector('span#nameCharCounter');
+                // Setting input min and max length
+                productNameInput.minLength = result.name.minLength;
+                productNameInput.maxLength = result.name.maxLength;
+                // Displaying char counter and creating an event listener
+                nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
+                productNameInput.oninput = function(){
+                    // When a char is added or removed, updating the displayed value
+                    nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
+                }
+
+                // Defining product description contants
+                const productDescriptionInput = document.querySelector('textarea#description');
+                const descriptionCharDisplay = document.querySelector('span#descriptionCharCounter');
+                // Setting input min and max length
+                productDescriptionInput.minLength = result.description.minLength;
+                productDescriptionInput.maxLength = result.description.maxLength;
+                // Displaying char counter and creating an event listener
+                descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
+                productDescriptionInput.oninput = function(){
+                    // When a char is added or removed, updating the displayed value
+                    descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
+                    autoExpand(productDescriptionInput);
+                }
+            }
+        });
 
 
         Session.set('coverImageId', null);

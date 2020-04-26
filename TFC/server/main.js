@@ -4,13 +4,10 @@ import { Accounts } from 'meteor/accounts-base';
 import { Email } from 'meteor/email';
 
 // Importing databases
-import '../imports/databases/products.js';
-import '../imports/databases/usersInformations.js';
-import '../imports/databases/contributions.js';
-import '../imports/databases/favorites.js';
-import '../imports/databases/images.js';
-import '../imports/databases/moderation.js';
-import '../imports/databases/editedProducts.js';
+import '../imports/databases/_all.js';
+
+// Importing methods
+import './methods/_all.js';
 
 import { Products } from '../imports/databases/products.js';
 import { Moderation } from '../imports/databases/moderation.js';
@@ -28,38 +25,6 @@ Meteor.startup(function(){
     });
 });
 
-Meteor.methods({
-    'changeUsername'({newUsername}){
-        Accounts.setUsername(Meteor.userId(), newUsername);
-    },
-    'checkIfUsernameIsTaken'({username}){
-        if(Meteor.user()){
-            // If user is logged in, check if username exists and if it's different than current user's
-            return (Meteor.users.findOne({username: username}) && username !== Meteor.user().username) ? true : false;
-        } else{
-            // Only check if username exists
-            return (Meteor.users.findOne({username: username})) ? true : false;
-        }
-    },
-    'checkIfEmailIsTaken'({email}){
-        return (Accounts.findUserByEmail(email)) ? true : false;
-    },
-    'searchForProducts'({text}){
-        var result = Products.find({$text: { $search: text}}).fetch();  // Return the matching products that are not under moderation
-        var productsID = [];  // To save server resources we will only return products IDs
-        for (var product of result){
-            // For each product we add its ID to the array
-            if(!Moderation.findOne({elementId: product._id})){
-                // The product is not under moderation
-                productsID.push(product._id);
-            }
-        }
-        return productsID  // return array of productsID
-    },
-    'sendVerificationEmail'(){
-        Accounts.sendVerificationEmail(Meteor.userId());
-    }
-});
 
 Accounts.onEmailVerificationLink = function(token, done){
     Accounts.verifyEmail(token);

@@ -29,27 +29,42 @@ Template.editProduct.onRendered(function(){
     var productId = Session.get('currentProductID');
     var product = Products.findOne({_id: productId});
 
-    // Product name
-    const productName = document.querySelector('input#name');  // Catching the input
-    productName.value = product.name;  // Updating the value
-    // Event listener
-    const nameCharDisplay = document.querySelector('span#nameCharCounter');
-    nameCharDisplay.innerText = productName.value.length+" / "+productName.maxLength;
-    productName.oninput = function(){
-        nameCharDisplay.innerText = productName.value.length+" / "+productName.maxLength;
-    }
+    Meteor.call('getRuleValue', {rulePath: 'Rules.product'}, function(error, result){
+        if(result){
+            // The rule was returned succesfully, we apply it
 
-    // Product description
-    const productDescription = document.querySelector('textarea#description');  // Catching the field
-    productDescription.value = product.description;  // Updating it's value
-    autoExpand(productDescription);  // Auto expand the field to display the text correctly
-    // Event listener
-    const descriptionCharDisplay = document.querySelector('span#descriptionCharCounter');
-    descriptionCharDisplay.innerText = productDescription.value.length+" / "+productDescription.maxLength;
-    productDescription.oninput = function(){
-        descriptionCharDisplay.innerText = productDescription.value.length+" / "+productDescription.maxLength;
-        autoExpand(productDescription);
-    }
+            // Defining product name contants
+            const productNameInput = document.querySelector('input#name');
+            const nameCharDisplay = document.querySelector('span#nameCharCounter');
+            productNameInput.value = product.name;  // Setting the input value with the current product name
+            // Setting input min and max length
+            productNameInput.minLength = result.name.minLength;
+            productNameInput.maxLength = result.name.maxLength;
+            // Displaying char counter and creating an event listener
+            nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
+            productNameInput.oninput = function(){
+                // When a char is added or removed, updating the displayed value
+                nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
+            }
+
+            // Defining product description contants
+            const productDescriptionInput = document.querySelector('textarea#description');
+            const descriptionCharDisplay = document.querySelector('span#descriptionCharCounter');
+            productDescriptionInput.value = product.description;  // Setting the input value with the current product description
+            autoExpand(productDescriptionInput);  // Auto expand the field to display the text correctly
+            // Setting input min and max length
+            productDescriptionInput.minLength = result.description.minLength;
+            productDescriptionInput.maxLength = result.description.maxLength;
+            // Displaying char counter and creating an event listener
+            descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
+            productDescriptionInput.oninput = function(){
+                // When a char is added or removed, updating the displayed value
+                descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
+                autoExpand(productDescriptionInput);
+            }
+        }
+    });
+
 
     // Cover image
     var coverImageId = product.imagesID.splice(0, 1);  // Cover image Id is the first (splice remove it from the list so we can use it after for other images)
