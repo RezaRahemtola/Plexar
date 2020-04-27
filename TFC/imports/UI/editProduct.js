@@ -53,7 +53,7 @@ Template.editProduct.onRendered(function(){
             fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
             Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
                 if(!error && result){
-                    productDescriptionInput.style.height = result;
+                    productDescriptionInput.style.height = result;  // Result is the height to apply to the field
                 }
             });
             // Setting input min and max length
@@ -69,7 +69,7 @@ Template.editProduct.onRendered(function(){
                 fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
                 Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
                     if(!error && result){
-                        productDescriptionInput.style.height = result;
+                        productDescriptionInput.style.height = result;  // Result is the height to apply to the field
                     }
                 });
             }
@@ -78,7 +78,7 @@ Template.editProduct.onRendered(function(){
             const coverImageInput = document.querySelector('input#coverImage');  // Saving input in a variable
             const coverImageNumberDisplay = document.querySelector('span.coverImage.file-name');  // Catching the file number display
             // Setting current cover image
-            var coverImageId = product.imagesID.splice(0, 1)[0];  // Cover image Id is the first (splice remove it from the list so we can use it after for other images)
+            var coverImageId = product.images.splice(0, 1)[0];  // Cover image Id is the first (splice remove it from the list so we can use it after for other images)
             Session.set('coverImageId', coverImageId);  // Setting the reactive variable with this value
             Session.set('editedCoverImageId', coverImageId);  // For the moment, the cover image of the edited product is the same than the actual product
             // Displaying file counter and creating an event listener
@@ -124,16 +124,16 @@ Template.editProduct.onRendered(function(){
             // Defining other images constants
             const imagesInput = document.querySelector('input#images');  // Saving input in a variable
             const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display to update the value
-            Session.set('otherImagesId', product.imagesID);  // Set the original product other images
-            Session.set('editedOtherImagesId', product.imagesID);  // For the moment, the images of the edited product are the same than the actual product
+            Session.set('otherImagesId', product.images);  // Set the original product other images
+            Session.set('editedOtherImagesId', product.images);  // For the moment, the images of the edited product are the same than the actual product
             // Displaying file counter and creating an event listener
-            if(product.imagesID.length === 0){
+            if(product.images.length === 0){
                 imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-            } else if(product.imagesID.length === 1){
+            } else if(product.images.length === 1){
                 imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
             } else{
                 // At least 2 files
-                imagesNumberDisplay.textContent = product.imagesID.length + " fichiers sélectionnés";  // Updating displayed value
+                imagesNumberDisplay.textContent = product.images.length + " fichiers sélectionnés";  // Updating displayed value
             }
             // Event listener
             imagesInput.onchange = function(){
@@ -280,104 +280,88 @@ Template.editProduct.events({
         var formErrors = 0;  // No error for the moment
         var callbacksPending = 0;  // No callback is pending for the moment
 
-        // Check if the name is correctly formatted
+        // Catching and formatting product name
         var productName = form.get('name');
-        callbacksPending++;  // Starting a call with a callback function
-        Meteor.call('checkProductNameInput', {text: productName}, function(error, result){
-            if(error){
-                // Product name doesn't match all criteria
-                formErrors++;
-                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
-            } else{
-                // Product name is correct, checking the description
-                var productDescription = form.get('description');
+        productName.slice(0, 70);  // TODO: Remplacer par la rule
+
+        // Catching and formatting product description
+        var productDescription = form.get('description');
+        productDescription.slice(0, 1000);  // TODO: Remplacer par la rule
+        
+        // Description is correct, checking the images
+        if(Images.findOne({_id: Session.get('editedCoverImageId')})){
+            // Cover image is in the db, checking the images
+            var otherImagesId = Session.get('editedOtherImagesId');
+            var correctImages = 0;
+            for(var imageId of otherImagesId){
+                // For each image id, checking if it's in the db
+                if(Images.findOne({_id: imageId})){
+                    correctImages++;
+                }
+            }
+            if(correctImages === Session.get('editedOtherImagesId').length){
+                // All images are correct, catching categories
+                var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
+                var originalProduct = Products.findOne({_id: Session.get('currentProductID')});
+                // Inserting informations in the database :
                 callbacksPending++;  // Starting a call with a callback function
-                Meteor.call('checkProductDescriptionInput', {text: productDescription}, function(error, result){
-                    if(error){
-                        // Product description doesn't match all criteria
-                        formErrors++;
-                        Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
-                    } else{
-                        // Description is correct, checking the images
-                        if(Images.findOne({_id: Session.get('editedCoverImageId')})){
-                            // Cover image is in the db, checking the images
-                            var otherImagesId = Session.get('editedOtherImagesId');
-                            var correctImages = 0;
-                            for(var imageId of otherImagesId){
-                                // For each image id, checking if it's in the db
-                                if(Images.findOne({_id: imageId})){
-                                    correctImages++;
+                EditedProducts.insert({
+                    originalId: originalProduct._id,
+                    name: productName,
+                    description: productDescription,
+                    images: [],
+                    score: originalProduct.score,
+                    categories: selectedCategories
+                }, function(error, addedProductId){
+                        if(!error){
+                            // The product was successfully added, now let's add the images id
+                            var editedProductImages = EditedProducts.findOne({_id: addedProductId}).images;  // Catching the product images IDs array
+                            var editedCoverImage = Session.get('editedCoverImageId');
+                            var editedOtherImages = Session.get('editedOtherImagesId');
+                            editedProductImages.push(editedCoverImage);  // Adding the cover image to the array
+                            for(var imageId of editedOtherImages){
+                                // For each image, adding it to the array
+                                editedProductImages.push(imageId);
+                            }
+                            // Updating the db with the new array
+                            EditedProducts.update(addedProductId, { $set: {
+                                images: editedProductImages
+                            }});
+                            callbacksPending++;  // Starting a call with a callback function
+                            // Adding the product to the moderation database
+                            Moderation.insert({
+                                userId: Meteor.userId(),
+                                elementId: Session.get('currentProductID'),
+                                reason: "editProduct"
+                            }, function(error, addedModerationId){
+                                if(!error){
+                                    // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
+                                    Contributions.insert({
+                                        userId: Meteor.userId(),
+                                        type: 'Proposition de modifications',
+                                        elementId: addedProductId,
+                                        createdAt: new Date().toISOString(),
+                                        moderationId: addedModerationId,
+                                        points: 10
+                                    });
+                                } else{
+                                    // There was an error while adding the moderation
+                                    formErrors++;
                                 }
-                            }
-                            if(correctImages === Session.get('editedOtherImagesId').length){
-                                // All images are correct, catching categories
-                                var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
-                                var originalProduct = Products.findOne({_id: Session.get('currentProductID')});
-                                // Inserting informations in the database :
-                                callbacksPending++;  // Starting a call with a callback function
-                                EditedProducts.insert({
-                                    originalId: originalProduct._id,
-                                    name: productName,
-                                    description: productDescription,
-                                    imagesID: [],
-                                    score: originalProduct.score,
-                                    categories: selectedCategories
-                                }, function(error, addedProductId){
-                                        if(!error){
-                                            // The product was successfully added, now let's add the images id
-                                            var editedProductImages = EditedProducts.findOne({_id: addedProductId}).imagesID;  // Catching the product images IDs array
-                                            var editedCoverImage = Session.get('editedCoverImageId');
-                                            var editedOtherImages = Session.get('editedOtherImagesId');
-                                            editedProductImages.push(editedCoverImage);  // Adding the cover image to the array
-                                            for(var imageId of editedOtherImages){
-                                                // For each image, adding it to the array
-                                                editedProductImages.push(imageId);
-                                            }
-                                            // Updating the db with the new array
-                                            EditedProducts.update(addedProductId, { $set: {
-                                                imagesID: editedProductImages
-                                            }});
-                                            callbacksPending++;  // Starting a call with a callback function
-                                            // Adding the product to the moderation database
-                                            Moderation.insert({
-                                                userId: Meteor.userId(),
-                                                elementId: Session.get('currentProductID'),
-                                                reason: "editProduct"
-                                            }, function(error, addedModerationId){
-                                                if(!error){
-                                                    // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
-                                                    Contributions.insert({
-                                                        userId: Meteor.userId(),
-                                                        type: 'Proposition de modifications',
-                                                        elementId: addedProductId,
-                                                        createdAt: new Date().toISOString(),
-                                                        moderationId: addedModerationId,
-                                                        points: 10
-                                                    });
-                                                } else{
-                                                    // There was an error while adding the moderation
-                                                    formErrors++;
-                                                }
-                                                callbacksPending--;  // End of callback function
-                                            });
-                                        } else{
-                                            // There was an error while adding the product
-                                            formErrors++;
-                                        }
-                                        callbacksPending--;  // End of callback function
-                                    }
-                                );
-                            }
+                                callbacksPending--;  // End of callback function
+                            });
                         } else{
-                            // Other images doesn't match all criteria
+                            // There was an error while adding the product
                             formErrors++;
                         }
+                        callbacksPending--;  // End of callback function
                     }
-                    callbacksPending--;  // End of callback function
-                });
+                );
             }
-            callbacksPending--;  // End of callback function
-        });
+        } else{
+            // Other images doesn't match all criteria
+            formErrors++;
+        }
 
 
         // Waiting for all callbacks to complete (to see if an error is raised)

@@ -53,7 +53,7 @@ Template.addProduct.onRendered(function(){
                     fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
                     Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
                         if(!error && result){
-                            productDescriptionInput.style.height = result;
+                            productDescriptionInput.style.height = result;  // Result is the height to apply to the field
                         }
                     });
                 }
@@ -169,9 +169,7 @@ Template.addProduct.onRendered(function(){
 
 Template.addProduct.helpers({
     displayCoverImage: function(){
-        // Display the cover image
-        var coverImageId = Session.get('coverImageId');  // Catching the image id
-        return Images.find({_id: coverImageId})  // Find and return the corresponding image in the db
+        return Images.find({_id: Session.get('coverImageId')})  // Find and return the corresponding image in the db
     },
     displayOtherImages: function(){
         // Display the other images
@@ -189,119 +187,24 @@ Template.addProduct.helpers({
 Template.addProduct.events({
     'click button#addProduct'(event){
         event.preventDefault();
-        var form = new FormData(document.getElementById('newProduct'));
-        var formErrors = 0;  // No error for the moment
-        var callbacksPending = 0;  // No callback is pending for the moment
 
+        // Catching inputs :
+        const form = new FormData(document.getElementById('newProduct'));
+        const productName = form.get('name');
+        const productDescription = form.get('description');
+        const coverImage = Session.get('coverImageId');
+        const otherImages = Session.get('otherImagesId');
+        const categories = Session.get('selectedCategories');
 
-        // Check if the name is correctly formatted
-        var productName = form.get('name');
-        callbacksPending++;  // Starting a call with a callback function
-        Meteor.call('checkProductNameInput', {text: productName}, function(error, result){
+        Meteor.call('addNewProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories}, function(error, result){
             if(error){
-                // Product name doesn't match all criteria
-                formErrors++;
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
             } else{
-                // Product name is correct, checking the description
-                var productDescription = form.get('description');
-                callbacksPending++;  // Starting a call with a callback function
-                Meteor.call('checkProductDescriptionInput', {text: productDescription}, function(error, result){
-                    if(error){
-                        // Product description doesn't match all criteria
-                        formErrors++;
-                        Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
-                    } else{
-                        // Description is correct, checking the images
-                        if(Images.findOne({_id: Session.get('coverImageId')})){
-                            // Cover image is in the db, checking other images
-                            var otherImagesId = Session.get('otherImagesId');
-                            var correctImages = 0;
-                            for(var imageId of otherImagesId){
-                                // For each image id, checking if it's in the db
-                                if(Images.findOne({_id: imageId})){
-                                    correctImages++;
-                                }
-                            }
-                            if(correctImages === Session.get('otherImagesId').length){
-                                // All images are correct, catching categories
-                                var selectedCategories = Session.get('selectedCategories');   // Catching the array of categories that are already selected
-                                // Inserting informations in the database :
-                                callbacksPending++;  // Starting a call with a callback function
-                                Products.insert({
-                                    name: productName,
-                                    description: productDescription,
-                                    imagesID: [],
-                                    score: 0,
-                                    categories: selectedCategories
-                                }, function(error, addedProductID){
-                                        if(!error){
-                                            // The product was successfully added, now let's add the images id
-                                            var productImagesId = Products.findOne({_id: addedProductID}).imagesID;  // Catching the product images IDs array
-                                            var coverImageId = Session.get('coverImageId');
-                                            var otherImagesId = Session.get('otherImagesId');
-                                            productImagesId.push(coverImageId);  // Adding the cover image to the array
-                                            for(var imageId of otherImagesId){
-                                                // For each image, adding it to the array
-                                                productImagesId.push(imageId);
-                                            }
-                                            // Updating the db with the new array
-                                            Products.update(addedProductID, { $set: {
-                                                imagesID: productImagesId
-                                            }});
-                                            callbacksPending++;  // Starting a call with a callback function
-                                            // Adding the product to the moderation database
-                                            Moderation.insert({
-                                                userId: Meteor.userId(),
-                                                elementId: addedProductID,
-                                                reason: "newProduct"
-                                            }, function(error, addedModerationId){
-                                                if(!error){
-                                                    // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
-                                                    Contributions.insert({
-                                                        userId: Meteor.userId(),
-                                                        type: 'Ajout',
-                                                        elementId: addedProductID,
-                                                        createdAt: new Date().toISOString(),
-                                                        moderationId: addedModerationId,
-                                                        points: 10
-                                                    });
-                                                } else{
-                                                    // There was an error while adding the moderation
-                                                    formErrors++;
-                                                }
-                                                callbacksPending--;  // End of callback function
-                                            });
-                                        } else{
-                                            // There was an error while adding the product
-                                            formErrors++;
-                                        }
-                                        callbacksPending--;  // End of callback function
-                                    }
-                                );
-                            }
-                        } else{
-                            // Other images doesn't match all criteria
-                            formErrors++;
-                        }
-                    }
-                    callbacksPending--;  // End of callback function
-                });
-            }
-            callbacksPending--;  // End of callback function
-        });
-
-
-
-        // Waiting for all callbacks to complete (to see if an error is raised)
-        var intervalId = setInterval(function(){
-            if(callbacksPending === 0 && formErrors === 0){
-                // All callbacks were completed without any error, displaying a success message
+                // Product was inserted without any error, displaying a success message
                 Session.set('message', {type: "header", headerContent: "Produit ajouté avec succès !", style:"is-success"} );
                 Session.set('page', 'home');
-                clearInterval(intervalId);  // This interval is not required anymore, removing it
             }
-        }, 200);
+        });
     },
     'click a.tag.is-delete'(event){
         // Link to delete a category tag is cliked

@@ -40,7 +40,7 @@ Template.moderation.events({
             case 'duplicate':
             case 'offTopic':
                 // Duplicate or off topic approved, removing the product
-                var productImagesID = Products.findOne({_id: currentModeration.elementId}).imagesID;  // Catching the product images
+                var productImagesID = Products.findOne({_id: currentModeration.elementId}).images;  // Catching the product images
                 Products.remove(currentModeration.elementId, function(error, result){
                     if(!error){
                         // The product was successfully removed, we can now delete it's images

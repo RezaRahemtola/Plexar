@@ -153,48 +153,6 @@ Meteor.methods({
             }
         }
     },
-    'checkProductNameInput'({text}){
-        const productNameRules = Rules.product.name;  // Catching rules
-        if(text.length >= productNameRules.minLength && text.length <= productNameRules.maxLength){
-            // Text length is correct
-            return true;
-        }
-        // Text length isn't correct, displaying custom error messages
-        if(text.length < productNameRules.minLength){
-            if(productNameRules.minLength === 1){
-                throw new Meteor.Error('filesNumberError', "La longueur minimale du texte doit être de 1 caractère.");
-            } else{
-                throw new Meteor.Error('filesNumberError', "La longueur minimale du texte doit être de "+productNameRules.minLength+" caractères.");
-            }
-        } else if(text.length > productNameRules. maxLength){
-            if(productNameRules.maxLength === 1){
-                throw new Meteor.Error('filesNumberError', "La longueur maximale du texte doit être de 1 caractère.");
-            } else{
-                throw new Meteor.Error('filesNumberError', "La longueur du texte ne peut dépasser "+productNameRules.maxLength+" caractères.");
-            }
-        }
-    },
-    'checkProductDescriptionInput'({text}){
-        const productDescriptionRules = Rules.product.description;  // Catching rules
-        if(text.length >= productDescriptionRules.minLength && text.length <= productDescriptionRules.maxLength){
-            // Text length is correct
-            return true;
-        }
-        // Text length isn't correct, displaying custom error messages
-        if(text.length < productDescriptionRules.minLength){
-            if(productDescriptionRules.minLength === 1){
-                throw new Meteor.Error('filesNumberError', "La longueur minimale du texte doit être de 1 caractère.");
-            } else{
-                throw new Meteor.Error('filesNumberError', "La longueur minimale du texte doit être de "+productDescriptionRules.minLength+" caractères.");
-            }
-        } else if(text.length > productDescriptionRules. maxLength){
-            if(productDescriptionRules.maxLength === 1){
-                throw new Meteor.Error('filesNumberError', "La longueur maximale du texte doit être de 1 caractère.");
-            } else{
-                throw new Meteor.Error('filesNumberError', "La longueur du texte ne peut dépasser "+productDescriptionRules.maxLength+" caractères.");
-            }
-        }
-    },
     'autoExpand'({field}){
         if(field.value.length === 0){
             // If the field is empty, reset the style height to min-height

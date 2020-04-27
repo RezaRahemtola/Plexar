@@ -50,6 +50,7 @@ Session.set('search', {query: "", categories: [], sort: 'popularity'});
 Session.set('coverImageId', null);
 Session.set('otherImagesId', []);
 Session.set('productsCounter', 0);
+Session.set('userContributions', []);
 
 
 Template.body.helpers({
@@ -101,6 +102,12 @@ Template.body.events({
     },
     'click .productBanner'(event){
         // When a product banner is clicked (like in search result or favorites)
+        Session.set('currentProduct', null);  // Reset the variable
+        Meteor.call('findOneProductById', {productId: event.currentTarget.id}, function(error, result){
+            if(!error){
+                Session.set('currentProduct', result);
+            }
+        });
         Session.set('currentProductID', event.currentTarget.id);  // Setting displayed product with value of the target
         Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
         Session.set('page', 'productPage');  // Redirecting to product page

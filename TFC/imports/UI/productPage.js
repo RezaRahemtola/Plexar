@@ -9,22 +9,20 @@ import './productPage.html';
 import './css/slideshow.css';
 
 // Database imports
-import { Products } from '../databases/products.js';
 import { Favorites } from '../databases/favorites.js';
 import { Images } from '../databases/images.js';
 import { UsersInformations } from '../databases/usersInformations.js';
 
 
 Template.productPage.onRendered(function(){
-    if(Meteor.user()){
-        var productID = Session.get('currentProductID');
-        var productScore = Products.findOne({_id: productID}).score;
+    if(Meteor.user() && Session.get('currentProduct')){
+        var product = Session.get('currentProduct');
         var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
         var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
-        if(userUpvotes.includes(productID)){
+        if(userUpvotes.includes(product._id)){
             // Product has already been upvoted by the user
             $('#upvote').addClass("has-text-primary");
-        } else if(userDownvotes.includes(productID)){
+        } else if(userDownvotes.includes(product._id)){
             // User has already downvoted this product
             $('#downvote').addClass("has-text-primary");
         }
@@ -62,55 +60,62 @@ Template.productPage.events({
         Session.set('message', {type: "header", headerContent: "Produit supprimé de vos favoris", style: "is-success"});  // Showing a confirmation message
     },
     'click .productVote'(event){
-        var productID = Session.get('currentProductID');
-        var productScore = Products.findOne({_id: productID}).score;
+        var product = Session.get('currentProduct');
         const userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
         var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
         var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
+        var voteToApply = 0;
 
         if(event.currentTarget.id === 'upvote'){
-            if(userUpvotes.includes(productID)){
+            if(userUpvotes.includes(product._id)){
                 // Product has already been upvoted, we remove the upvote
-                userUpvotes.pop(productID);
-                productScore--;
+                userUpvotes.pop(product._id);
+                voteToApply = -1;
                 $('#upvote').removeClass("has-text-primary");
-            } else if(userDownvotes.includes(productID)){
+            } else if(userDownvotes.includes(product._id)){
                 // Product has already been downvoted, remove the downvote and set an upvote
-                userDownvotes.pop(productID);
-                userUpvotes.push(productID);
-                productScore += 2;  // Removing the downvote and adding an upvote
+                userDownvotes.pop(product._id);
+                userUpvotes.push(product._id);
+                voteToApply = 2;
                 $('#upvote').addClass("has-text-primary");
                 $('#downvote').removeClass("has-text-primary");
             } else{
                 // Product hasn't already been voted
-                userUpvotes.push(productID);
-                productScore++;
+                userUpvotes.push(product._id);
+                voteToApply = 1;
                 $('#upvote').addClass("has-text-primary");
             }
         } else{
-            if(userUpvotes.includes(productID)){
+            if(userUpvotes.includes(product._id)){
                 // Product has already been upvoted, we remove the upvote and set a downvote
-                userUpvotes.pop(productID);
-                userDownvotes.push(productID);
-                productScore -= 2;
+                userUpvotes.pop(product._id);
+                userDownvotes.push(product._id);
+                voteToApply = -2;
                 $('#upvote').removeClass("has-text-primary");
                 $('#downvote').addClass("has-text-primary");
-            } else if(userDownvotes.includes(productID)){
+            } else if(userDownvotes.includes(product._id)){
                 // Product has already been downvoted, remove the downvote
-                userDownvotes.pop(productID);
-                productScore++;
+                userDownvotes.pop(product._id);
+                voteToApply = 1;
                 $('#downvote').removeClass("has-text-primary");
             } else{
                 // Product hasn't already been voted
-                userDownvotes.push(productID);
-                productScore--;
+                userDownvotes.push(product._id);
+                voteToApply = -1;
                 $('#downvote').addClass("has-text-primary");
             }
         }
-        Products.update(productID, { $set: {
-            // Updating the database with the new score
-            score: productScore
-        }});
+        Meteor.call('updateProductScore', {productId: product._id, vote: voteToApply}, function(error, result){
+            if(!error){
+                // Database was successfully updated, refreshing the Session variable with the updated product
+                Meteor.call('findOneProductById', {productId: product._id}, function(error, result){
+                    if(!error){
+                        // Product wass succesfully found
+                        Session.set('currentProduct', result);
+                    }
+                });
+            }
+        });
         UsersInformations.update(userInformationsID, { $set: {
             upvotes: userUpvotes,
             downvotes: userDownvotes
@@ -144,27 +149,33 @@ Template.productPage.events({
 Template.productPage.helpers({
     displayProduct: function(){
         // Return the product that corresponds to the one to display
-        return Products.find({_id: Session.get('currentProductID')});
+        if(Session.get('currentProduct')){
+            return [Session.get('currentProduct')];
+        }
     },
     productInFavorites: function(){
         // Check if the given product ID is in the favorite products of the user
         var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Return the favorites of the current user
-        return favoriteProducts.includes(Session.get('currentProductID'));
+        return favoriteProducts.includes(Session.get('currentProduct')._id);
     },
     displayProductImages: function(){
-        var productImagesID = Products.findOne({_id: Session.get('currentProductID')}).imagesID;  // Return an array with IDs of the product images
-        var productImages = [];  // Creating an empty array for the images
-        for(var imageID of productImagesID){
-            // Filling the array with product's images
-            productImages.push(Images.findOne({_id: imageID}));
+        if(Session.get('currentProduct')){
+            var productImagesId = Session.get('currentProduct').images;  // Return an array with IDs of the product images
+            var productImages = [];  // Creating an empty array for the images
+            for(var imageId of productImagesId){
+                // Filling the array with product's images
+                productImages.push(Images.findOne({_id: imageId}));
+            }
+            return productImages;
         }
-        return productImages;
     },
     moreThanOneImage: function(){
-        var productImagesID = Products.findOne({_id: Session.get('currentProductID')}).imagesID;  // Return an array with IDs of the product images
-        if(productImagesID.length > 1){
-            return true;
+        if(Session.get('currentProduct')){
+            var productImagesId = Session.get('currentProduct').images;  // Return an array with IDs of the product images
+            if(productImagesId.length > 1){
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 });
