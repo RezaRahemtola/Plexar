@@ -8,8 +8,6 @@ import { Rules } from '../rules.js';
 import { UsersInformations } from '../../imports/databases/usersInformations.js';
 import { Favorites } from '../../imports/databases/favorites.js';
 
-// Importing functions
-import '../functions/checkInputs.js';
 
 Meteor.methods({
     'changeUsername'({newUsername}){

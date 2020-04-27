@@ -9,15 +9,14 @@ import { Moderation } from '../../imports/databases/moderation.js';
 
 Meteor.methods({
     'searchForProducts'({text}){
-        var result = Products.find({$text: { $search: text}}).fetch();  // Return the matching products that are not under moderation
-        var productsID = [];  // To save server resources we will only return products IDs
-        for (var product of result){
-            // For each product we add its ID to the array
+        const matchingProducts = Products.find({$text: { $search: text}}).fetch();  // Return the products that match the search query
+        var productsToReturn = [];  // Creating a list in which we will push the products
+        for(var product of matchingProducts){
+            // For each product we add it to the array if it's not under moderation
             if(!Moderation.findOne({elementId: product._id})){
-                // The product is not under moderation
-                productsID.push(product._id);
+                productsToReturn.push(product);
             }
         }
-        return productsID  // Returns array of productsID
+        return productsToReturn  // Returns array of products
     }
 });

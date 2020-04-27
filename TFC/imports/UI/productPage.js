@@ -166,8 +166,5 @@ Template.productPage.helpers({
             return true;
         }
         return false;
-    },
-    displayProductCategories: function(productID){
-        return Products.findOne({_id: productID}).categories;
     }
 });

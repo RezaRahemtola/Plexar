@@ -43,12 +43,13 @@ import './about.html';
 // Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page
 Session.set('lastPage', null);  // No last page (used for return button)
-Session.set("searchedProductsID", [] );  // No search for the moment
+Session.set("searchedProducts", [] );  // No search for the moment
 Session.set('message', null);  // No message to display for the moment
 Session.set('modal', null);  // No modal to display for the moment
 Session.set('search', {query: "", categories: [], sort: 'popularity'});
 Session.set('coverImageId', null);
 Session.set('otherImagesId', []);
+Session.set('productsCounter', 0);
 
 
 Template.body.helpers({

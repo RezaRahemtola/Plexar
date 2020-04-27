@@ -8,12 +8,12 @@
 
             <div class="message-body">
                 <div class="field has-addons">
-                    <img src="{{displayProductFirstImage _id}}" alt="Image du produit" class="image is-150x150"/>
+                    <img src="{{displayProductFirstImage imagesID}}" alt="Image du produit" class="image is-150x150"/>
                     <p id="description">{{description}}</p>
                 </div>
 
                 <div class="tags">
-                {{#each displayProductCategories _id}}
+                {{#each categories}}
                     <span class="tag is-link">{{this}}</span>
                 {{/each}}
                 </div>

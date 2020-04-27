@@ -16,16 +16,12 @@ import { Moderation } from '../../databases/moderation.js';
 
 
 Template.moderationBanner.helpers({
-    displayProductFirstImage: function(productID){
-        var firstImageID = Products.findOne({_id: productID}).imagesID[0];  // Return the ID of the first product image
-        return Images.findOne({_id: firstImageID}).url();  // Return the url of the image
+    displayProductFirstImage: function(images){
+        return Images.findOne({_id: images[0]}).url();  // Return the url of the image
     },
-    displayProductCategories: function(productID){
-        return Products.findOne({_id: productID}).categories;
-    },
-    underModeration: function(productID){
+    underModeration: function(productId){
         // TODO: check if current user is an admin/power users
-        var isUnderModeration = (Moderation.findOne({elementId: productID})) ? true : false;
+        var isUnderModeration = (Moderation.findOne({elementId: productId})) ? true : false;
         if(Session.get('page') === 'moderation' && isUnderModeration){
             return true;
         }

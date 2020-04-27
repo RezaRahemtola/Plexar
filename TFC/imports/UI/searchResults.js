@@ -2,9 +2,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-// Database imports
-import { Products } from '../databases/products.js';
-
 // HTML imports
 import './searchResults.html';
 
@@ -13,7 +10,7 @@ import './functions/sortResults.js';
 
 
 Template.searchResults.onRendered(function(){
-    Session.set("searchedProductsID", []);
+    Session.set("searchedProducts", []);
     // Catch sorting select changes to filter results
     const sortResults = document.querySelector("select#sortResults");
     sortResults.onchange = function(){
@@ -68,31 +65,29 @@ Template.searchResults.helpers({
     },
     displayProductsResults: function(){
         Meteor.call('searchForProducts', {text: Session.get("search").query}, function(error, result){
-            Session.set("searchedProductsID", result);  // Result is an array of products ID, saving it in a Session variable
+            if(!error){
+                Session.set("searchedProducts", result);  // Result is an array of products , saving it in a Session variable
+            }
         });
         var searchedProducts = [];  // We will save the products in an array
-        var currentProduct;
-        for (var productID of Session.get("searchedProductsID")){
+        for(var product of Session.get("searchedProducts")){
             // For each product ID we add the product to the array
-            currentProduct = Products.findOne({_id : productID});
             if(Session.get('search').categories.length > 0){
                 // User wants to filter results by categories
                 var matchingCategories = 0;
-                for (var category of Session.get('search').categories){
-                    if(currentProduct.categories.includes(category)){
+                for(var category of Session.get('search').categories){
+                    if(product.categories.includes(category)){
                         matchingCategories++;
                     }
                 }
                 if(matchingCategories > 0){
-                    searchedProducts.push(currentProduct);
+                    searchedProducts.push(product);
                 }
             } else{
-                searchedProducts.push(currentProduct);
+                searchedProducts.push(product);
             }
         }
-        var search = Session.get('search');  // Get search object with sort option inside
-        sortResults(searchedProducts, order=search.sort);
-        return searchedProducts;  // Return the products array
+        return Session.get("searchedProducts");  // Return the products array
     }
 });
 

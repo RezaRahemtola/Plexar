@@ -5,15 +5,15 @@ import { Template } from 'meteor/templating';
 // HTML imports
 import './home.html';
 
-// Database imports
-import { Products } from '../databases/products.js';
-import { UsersInformations } from '../databases/usersInformations.js';
-import { Images } from '../databases/images.js';
-
 
 Template.home.helpers({
     productsCounter: function(){
-        return Products.find().count().toLocaleString();  // toLocaleString() make a space where needed (1000 will be 1 000)
+        Meteor.call('productsCounter', function(error, result){
+            if(!error){
+                Session.set('productsCounter', result);
+            }
+        });
+        return Session.get('productsCounter');
     }
 });
 
