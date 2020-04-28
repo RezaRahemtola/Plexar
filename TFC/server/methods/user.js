@@ -33,7 +33,7 @@ Meteor.methods({
     'createNewUser'({username, email, newsletterIsChecked}){
         // Inserting informations in the database
         UsersInformations.insert({
-            userID: Meteor.userId(),
+            userId: Meteor.userId(),
             username: username,
             email: email,
             firstName: "",

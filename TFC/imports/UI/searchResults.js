@@ -65,8 +65,12 @@ Template.searchResults.helpers({
     },
     displayProductsResults: function(){
         Meteor.call('searchForProducts', {text: Session.get("search").query}, function(error, result){
-            if(!error){
-                Session.set("searchedProducts", result);  // Result is an array of products , saving it in a Session variable
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // Result is an array of products , saving it in a Session variable
+                Session.set("searchedProducts", result);
             }
         });
         var searchedProducts = [];  // We will save the products in an array

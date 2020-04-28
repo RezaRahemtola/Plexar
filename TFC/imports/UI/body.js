@@ -71,9 +71,9 @@ Template.body.helpers({
         }
     },
     displayProfilePicture: function(){
-        if(Meteor.userId() && UsersInformations.findOne({userID: Meteor.userId()}) && UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID !== null){
+        if(Meteor.userId() && UsersInformations.findOne({userId: Meteor.userId()}) && UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID !== null){
             // The current user has a profile picture
-            var profilePictureId = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;  // Catch the picture ID
+            var profilePictureId = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;  // Catch the picture ID
             return Images.findOne({_id: profilePictureId}).url();  // Return the url of the image
         } else{
             // The current user doesn't have a profile picture, return the default one

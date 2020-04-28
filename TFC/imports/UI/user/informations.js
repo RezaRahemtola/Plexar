@@ -17,7 +17,7 @@ import '../css/form.css';
 Template.informations.onRendered(function(){  // When the template is rendered on the screen
 
     // Auto filling fields
-    var userInformations = UsersInformations.findOne({userID: Meteor.userId()});
+    var userInformations = UsersInformations.findOne({userId: Meteor.userId()});
     document.getElementById('username').value = Meteor.user().username;
     document.getElementById('email').value = Meteor.user().emails[0].address;
     document.getElementById('firstName').value = userInformations.firstName;
@@ -57,8 +57,8 @@ Template.informations.onRendered(function(){  // When the template is rendered o
 Template.informations.events({
     'click button[type="submit"]' (event){
         event.preventDefault();
-        const userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
-        var currentProfilePictureID = UsersInformations.findOne({userID: Meteor.userId()}).profilePictureID;
+        const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
+        var currentProfilePictureID = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;
         var formErrors = 0;  // No error for the moment
         var callbacksPending = 0;  // No callback is pending for the moment
         // Catching the form element and saving inputs in variables
@@ -68,7 +68,7 @@ Template.informations.events({
         var newsletterIsChecked = document.querySelector('input#newsletter').checked;
         var firstName = form.get('firstName');  // Saving input in variable
         var lastName = form.get('lastName');  // Saving input in variable
-        UsersInformations.update(userInformationsID, { $set: {
+        UsersInformations.update(userInformationsId, { $set: {
             firstName: firstName,
             lastName: lastName,
             newsletter: newsletterIsChecked
@@ -86,7 +86,7 @@ Template.informations.events({
                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Set the error message with given error value
                 } else{
                     // Username was changed successfully, updating value in our database
-                    UsersInformations.update(userInformationsID, { $set: {
+                    UsersInformations.update(userInformationsId, { $set: {
                         username: username
                     }});
                 }
@@ -141,7 +141,7 @@ Template.informations.events({
                         if(!error){
                             // Image was successfully inserted, linking it with user's informations
                             callbacksPending++;  // Starting a call with a callback function
-                            UsersInformations.update(userInformationsID, { $set: {
+                            UsersInformations.update(userInformationsId, { $set: {
                                 profilePictureID: fileObj._id
                             }}, function(error, result){
                                     if(!error){

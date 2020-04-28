@@ -17,6 +17,6 @@ Meteor.methods({
                 productsToReturn.push(product);
             }
         }
-        return productsToReturn  // Returns array of products
+        return productsToReturn;  // Returns array of products
     }
 });

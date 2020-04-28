@@ -8,27 +8,29 @@ import './productPage.html';
 // CSS import
 import './css/slideshow.css';
 
-// Database imports
-import { Favorites } from '../databases/favorites.js';
+// Database import
 import { Images } from '../databases/images.js';
-import { UsersInformations } from '../databases/usersInformations.js';
 
+// Initializing Session variable
+Session.set('productInFavorites', null);
 
 Template.productPage.onRendered(function(){
     if(Meteor.user() && Session.get('currentProduct')){
-        const product = Session.get('currentProduct');
-        var userVotes = UsersInformations.findOne({userID: Meteor.userId()}).votes;
-        if(userVotes[product._id] !== undefined){
-            // Product has already been voted by the user
-            var currentVote = userVotes[product._id];  // Catching the vote
-            if(currentVote > 0){
-                // Product has already been upvoted by the user
-                $('#upvote').addClass("has-text-primary");
-            } else if(currentVote < 0){
-                // User has already downvoted this product
-                $('#downvote').addClass("has-text-primary");
+
+        // Catching current productId for the call
+        const productId = Session.get('currentProduct')._id;
+
+        Meteor.call('getVoteValue', {productId: productId}, function(error, result){
+            if(!error && result){
+                if(result > 0){
+                    // Product has already been upvoted by the user
+                    $('#upvote').addClass("has-text-primary");
+                } else if(result < 0){
+                    // User has already downvoted this product
+                    $('#downvote').addClass("has-text-primary");
+                }
             }
-        }
+        });
     }
 });
 
@@ -42,27 +44,33 @@ Template.productPage.events({
     },
     'click #addToFavoriteProducts'(event){
         // User wants to add this product to it's favorites
-        const product = Session.get('currentProduct');
-        var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
-        const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
-        favoriteProducts.push(product._id);  // Adding the product to the array
-        Favorites.update(favoriteId, { $set: {
-            // Updating the database with the modified array
-            products: favoriteProducts
-        }});
-        Session.set('message', {type: "header", headerContent: "Produit bien ajouté aux favoris !", style: "is-success"});  // Showing a confirmation message
+        const productId = Session.get('currentProduct')._id;
+        Meteor.call('addProductToFavorite', {productId: productId}, function(error, result){
+            if(error){
+                // There is an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else{
+                // Product was successfully added to favorite, showing a confirmation message
+                Session.set('message', {type: "header", headerContent: "Produit bien ajouté aux favoris !", style: "is-success"});
+                // Refreshing the favorite icon by calling the associated helper
+                Template.productPage.__helpers.get('productInFavorites').call();
+            }
+        });
     },
     'click #removeFromFavoriteProducts'(event){
         // User wants to remove this product from it's favorites
-        const product = Session.get('currentProduct');
-        var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
-        const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
-        favoriteProducts.pop(product._id);  // Removing the product from the array
-        Favorites.update(favoriteId, { $set: {
-            // Updating the database with the modified array
-            products: favoriteProducts
-        }});
-        Session.set('message', {type: "header", headerContent: "Produit supprimé de vos favoris", style: "is-success"});  // Showing a confirmation message
+        const productId = Session.get('currentProduct')._id;
+        Meteor.call('removeProductFromFavorite', {productId: productId}, function(error, result){
+            if(error){
+                // There is an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else{
+                // Product was successfully removed from favorite, showing a confirmation message
+                Session.set('message', {type: "header", headerContent: "Produit supprimé de vos favoris", style: "is-success"});
+                // Refreshing the favorite icon by calling the associated helper
+                Template.productPage.__helpers.get('productInFavorites').call();
+            }
+        });
     },
     'click .productVote'(event){
         // User wants to vote on this product
@@ -124,9 +132,18 @@ Template.productPage.helpers({
         }
     },
     productInFavorites: function(){
-        // Check if the given product ID is in the favorite products of the user
-        var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Return the favorites of the current user
-        return favoriteProducts.includes(Session.get('currentProduct')._id);
+        // Check if the product is in the favorite products of the user
+        const productId = Session.get('currentProduct')._id;
+        Meteor.call('productInFavorites', {productId: productId}, function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result === true || result === false){
+                // No error
+                Session.set('productInFavorites', result);
+            }
+        });
+        return Session.get('productInFavorites');
     },
     displayProductImages: function(){
         if(Session.get('currentProduct')){
@@ -148,4 +165,10 @@ Template.productPage.helpers({
             return false;
         }
     }
+});
+
+
+Template.productPage.onDestroyed(function(){
+    // Reset unused Session variables
+    Session.set('productInFavorites', null);
 });

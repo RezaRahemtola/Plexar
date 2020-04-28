@@ -6,6 +6,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { Products } from '../../imports/databases/products.js';
 import { EditedProducts } from '../../imports/databases/editedProducts.js';
 import { Images } from '../../imports/databases/images.js';
+import { Favorites } from '../../imports/databases/favorites.js';
 import { Moderation } from '../../imports/databases/moderation.js';
 import { Contributions } from '../../imports/databases/contributions.js';
 import { UsersInformations } from '../../imports/databases/usersInformations.js';
@@ -15,10 +16,15 @@ Meteor.methods({
     'findOneProductById'({productId}){
         return Products.findOne({_id : productId});
     },
+    'getVoteValue'({productId}){
+        const userVotes = UsersInformations.findOne({userId: Meteor.userId()}).votes;
+        // Returns the vote for asked productId : it can be a positive or negative number, or undefined if no vote
+        return userVotes[product._id];
+    },
     'updateProductScore'({productId, vote}){
         const product = Products.findOne({_id: productId});
-        const userInformationsId = UsersInformations.findOne({userID: Meteor.userId()})._id;
-        var userVotes = UsersInformations.findOne({userID: Meteor.userId()}).votes;
+        const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
+        var userVotes = UsersInformations.findOne({userId: Meteor.userId()}).votes;
         var currentScore = product.score;
 
         if(userVotes[product._id] !== undefined){
@@ -247,5 +253,29 @@ Meteor.methods({
                 }
             }
         }
+    },
+    'addProductToFavorite'({productId}){
+        // Getting favorite products of the current user in the db
+        var userFavorite = Favorites.findOne({userId: Meteor.userId()}).products;
+        const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Catching lineId (needed to modify data)
+        userFavorite.push(productId);  // Adding the product to the array
+        Favorites.update(favoriteId, { $set: {
+            // Updating the database with the modified array
+            products: userFavorite
+        }});
+    },
+    'removeProductFromFavorite'({productId}){
+        var userFavorite = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
+        const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
+        userFavorite.pop(productId);  // Removing the product from the array
+        Favorites.update(favoriteId, { $set: {
+            // Updating the database with the modified array
+            products: userFavorite
+        }});
+    },
+    'productInFavorites'({productId}){
+        // Check if the given product ID is in the favorite products of the user
+        var userFavorite = Favorites.findOne({userId: Meteor.userId()}).products;  // Return the favorites of the current user
+        return userFavorite.includes(productId);
     }
 });
