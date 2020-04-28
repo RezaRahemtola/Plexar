@@ -3,10 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 // Database import
-import { Products } from '../databases/products.js';
 import { Images } from '../databases/images.js';
-import { Contributions } from '../databases/contributions.js';
-import { Moderation } from '../databases/moderation.js';
 
 // HTML import
 import './addProduct.html';

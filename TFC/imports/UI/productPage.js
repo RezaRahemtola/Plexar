@@ -16,21 +16,24 @@ import { UsersInformations } from '../databases/usersInformations.js';
 
 Template.productPage.onRendered(function(){
     if(Meteor.user() && Session.get('currentProduct')){
-        var product = Session.get('currentProduct');
-        var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
-        var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
-        if(userUpvotes.includes(product._id)){
-            // Product has already been upvoted by the user
-            $('#upvote').addClass("has-text-primary");
-        } else if(userDownvotes.includes(product._id)){
-            // User has already downvoted this product
-            $('#downvote').addClass("has-text-primary");
+        const product = Session.get('currentProduct');
+        var userVotes = UsersInformations.findOne({userID: Meteor.userId()}).votes;
+        if(userVotes[product._id] !== undefined){
+            // Product has already been voted by the user
+            var currentVote = userVotes[product._id];  // Catching the vote
+            if(currentVote > 0){
+                // Product has already been upvoted by the user
+                $('#upvote').addClass("has-text-primary");
+            } else if(currentVote < 0){
+                // User has already downvoted this product
+                $('#downvote').addClass("has-text-primary");
+            }
         }
     }
 });
 
 Template.productPage.events({
-    'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .productVote, click .report, click .suggestChanges'(event){
+    'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .report, click .suggestChanges'(event){
         // Prevent default action for all events
         event.preventDefault();
     },
@@ -39,10 +42,11 @@ Template.productPage.events({
     },
     'click #addToFavoriteProducts'(event){
         // User wants to add this product to it's favorites
+        const product = Session.get('currentProduct');
         var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
-        const favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
-        favoriteProducts.push(Session.get('currentProductID'));  // Adding the product to the array
-        Favorites.update(favoriteID, { $set: {
+        const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
+        favoriteProducts.push(product._id);  // Adding the product to the array
+        Favorites.update(favoriteId, { $set: {
             // Updating the database with the modified array
             products: favoriteProducts
         }});
@@ -50,76 +54,43 @@ Template.productPage.events({
     },
     'click #removeFromFavoriteProducts'(event){
         // User wants to remove this product from it's favorites
+        const product = Session.get('currentProduct');
         var favoriteProducts = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
-        const favoriteID = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
-        favoriteProducts.pop(Session.get('currentProductID'));  // Removing the product from the array
-        Favorites.update(favoriteID, { $set: {
+        const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
+        favoriteProducts.pop(product._id);  // Removing the product from the array
+        Favorites.update(favoriteId, { $set: {
             // Updating the database with the modified array
             products: favoriteProducts
         }});
         Session.set('message', {type: "header", headerContent: "Produit supprimé de vos favoris", style: "is-success"});  // Showing a confirmation message
     },
     'click .productVote'(event){
-        var product = Session.get('currentProduct');
-        const userInformationsID = UsersInformations.findOne({userID: Meteor.userId()})._id;
-        var userUpvotes = UsersInformations.findOne({userID: Meteor.userId()}).upvotes;
-        var userDownvotes = UsersInformations.findOne({userID: Meteor.userId()}).downvotes;
-        var voteToApply = 0;
+        // User wants to vote on this product
+        event.preventDefault();
+        // Catching parameters for the call
+        const productId = Session.get('currentProduct')._id;
+        const vote = event.currentTarget.id;
+        // Remove the active class on votes buttons
+        $('#upvote, #downvote').removeClass("has-text-primary");
 
-        if(event.currentTarget.id === 'upvote'){
-            if(userUpvotes.includes(product._id)){
-                // Product has already been upvoted, we remove the upvote
-                userUpvotes.pop(product._id);
-                voteToApply = -1;
-                $('#upvote').removeClass("has-text-primary");
-            } else if(userDownvotes.includes(product._id)){
-                // Product has already been downvoted, remove the downvote and set an upvote
-                userDownvotes.pop(product._id);
-                userUpvotes.push(product._id);
-                voteToApply = 2;
-                $('#upvote').addClass("has-text-primary");
-                $('#downvote').removeClass("has-text-primary");
-            } else{
-                // Product hasn't already been voted
-                userUpvotes.push(product._id);
-                voteToApply = 1;
-                $('#upvote').addClass("has-text-primary");
-            }
-        } else{
-            if(userUpvotes.includes(product._id)){
-                // Product has already been upvoted, we remove the upvote and set a downvote
-                userUpvotes.pop(product._id);
-                userDownvotes.push(product._id);
-                voteToApply = -2;
-                $('#upvote').removeClass("has-text-primary");
-                $('#downvote').addClass("has-text-primary");
-            } else if(userDownvotes.includes(product._id)){
-                // Product has already been downvoted, remove the downvote
-                userDownvotes.pop(product._id);
-                voteToApply = 1;
-                $('#downvote').removeClass("has-text-primary");
-            } else{
-                // Product hasn't already been voted
-                userDownvotes.push(product._id);
-                voteToApply = -1;
-                $('#downvote').addClass("has-text-primary");
-            }
-        }
-        Meteor.call('updateProductScore', {productId: product._id, vote: voteToApply}, function(error, result){
-            if(!error){
+        Meteor.call('updateProductScore', {productId: productId, vote: vote}, function(error, result){
+            if(!error && result){
                 // Database was successfully updated, refreshing the Session variable with the updated product
                 Meteor.call('findOneProductById', {productId: product._id}, function(error, result){
                     if(!error){
-                        // Product wass succesfully found
+                        // Product was succesfully found
                         Session.set('currentProduct', result);
                     }
                 });
+
+                // Return value is the vote, set an active class on the corresponding button
+                if(result === 'upvote'){
+                    $('#upvote').addClass("has-text-primary");
+                } else if(result === 'downvote'){
+                    $('#downvote').addClass("has-text-primary");
+                }
             }
         });
-        UsersInformations.update(userInformationsID, { $set: {
-            upvotes: userUpvotes,
-            downvotes: userDownvotes
-        }});
     },
     'click .report'(event){
         // TODO: En fonction du nombre de points/admin de l'user, instant valider le report et effectuer l'action correspondante
@@ -138,7 +109,6 @@ Template.productPage.events({
             Session.set('modal', 'register');
         } else{
             // User is logged in
-            Session.set('currentProductID', event.currentTarget.id);  // Setting displayed product with value of the target
             Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
             Session.set('page', 'editProduct');
         }

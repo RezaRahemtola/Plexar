@@ -108,7 +108,6 @@ Template.body.events({
                 Session.set('currentProduct', result);
             }
         });
-        Session.set('currentProductID', event.currentTarget.id);  // Setting displayed product with value of the target
         Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
         Session.set('page', 'productPage');  // Redirecting to product page
     },

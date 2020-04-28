@@ -5,9 +5,6 @@ import { Template } from 'meteor/templating';
 // Database import
 import { Products } from '../databases/products.js';
 import { Images } from '../databases/images.js';
-import { Contributions } from '../databases/contributions.js';
-import { Moderation } from '../databases/moderation.js';
-import { EditedProducts } from '../databases/editedProducts.js';
 
 // HTML import
 import './editProduct.html';
@@ -15,6 +12,7 @@ import './editProduct.html';
 // CSS import
 import './css/form.css';
 
+// Initializing Session variables
 Session.set('editedCoverImageId', null);
 Session.set('editedOtherImagesId', []);
 
@@ -23,8 +21,7 @@ Template.editProduct.onRendered(function(){
     // Filling the fields with product's informations :
 
     // Catching product's informations
-    var productId = Session.get('currentProductID');
-    var product = Products.findOne({_id: productId});
+    const product = Session.get('currentProduct');
 
     Meteor.call('getRuleValue', {rulePath: 'Rules.product'}, function(error, result){
         if(result){
@@ -208,9 +205,7 @@ Template.editProduct.onRendered(function(){
 
 Template.editProduct.helpers({
     displayCoverImage: function(){
-        // Display the cover image
-        var coverImageId = Session.get('editedCoverImageId');  // Catching the image id
-        return Images.find({_id: coverImageId})  // Find and return the corresponding image in the db
+        return Images.find({_id: Session.get('editedCoverImageId')})  // Find and return the corresponding image in the db
     },
     displayOtherImages: function(){
         // Display the other images
@@ -276,103 +271,24 @@ Template.editProduct.events({
     },
     'click #submitModifications'(event){
         event.preventDefault();
-        var form = new FormData(document.querySelector('form#editProduct'));
-        var formErrors = 0;  // No error for the moment
-        var callbacksPending = 0;  // No callback is pending for the moment
+        const form = new FormData(document.querySelector('form#editProduct'));
 
-        // Catching and formatting product name
-        var productName = form.get('name');
-        productName.slice(0, 70);  // TODO: Remplacer par la rule
+        const productName = form.get('name');
+        const productDescription = form.get('description');
+        const coverImage = Session.get('editedCoverImageId');
+        const otherImages = Session.get('editedOtherImagesId');
+        const categories = Session.get('selectedCategories');
+        const productId = Session.get('currentProduct')._id;
 
-        // Catching and formatting product description
-        var productDescription = form.get('description');
-        productDescription.slice(0, 1000);  // TODO: Remplacer par la rule
-        
-        // Description is correct, checking the images
-        if(Images.findOne({_id: Session.get('editedCoverImageId')})){
-            // Cover image is in the db, checking the images
-            var otherImagesId = Session.get('editedOtherImagesId');
-            var correctImages = 0;
-            for(var imageId of otherImagesId){
-                // For each image id, checking if it's in the db
-                if(Images.findOne({_id: imageId})){
-                    correctImages++;
-                }
-            }
-            if(correctImages === Session.get('editedOtherImagesId').length){
-                // All images are correct, catching categories
-                var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
-                var originalProduct = Products.findOne({_id: Session.get('currentProductID')});
-                // Inserting informations in the database :
-                callbacksPending++;  // Starting a call with a callback function
-                EditedProducts.insert({
-                    originalId: originalProduct._id,
-                    name: productName,
-                    description: productDescription,
-                    images: [],
-                    score: originalProduct.score,
-                    categories: selectedCategories
-                }, function(error, addedProductId){
-                        if(!error){
-                            // The product was successfully added, now let's add the images id
-                            var editedProductImages = EditedProducts.findOne({_id: addedProductId}).images;  // Catching the product images IDs array
-                            var editedCoverImage = Session.get('editedCoverImageId');
-                            var editedOtherImages = Session.get('editedOtherImagesId');
-                            editedProductImages.push(editedCoverImage);  // Adding the cover image to the array
-                            for(var imageId of editedOtherImages){
-                                // For each image, adding it to the array
-                                editedProductImages.push(imageId);
-                            }
-                            // Updating the db with the new array
-                            EditedProducts.update(addedProductId, { $set: {
-                                images: editedProductImages
-                            }});
-                            callbacksPending++;  // Starting a call with a callback function
-                            // Adding the product to the moderation database
-                            Moderation.insert({
-                                userId: Meteor.userId(),
-                                elementId: Session.get('currentProductID'),
-                                reason: "editProduct"
-                            }, function(error, addedModerationId){
-                                if(!error){
-                                    // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
-                                    Contributions.insert({
-                                        userId: Meteor.userId(),
-                                        type: 'Proposition de modifications',
-                                        elementId: addedProductId,
-                                        createdAt: new Date().toISOString(),
-                                        moderationId: addedModerationId,
-                                        points: 10
-                                    });
-                                } else{
-                                    // There was an error while adding the moderation
-                                    formErrors++;
-                                }
-                                callbacksPending--;  // End of callback function
-                            });
-                        } else{
-                            // There was an error while adding the product
-                            formErrors++;
-                        }
-                        callbacksPending--;  // End of callback function
-                    }
-                );
-            }
-        } else{
-            // Other images doesn't match all criteria
-            formErrors++;
-        }
-
-
-        // Waiting for all callbacks to complete (to see if an error is raised)
-        var intervalId = setInterval(function(){
-            if(callbacksPending === 0 && formErrors === 0){
-                // All callbacks were completed without any error, displaying a success message
+        Meteor.call('addEditedProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, productId: productId}, function(error, result){
+            if(error){
+                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+            } else{
+                // Product was inserted without any error, displaying a success message
                 Session.set('message', {type: "header", headerContent: "Proposition de modification effectuée", style:"is-success"} );
                 Session.set('page', 'productPage');
-                clearInterval(intervalId);  // This interval is not required anymore, removing it
             }
-        }, 200);
+        });
     }
 });
 

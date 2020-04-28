@@ -39,8 +39,7 @@ Meteor.methods({
             firstName: "",
             lastName: "",
             profilePictureID: null,
-            upvotes: [],
-            downvotes: [],
+            votes: {},
             newsletter: newsletterIsChecked
         });
         // Creating empty favorites of the new user
