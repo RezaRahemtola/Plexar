@@ -51,6 +51,7 @@ Session.set('coverImageId', null);
 Session.set('otherImagesId', []);
 Session.set('productsCounter', 0);
 Session.set('userContributions', []);
+Session.set('profilePicture', 'user.svg');
 
 
 Template.body.helpers({
@@ -71,14 +72,22 @@ Template.body.helpers({
         }
     },
     displayProfilePicture: function(){
-        if(Meteor.userId() && UsersInformations.findOne({userId: Meteor.userId()}) && UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID !== null){
-            // The current user has a profile picture
-            var profilePictureId = UsersInformations.findOne({userId: Meteor.userId()}).profilePictureID;  // Catch the picture ID
-            return Images.findOne({_id: profilePictureId}).url();  // Return the url of the image
-        } else{
-            // The current user doesn't have a profile picture, return the default one
-            return 'user.svg';
-        }
+        Meteor.call('hasProfilePicture', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // The current user has a profile picture, imageId was returned
+                const profilePictureId = result  // Catch the result
+                const image = Images.findOne({_id: profilePictureId}).url();  // Find the url
+                Session.set('profilePicture', image);
+            } else{
+                // Current user doesn't have a profile picture, set it to the default one
+                Session.set('profilePicture', 'user.svg');
+            }
+        });
+
+        return Session.get('profilePicture');
     }
 });
 

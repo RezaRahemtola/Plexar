@@ -12,7 +12,25 @@ import { Contributions } from '../../imports/databases/contributions.js';
 import { UsersInformations } from '../../imports/databases/usersInformations.js';
 import { Rules } from '../rules.js';
 
+
+// Allow all client-side updates on the Images collection
+Images.allow({
+  insert() { return true; },
+  update() { return true; },
+  remove() { return true; },
+  download() { return true; }
+});
+
 Meteor.methods({
+    'hasProfilePicture'(){
+        if(Meteor.userId() && UsersInformations.findOne({userId: Meteor.userId()}) && UsersInformations.findOne({userId: Meteor.userId()}).profilePicture !== null){
+            // User is logged in and has a profile picture, return the profile picture id
+            return UsersInformations.findOne({userId: Meteor.userId()}).profilePicture;
+        } else{
+            // No profile picture
+            return false;
+        }
+    },
     'findOneProductById'({productId}){
         return Products.findOne({_id : productId});
     },
