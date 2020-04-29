@@ -3,9 +3,6 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
 
-// Database imports
-import { UsersInformations } from '../../databases/usersInformations.js';
-import { Favorites } from '../../databases/favorites.js';
 
 // HTML import
 import './register.html';

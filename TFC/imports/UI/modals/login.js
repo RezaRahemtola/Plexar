@@ -1,7 +1,6 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-import { Accounts } from 'meteor/accounts-base';
 
 // HTML import
 import './login.html';

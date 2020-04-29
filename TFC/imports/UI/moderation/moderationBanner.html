@@ -1,19 +1,19 @@
 <template name="moderationBanner">
     <article class="message is-info">
-        <div class="productBanner" id="{{_id}}">
+        <div class="productBanner" id="{{product._id}}">
             <div class="message-header">
-                <p>{{name}}</p>
-                <p style="font: 1.8rem 'Changa One';">{{score}} <i class="fas fa-heart" style="font-size: 1.5rem;"></i></p>
+                <p>{{product.name}}</p>
+                <p style="font: 1.8rem 'Changa One';">{{product.score}} <i class="fas fa-heart" style="font-size: 1.5rem;"></i></p>
             </div>
 
             <div class="message-body">
                 <div class="field has-addons">
-                    <img src="{{displayProductFirstImage images}}" alt="Image du produit" class="image is-150x150"/>
-                    <p id="description">{{description}}</p>
+                    <img src="{{displayProductFirstImage product.images}}" alt="Image du produit" class="image is-150x150"/>
+                    <p id="description">{{product.description}}</p>
                 </div>
 
                 <div class="tags">
-                {{#each categories}}
+                {{#each product.categories}}
                     <span class="tag is-link">{{this}}</span>
                 {{/each}}
                 </div>
@@ -21,20 +21,17 @@
             </div>
         </div>
 
-        {{#if underModeration _id}}
-            {{#each displayModerationControls _id}}
-                <div class="has-text-centered">
-                    <p>Raison : <br> {{reasonText}}</p>
-                    <button class="button is-danger">{{rejectText}}</button>
-                    <button class="button is-success moderationAccepted" id="{{_id}}">{{approveText}}</button>
-                </div>
-            {{/each}}
-            {{#each editModeration _id}}
-                <br>
-                <div class="has-text-centered">
-                    <button class="button seeEdit" id="{{_id}}">Voir les modifications</button>
-                </div>
-            {{/each}}
+        <div class="has-text-centered">
+            <p>Raison : <br> {{moderation.reasonText}}</p>
+            <button class="button is-danger">{{moderation.rejectText}}</button>
+            <button class="button is-success moderationAccepted" id="{{moderation._id}}">{{moderation.approveText}}</button>
+        </div>
+
+        {{#if editModeration moderation.reason}}
+            <br>
+            <div class="has-text-centered">
+                <button class="button seeEdit" id="{{product._id}}">Voir les modifications</button>
+            </div>
         {{/if}}
     </article>
 </template>
