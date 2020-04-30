@@ -8,6 +8,7 @@ import './moderation.html';
 // JS imports
 import './moderationBanner.js';
 import './editProductModeration.js';
+import './moderationProductPage.js';
 
 
 Template.moderation.helpers({
@@ -27,6 +28,20 @@ Template.moderation.helpers({
 
 
 Template.moderation.events({
+    'click .moderationBanner'(event){
+        // When a moderation banner is clicked
+        Session.set('currentProduct', null);  // Reset the variable
+        Meteor.call('findOneProductById', {productId: event.currentTarget.id}, function(error, result){
+            if(error){
+                // There is an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else{
+                Session.set('currentProduct', result);
+            }
+        });
+        Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
+        Session.set('page', 'moderationProductPage');
+    },
     'click .moderationAccepted'(event){
         event.preventDefault();
 

@@ -1,6 +1,6 @@
 <template name="moderationBanner">
     <article class="message is-info">
-        <div class="productBanner" id="{{product._id}}">
+        <div class="moderationBanner" id="{{product._id}}">
             <div class="message-header">
                 <p>{{product.name}}</p>
                 <p style="font: 1.8rem 'Changa One';">{{product.score}} <i class="fas fa-heart" style="font-size: 1.5rem;"></i></p>
@@ -21,17 +21,18 @@
             </div>
         </div>
 
-        <div class="has-text-centered">
-            <p>Raison : <br> {{moderation.reasonText}}</p>
-            <button class="button is-danger">{{moderation.rejectText}}</button>
-            <button class="button is-success moderationAccepted" id="{{moderation._id}}">{{moderation.approveText}}</button>
-        </div>
-
         {{#if editModeration moderation.reason}}
-            <br>
             <div class="has-text-centered">
+                <p>Raison : <br> {{moderation.reasonText}}</p>
                 <button class="button seeEdit" id="{{product._id}}">Voir les modifications</button>
             </div>
+        {{else}}
+            <div class="has-text-centered">
+                <p>Raison : <br> {{moderation.reasonText}}</p>
+                <button class="button is-danger">{{moderation.rejectText}}</button>
+                <button class="button is-success moderationAccepted" id="{{moderation._id}}">{{moderation.approveText}}</button>
+            </div>
         {{/if}}
+
     </article>
 </template>

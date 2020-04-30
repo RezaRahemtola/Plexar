@@ -19,7 +19,8 @@ Template.editProductModeration.helpers({
     displayName: function(){
         Meteor.call('getRuleValue', {rulePath: 'Rules.product.name'}, function(error, result){
             if(error){
-                // TODO: afficher erreur
+                // There is an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
                 // Defining original name constants
                 const originalName = document.querySelector('input#originalName');
@@ -40,7 +41,8 @@ Template.editProductModeration.helpers({
         if(originalProduct.name !== editedProduct.name){
             Meteor.call('getRuleValue', {rulePath: 'Rules.product.name'}, function(error, result){
                 if(error){
-                    // TODO: afficher erreur
+                    // There is an error
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                 } else{
                     // Defining edited name constants
                     const editedName = document.querySelector('input#editedName');
@@ -59,7 +61,8 @@ Template.editProductModeration.helpers({
     displayDescription: function(){
         Meteor.call('getRuleValue', {rulePath: 'Rules.product.description'}, function(error, result){
             if(error){
-                // TODO: display error
+                // There is an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
                 // Defining product description constants
                 const originalDescription = document.querySelector('textarea#originalDescription');
@@ -68,7 +71,10 @@ Template.editProductModeration.helpers({
                 // Sending mandatory informations only to preserve server resources
                 fieldForServer = {value: originalDescription.value, scrollHeight: originalDescription.scrollHeight};
                 Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
-                    if(!error && result){
+                    if(error){
+                        // There is an error
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    } else if(result){
                         originalDescription.style.height = result;  // Result is the height to apply to the field
                     }
                 });
@@ -88,7 +94,8 @@ Template.editProductModeration.helpers({
         if(originalProduct.description !== editedProduct.description){
             Meteor.call('getRuleValue', {rulePath: 'Rules.product.description'}, function(error, result){
                 if(error){
-                    // TODO: display error
+                    // There is an error
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                 } else{
                     // Defining product description constants
                     const editedDescription = document.querySelector('textarea#editedDescription');

@@ -1,4 +1,4 @@
-<template name="productPage">
+<template name="moderationProductPage">
     {{#each displayProduct}}
         <div class="card width-fit-content" style="margin: auto;">
             <header class="card-header">
@@ -13,16 +13,7 @@
                 </h3>
 
                 <div class="card-header-icon">
-                    {{#if currentUser}}
-                        <!-- Diplay favorites options only if the user is logged-->
-                        {{#if productInFavorites}}
-                            <!-- Product is already in the favorites, suggest to remove it -->
-                            <span class="icon" id="removeFromFavoriteProducts"><i class="fas fa-bookmark" style="color: green;"></i></span>
-                        {{else}}
-                            <!-- Product is not in the favorites, suggest to add it -->
-                            <span class="icon" id="addToFavoriteProducts"><i class="far fa-bookmark"></i></span>
-                        {{/if}}
-                    {{/if}}
+                    <span class="icon" id="addToFavoriteProducts"><i class="far fa-bookmark"></i></span>
                 </div>
             </header>
             <br>
@@ -95,17 +86,17 @@
                         {{/each}}
                     </div>
 
-                    <button class="button">
+                    <button class="button" disabled>
                         <span class="icon"><i class="fas fa-share-alt"></i></span>
                         <p>Partager</p>
                     </button>
 
-                    <button class="button has-text-danger report" id="{{_id}}">
+                    <button class="button has-text-danger report" disabled>
                         <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
                         <p>Signaler</p>
                     </button>
 
-                    <button class="button suggestChanges" id="{{_id}}">
+                    <button class="button suggestChanges" disabled>
                         <span class="icon"><i class="fas fa-edit"></i></span>
                         <p>Proposer des modifications</p>
                     </button>

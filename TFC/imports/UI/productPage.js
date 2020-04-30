@@ -14,6 +14,7 @@ import { Images } from '../databases/images.js';
 // Initializing Session variable
 Session.set('productInFavorites', null);
 
+
 Template.productPage.onRendered(function(){
     if(Meteor.user() && Session.get('currentProduct')){
 
@@ -33,6 +34,7 @@ Template.productPage.onRendered(function(){
         });
     }
 });
+
 
 Template.productPage.events({
     'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .report, click .suggestChanges'(event){
