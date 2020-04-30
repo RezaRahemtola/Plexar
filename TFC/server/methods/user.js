@@ -151,10 +151,7 @@ Meteor.methods({
         // Catching current user's informations
         const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
         const currentProfilePicture = userInformations.profilePicture;
-
-        UsersInformations.update(userInformations._id, { $set: {
-            profilePicture: imageId
-        }}, function(error, result){
+        UsersInformations.update(userInformations._id, { $set: { profilePicture: imageId }}, function(error, result){
                 if(error){
                     // There was an error while linking the image with user's informations
                     Images.remove(imageId);  // Removing the new picture

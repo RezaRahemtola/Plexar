@@ -1,88 +1,126 @@
 <template name="informations">
-    <div class="container has-text-center width-fit-content">
-        <h3 class="title is-3">Mes informations</h3>
-        <form id="editProfileForm">
 
-            <div class="field has-animated-label">
-                <div class="control has-icons-left">
-                    <input type="text" class="input has-animated-label" name="username" id="username" placeholder=" " required/>
-                    <label for="username" class="label is-animated">Nom d'utilisateur</label>
-                    <span class="icon is-left">
-                        <i class="fas fa-user-circle"></i>
-                    </span>
-                </div>
-            </div>
+    {{#if currentUser}}
+        <div class="container" style="border: ridge grey 0.1rem; border-bottom: none;">
+            <h3 class="title is-3 has-text-centered">Mes informations</h3>
+        </div>
 
-            <div class="field has-animated-label">
-                <input type="text" class="input has-animated-label" name="firstName" id="firstName" placeholder=" ">
-                <label for="firstName" class="label is-animated">Prénom</label>
-            </div>
+        <form id="editProfileForm" class="container" style="border: ridge grey 0.1rem; padding: 0.8rem;">
 
+            <section class="section">
+                <h4 class="title is-4 has-text-centered">Général</h4>
 
-            <div class="field has-animated-label">
-                <input type="text" class="input has-animated-label" name="lastName" id="lastName" placeholder=" ">
-                <label for="lastName" class="label is-animated">Nom</label>
-            </div>
-
-
-            <div class="field has-animated-label">
-                <div class="control has-icons-left">
-                    <input type="email" class="input has-animated-label" id="email" placeholder=" " required disabled>
-                    <label for="email" class="label is-animated">Email</label>
-                    <span class="icon is-left">
-                        <i class="fas fa-envelope"></i>
-                    </span>
-                </div>
-            </div>
-
-
-            <label for="profilePictureFile" class="label">Changer de photo de profil :</label>
-            <div class="file has-name is-boxed">
-                <label class="file-label">
-                    <input class="file-input" type="file" name="profilePictureFile" id="profilePictureFile" accept="image/*">
-                    <span class="file-cta">
-                        <span class="file-icon">
-                            <i class="fas fa-file-image"></i>
+                <div class="field has-animated-label">
+                    <div class="control has-icons-left">
+                        <input type="text" class="input has-animated-label" name="username" id="username" placeholder=" " required/>
+                        <label for="username" class="label is-animated">Nom d'utilisateur</label>
+                        <span class="icon is-left">
+                            <i class="fas fa-user-circle"></i>
                         </span>
-                        <span class="file-label">Choisir un fichier…</span>
-                    </span>
-                    <span class="file-name">Aucun fichier sélectionné</span>
-                </label>
-            </div>
-
-            <div class="field">
-                <input class="switch is-rounded" type="checkbox" id="newsletter" name="newsletter">
-                <label for="newsletter">Recevoir la newsletter</label>
-            </div>
-
-            <hr>
-
-            <div class="field has-animated-label">
-                <div class="control has-icons-left">
-                    <input type="password" class="input has-animated-label" name="oldPassword" id="oldPassword" autocomplete="current-password" placeholder=" ">
-                    <label for="oldPassword" class="label is-animated">Mot de passe actuel</label>
-                    <span class="icon is-left">
-                        <i class="fas fa-lock"></i>
-                    </span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="field has-animated-label">
-                <input type="password" class="input has-animated-label" name="newPassword" id="newPassword" autocomplete="new-password" placeholder=" ">
-                <label for="newPassword" class="label is-animated">Nouveau mot de passe</label>
-            </div>
+                <div class="field has-animated-label">
+                    <div class="control has-icons-left">
+                        <input type="email" class="input has-animated-label" id="email" placeholder=" " required disabled>
+                        <label for="email" class="label is-animated">Email</label>
+                        <span class="icon is-left">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                    </div>
+                </div>
 
-            <div class="field has-animated-label">
-                <input type="password" class="input has-animated-label" name="confirmNewPassword" id="confirmNewPassword" autocomplete="new-password" placeholder=" ">
-                <label for="confirmNewPassword" class="label is-animated">Confirmer le mot de passe</label>
-            </div>
+                <div class="field has-animated-label">
+                    <input type="text" class="input has-animated-label" name="firstName" id="firstName" placeholder=" ">
+                    <label for="firstName" class="label is-animated">Prénom</label>
+                </div>
 
-            <br><br>
 
-            <button type="submit" class="button is-success">
+                <div class="field has-animated-label">
+                    <input type="text" class="input has-animated-label" name="lastName" id="lastName" placeholder=" ">
+                    <label for="lastName" class="label is-animated">Nom</label>
+                </div>
+            </section>
+
+            <section class="section" style="border-top: solid grey 0.1rem;">
+                <h4 class="title is-4 has-text-centered">Changer le mot de passe</h4>
+
+                <div class="field has-animated-label">
+                    <div class="control has-icons-left">
+                        <input type="password" class="input has-animated-label" name="oldPassword" id="oldPassword" autocomplete="current-password" placeholder=" ">
+                        <label for="oldPassword" class="label is-animated">Mot de passe actuel</label>
+                        <span class="icon is-left">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="field has-animated-label">
+                    <div class="control has-icons-left">
+                        <input type="password" class="input has-animated-label" name="newPassword" id="newPassword" autocomplete="new-password" placeholder=" ">
+                        <label for="newPassword" class="label is-animated">Nouveau mot de passe</label>
+                        <span class="icon is-left">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="field has-animated-label">
+                    <div class="control has-icons-left">
+                        <input type="password" class="input has-animated-label" name="confirmNewPassword" id="confirmNewPassword" autocomplete="new-password" placeholder=" ">
+                        <label for="confirmNewPassword" class="label is-animated">Confirmer le mot de passe</label>
+                        <span class="icon is-left">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" style="border-top: solid grey 0.1rem;">
+                <h4 class="title is-4 has-text-centered">Autres</h4>
+
+                <div class="columns">
+
+                    <div class="column field has-text-centered">
+                        <label for="profilePictureFile" class="label">Photo de profil</label>
+
+
+                            <div class="width-fit-content" style="position: relative; display: inline-block;">
+                                <img src="{{displayProfilePicture}}" alt="Photo de profil" class="image is-128x128">
+                            </div>
+
+
+                        <div class="file has-name is-boxed width-fit-content" style="margin: auto;">
+                            <label class="file-label">
+                                <input class="file-input" type="file" name="profilePictureFile" id="profilePictureFile" accept="image/*">
+                                <span class="file-cta" style="padding: 0.5rem 1.5rem; font-size: 1rem;">
+                                    <p>
+                                        <span class="icon">
+                                            <i class="fas fa-file-image"></i>
+                                        </span>
+                                        Changer de photo
+                                    </p>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="column field has-text-centered">
+                        <div class="field">
+                            <label class="label">Notifications</label>
+                            <input class="switch is-rounded" type="checkbox" id="newsletter" name="newsletter">
+                            <label for="newsletter">Recevoir la newsletter</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <button type="submit" class="button is-success is-medium is-fullwidth">
                 <span class="icon"><i class="fas fa-user-edit"></i></span>
                 <p>Modifier mes informations</p>
             </button>
         </form>
-    </div>
+    {{else}}
+        <p class="subtitle"><span class="register link has-text-weight-semibold">Inscrivez-vous</span> ou <span class="login link has-text-weight-semibold">connectez-vous</span> pour continuer.</p>
+    {{/if}}
 </template>

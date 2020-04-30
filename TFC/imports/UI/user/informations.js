@@ -12,6 +12,8 @@ import './informations.html';
 // CSS import
 import '../css/form.css';
 
+// Initializing Session variables
+Session.set('currentProfilePicture', 'user.svg');
 
 Template.informations.onRendered(function(){  // When the template is rendered on the screen
 
@@ -43,20 +45,77 @@ Template.informations.onRendered(function(){  // When the template is rendered o
                 });
             }
 
+            Meteor.call('hasProfilePicture', function(error, result){
+                if(error){
+                    // There was an error
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                } else if(result){
+                    // The current user has a profile picture, imageId was returned
+                    const profilePictureId = result;  // Catch the result
+                    Session.set('currentProfilePicture', profilePictureId);
+                } else{
+                    // Current user doesn't have a profile picture, set it to the default one
+                    Session.set('currentProfilePicture', 'user.svg');
+                }
+            });
+
             //Code to update file name from https://bulma.io/documentation/form/file/
             const fileInput = document.querySelector('input#profilePictureFile');  // Saving input in a variable
             fileInput.onchange = function(){
-                const fileName = document.querySelector('span.file-name');  //Catching the file name display
-                if(fileInput.files.length === 0){
-                    // No file uploaded
-                    fileName.textContent = "Aucun fichier sélectionné";
-                } else if(fileInput.files.length === 1){
-                    // There's a file in the input
-                    fileName.textContent = fileInput.files[0].name;  //Updating displayed value
+                if(fileInput.files.length > 0){
+                    // There is at least one uploaded file, we transform them to pass it to the server (File object can't be pass)
+                    var serverFiles = [];
+                    for(file of fileInput.files){
+                        serverFiles.push({size: file.size, type: file.type});
+                    }
+
+                    Meteor.call('checkProductCoverImageInput', {files: serverFiles}, function(error, result){
+                        if(error){
+                            // There is an error
+                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                        } else{
+                            // File input is correct
+                            Meteor.call('getUserInformations', function(error, result){
+                                if(error){
+                                    // There is an error
+                                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                                } else{
+                                    // Catching profile picture
+                                    const profilePicture = result.profilePicture;
+                                    if(Session.get('currentProfilePicture') !== 'user.svg' && Session.get('currentProfilePicture') !== profilePicture){
+                                        // Current picture was not the default and not the real profile picture, we can delete it
+                                        const imageToRemove = Session.get('currentProfilePicture');
+                                          // Reset temporarily the image, else the helper will search for the url of a removed image
+                                        Session.set('currentProfilePicture', 'user.svg');
+                                        Images.remove(Session.get('currentProfilePicture'));  // Remove the old image from the db
+                                    }
+                                    Images.insert(fileInput.files[0], function(error, fileObj){
+                                        if(fileObj){
+                                            Session.set('currentProfilePicture', fileObj._id);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
                 }
             }
         }
     });
+});
+
+
+Template.informations.helpers({
+    displayProfilePicture: function(){
+        if(Session.get('currentProfilePicture') !== 'user.svg'){
+            // Selected image isn't the default one, we can catch and return it's url
+            const imageUrl = Images.findOne({_id: Session.get('currentProfilePicture')}).url();
+            return imageUrl;
+        } else{
+            return 'user.svg';
+        }
+
+    }
 });
 
 
@@ -112,50 +171,40 @@ Template.informations.events({
                     });
                 }
 
-                // Catching profile picture file in file input
-                const files = document.querySelector('input#profilePictureFile').files;
-                if(files.length > 0){
-                    // There is at least one uploaded file, user wants to update it's profile picture, transform it to pass it to the server (File object can't be pass)
-                    var serverFiles = [];
-                    for(file of files){
-                        // Create a new object with informations that server needs for verification
-                        serverFiles.push({size: file.size, type: file.type});
-                    }
-                    callbacksPending++;  // Starting a call with a callback function
-                    Meteor.call('checkProfilePictureInput', {files: serverFiles}, function(error, result){
-                        if(error){
-                            // There is an error
-                            formErrors++;  // File doesn't match all criteria
-                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                        } else{
-                            // File input is correct, inserting it to the db
+                // Updating profile picture
+                const selectedProfilePicture = Session.get('currentProfilePicture');  // Catching id of the wanted picture
+                callbacksPending++;  // Starting a call with a callback function
+                Meteor.call('getUserInformations', function(error, result){
+                    if(error){
+                        // There is an error
+                        formErrors++;
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    } else{
+                        // Catching profile picture
+                        const profilePicture = result.profilePicture;
+                        if(selectedProfilePicture !== 'user.svg' && selectedProfilePicture !== profilePicture){
+                            // Selected picture isn't the default and isn't the current profile picture, we change the value
                             callbacksPending++;  // Starting a call with a callback function
-                            Images.insert(files[0], function(error, fileObj){
+                            Meteor.call('changeProfilePictureInUserInformations', {imageId: selectedProfilePicture}, function(error, result){
                                 if(error){
-                                    // There was an error while inserting the file in Images db
+                                    // There was an error
                                     formErrors++;
                                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Set the error message with given error reason
                                 } else{
-                                    // Image was successfully inserted, linking it with user's informations
-                                    callbacksPending++;  // Starting a call with a callback function
-                                    Meteor.call('changeProfilePictureInUserInformations', {imageId: fileObj._id}, function(error, result){
-                                        if(error){
-                                            // There was an error
-                                            formErrors++;
-                                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Set the error message with given error reason
-                                        }
-                                        callbacksPending--;  // End of callback function
-                                    });
+                                    // Profile picture was successfully changed, calling the body helepr to refesh the display
+                                    Template.body.__helpers.get('displayProfilePicture').call();
                                 }
                                 callbacksPending--;  // End of callback function
                             });
                         }
-                        callbacksPending--;  // End of callback function
-                    });
-                }
+                        // TODO: sinon si l'user veut user.svg, faire un call pour delete la current profile picture
+                    }
+                    callbacksPending--;  // End of callback function
+                });
             }
             callbacksPending--;  // End of callback function
         });
+
 
 
         // Waiting for all callbacks to complete (to see if an error is raised)

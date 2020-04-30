@@ -32,7 +32,6 @@ import './modals/forgotPassword.js';
 import './modals/report.js';
 
 // Databases imports
-import { UsersInformations } from '../databases/usersInformations.js';
 import { Images } from '../databases/images.js';
 
 // Alone Template
