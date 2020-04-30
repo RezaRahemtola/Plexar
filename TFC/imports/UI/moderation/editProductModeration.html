@@ -132,8 +132,14 @@
 
 
             </section>
-
-            <button class="button is-success is-medium is-fullwidth" id="submitModifications" type="submit">Valider les modifications</button>
+            <div class="columns">
+                <div class="column">
+                    <button class="button is-danger is-medium is-fullwidth" id="rejectModifications">Rejeter les modifications</button>
+                </div>
+                <div class="column">
+                    <button class="button is-success is-medium is-fullwidth" id="approveModifications">Valider les modifications</button>
+                </div>
+            </div>
         </form>
     {{else}}
         <p class="subtitle"><span class="register link has-text-weight-semibold">Inscrivez-vous</span> ou <span class="login link has-text-weight-semibold">connectez-vous</span> pour continuer.</p>

@@ -8,6 +8,9 @@ import { Rules } from '../rules.js';
 
 Meteor.methods({
     'getRuleValue'({rulePath}){
+        // Type check to prevent malicious calls
+        check(rulePath, String);
+
         if(eval(rulePath) !== undefined && rulePath.includes("Rules.")){
             // Path is valid, return the corresponding getRuleValue
             return eval(rulePath);

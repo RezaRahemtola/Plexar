@@ -16,6 +16,11 @@ Meteor.methods({
          *
          *  @return {boolean}  true if password matched all criteria, else false
          */
+
+        // Type check to prevent malicious calls
+        check(password, String);
+        check(confirmPassword, String);
+
         const passwordRules = Rules.user.password;  // Catching password rules
         if(password.length >= passwordRules.minLength && password.length <= passwordRules.maxLength){
             // Password length is correct
@@ -45,6 +50,10 @@ Meteor.methods({
          *
          *  @return {boolean}  true if the text matched all criteria, else false
          */
+
+        // Type check to prevent malicious calls
+        check(email, String);
+
         // Regex expression to check email from https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
         const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if(regex.test(email)){
@@ -86,6 +95,10 @@ Meteor.methods({
         }
     },
     'checkProductOtherImagesInput'({files, numberOfUploadedImages}){
+
+        // Type check to prevent malicious calls
+        check(numberOfUploadedImages, Number);
+
         const otherImagesRules = Rules.product.otherImages;  // Catching the rules
         const maxFilesLength = otherImagesRules.maxLength - numberOfUploadedImages;
         if(files.length >= otherImagesRules.minLength && files.length <= maxFilesLength){
@@ -154,6 +167,10 @@ Meteor.methods({
         }
     },
     'autoExpand'({field}){
+
+        // Type check to prevent malicious calls
+        check(field, Object);
+
         if(field.value.length === 0){
             // If the field is empty, reset the style height to min-height
              var newHeight = 3 + 'rem';

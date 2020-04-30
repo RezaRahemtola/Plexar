@@ -9,6 +9,9 @@ import { Moderation } from '../../imports/databases/moderation.js';
 
 Meteor.methods({
     'searchForProducts'({text}){
+        // Type check to prevent malicious calls
+        check(text, String);
+
         const matchingProducts = Products.find({$text: { $search: text}}).fetch();  // Return the products that match the search query
         var productsToReturn = [];  // Creating a list in which we will push the products
         for(var product of matchingProducts){
