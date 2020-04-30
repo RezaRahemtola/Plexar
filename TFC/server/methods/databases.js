@@ -34,6 +34,9 @@ Meteor.methods({
     'findOneProductById'({productId}){
         return Products.findOne({_id : productId});
     },
+    'findOneEditedProductByOriginalId'({originalId}){
+        return EditedProducts.findOne({originalId: originalId});
+    },
     'getVoteValue'({productId}){
         const userVotes = UsersInformations.findOne({userId: Meteor.userId()}).votes;
         // Returns the vote for asked productId : it can be a positive or negative number, or undefined if no vote

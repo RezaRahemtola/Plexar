@@ -1,0 +1,141 @@
+<template name="editProductModeration">
+    <header class="card-header container" style="border: ridge grey 0.1rem; border-bottom: none;">
+        <h3 class="card-header-title title is-3 is-centered" style="margin-bottom: 0;">Modération de modification</h3>
+    </header>
+    {{#if currentUser}}
+        <form class="container" id="editProduct" style="border: ridge grey 0.1rem; padding: 0.8rem;">
+
+            <section class="section">
+                <h4 class="title is-4 has-text-centered">Informations</h4>
+
+                {{#each displayName}}
+                    <div class="field has-animated-label">
+                        <input type="text" class="input has-animated-label" name="name" id="originalName" value="{{originalProduct.name}}" disabled>
+                        <label for="name" class="label is-animated">Nom du produit (original)</label>
+                        <span id="originalNameCharCounter" class="character-counter"></span>
+                    </div>
+
+                    {{#if nameDifference}}
+                        <div class="field has-animated-label">
+                            <input type="text" class="input has-animated-label" name="name" id="editedName" value="{{editedProduct.name}}" disabled>
+                            <label for="name" class="label is-animated">Nom du produit (modifié)</label>
+                            <span id="editedNameCharCounter" class="character-counter"></span>
+                        </div>
+                    {{else}}
+                        <p>Pas de modification du nom</p>
+                    {{/if}}
+                {{/each}}
+
+                {{#each displayDescription}}
+                    <div class="field has-animated-label">
+                        <div class="control has-icons-left">
+                            <textarea class="textarea has-animated-label" name="description" id="originalDescription" value="{{originalProduct.description}}" disabled></textarea>
+                            <label for="description" class="label is-animated">Description du produit (originale)</label>
+                            <span class="icon is-left">
+                                <i class="fas fa-file-alt"></i>
+                            </span>
+                        </div>
+                        <span id="originalDescriptionCharCounter" class="character-counter"></span>
+                    </div>
+
+                    {{#if descriptionDifference}}
+                        <div class="field has-animated-label">
+                            <div class="control has-icons-left">
+                                <textarea class="textarea has-animated-label" name="description" id="editedDescription" placeholder="{{editedProduct.description}}" disabled></textarea>
+                                <label for="description" class="label is-animated">Description du produit (modifiée)</label>
+                                <span class="icon is-left">
+                                    <i class="fas fa-file-alt"></i>
+                                </span>
+                            </div>
+                            <span id="editedDescriptionCharCounter" class="character-counter"></span>
+                        </div>
+                    {{else}}
+                        <p>Pas de modification de la description</p>
+                    {{/if}}
+
+                {{/each}}
+            </section>
+
+            <section class="section" style="border-top: solid grey 0.1rem;">
+                <h4 class="title is-4 has-text-centered">Images</h4>
+
+                <div class="columns">
+                    <div class="column field has-text-centered">
+
+                        {{#each displayCoverImage}}
+                            <p>Image de couverture (originale)</p>
+                            <div class="cover-image width-fit-content" style="position: relative; display: inline-block;">
+                                <img src="{{originalCoverImageUrl}}" class="image is-128x128">
+                            </div>
+
+                            {{#if coverImageDifference}}
+                                <span>Image de couverture (modifiée)</span>
+                                <div class="cover-image width-fit-content" style="position: relative; display: inline-block;">
+                                    <img src="{{editedCoverImageUrl}}" class="image is-128x128">
+                                </div>
+                            {{else}}
+                                <p>Pas de modification de l'image de couverture</p>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+
+                    <div class="column field has-text-centered">
+
+                        <p>Images supplémentaires (originales)</p>
+                        {{#each displayOtherImages}}
+                            <div class="other-image width-fit-content" style="position: relative; display: inline-block;">
+                                <img src="{{this}}" class="image is-128x128">
+                            </div>
+                        {{/each}}
+
+                        {{#if otherImagesDifference}}
+                            <p>Images supplémentaires (modifiées)</p>
+                            {{#each displayEditedOtherImages}}
+                                <div class="other-image width-fit-content" style="position: relative; display: inline-block;">
+                                    <img src="{{this}}" class="image is-128x128">
+                                </div>
+                            {{/each}}
+                        {{else}}
+                            <p>Pas de modification de l'image de couverture</p>
+                        {{/if}}
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" style="border-top: solid grey 0.1rem;">
+                <h4 class="title is-4 has-text-centered">Catégories</h4>
+
+                <p class="has-text-centered">Originales</p>
+                <div class="field is-grouped is-grouped-multiline width-fit-content" style="margin: 0.5rem auto;">
+                    <div class="control">
+                        <div class="tags">
+                            {{#each displayCategories}}
+                                <a class="tag is-link">{{this}}</a>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                {{#if categoriesDifference}}
+                    <p class="has-text-centered">Modifiées</p>
+                    <div class="field is-grouped is-grouped-multiline width-fit-content" style="margin: 0.5rem auto;">
+                        <div class="control">
+                            <div class="tags">
+                                {{#each displayEditedCategories}}
+                                    <a class="tag is-link">{{this}}</a>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                {{else}}
+                    <p>Pas de modification de l'image de catégories</p>
+                {{/if}}
+
+
+            </section>
+
+            <button class="button is-success is-medium is-fullwidth" id="submitModifications" type="submit">Valider les modifications</button>
+        </form>
+    {{else}}
+        <p class="subtitle"><span class="register link has-text-weight-semibold">Inscrivez-vous</span> ou <span class="login link has-text-weight-semibold">connectez-vous</span> pour continuer.</p>
+    {{/if}}
+</template>

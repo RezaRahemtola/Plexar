@@ -5,8 +5,9 @@ import { Template } from 'meteor/templating';
 // HTML import
 import './moderation.html';
 
-// JS import
+// JS imports
 import './moderationBanner.js';
+import './editProductModeration.js';
 
 
 Template.moderation.helpers({
@@ -38,6 +39,33 @@ Template.moderation.events({
             } else{
                 // Moderation successfully accepted, calling the template helper to refresh the list of product under moderation
                 Template.moderation.__helpers.get('displayModeration').call();
+            }
+        });
+    },
+    'click .seeEdit'(event){
+        // TODO: Check if user is admin
+        event.preventDefault();
+        const productId = event.currentTarget.id;
+        Meteor.call('findOneProductById', {productId: productId}, function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else{
+                // Saving the result in a variable
+                Session.set('editProductModeration', {originalProduct: result} );
+                Meteor.call('findOneEditedProductByOriginalId', {originalId: productId}, function(error, result){
+                    if(error){
+                        // There was an error
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    } else{
+                        // Catching the object with original product and adding the edited one
+                        var editModeration = Session.get('editProductModeration');
+                        editModeration.editedProduct = result;
+                        Session.set('editProductModeration', editModeration);
+                        Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
+                        Session.set('page', 'editProductModeration')
+                    }
+                })
             }
         });
     }

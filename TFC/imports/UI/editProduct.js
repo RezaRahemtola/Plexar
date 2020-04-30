@@ -292,7 +292,7 @@ Template.editProduct.events({
 });
 
 
-Template.addProduct.onDestroyed(function(){
+Template.editProduct.onDestroyed(function(){
     // Selected categories' Session variable isn't useful anymore, deleting it
     delete Session.keys.selectedCategories;
     // TODO: Si template fermé sans submit le form, supprimer les images edited qui ne sont pas dans les normales de la db

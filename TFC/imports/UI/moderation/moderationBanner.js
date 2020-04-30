@@ -12,8 +12,6 @@ import '../css/banners.css';
 // Database imports
 import { Images } from '../../databases/images.js';
 
-// Initializing Session variables
-Session.set('originalProduct', null);
 
 Template.moderationBanner.helpers({
     displayProductFirstImage: function(images){
@@ -25,24 +23,5 @@ Template.moderationBanner.helpers({
             return true;
         }
         return false;
-    }
-});
-
-
-Template.moderationBanner.events({
-    'click #seeEdit'(event){
-        // TODO: Check if user is admin
-        event.preventDefault();
-        const productId = event.currentTarget.id;
-        Meteor.call('findOneProductById', {productId: productId}, function(error, result){
-            if(error){
-                // There was an error
-                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-            } else{
-                Session.set('originalProduct', result);
-            }
-        });
-        var originalProduct = Session.get('originalProduct');
-        //var editedProduct = EditedProducts.findOne({originalId: productId});
     }
 });
