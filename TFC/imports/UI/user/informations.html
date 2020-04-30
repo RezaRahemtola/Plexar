@@ -10,35 +10,46 @@
             <section class="section">
                 <h4 class="title is-4 has-text-centered">Général</h4>
 
-                <div class="field has-animated-label">
-                    <div class="control has-icons-left">
-                        <input type="text" class="input has-animated-label" name="username" id="username" placeholder=" " required/>
-                        <label for="username" class="label is-animated">Nom d'utilisateur</label>
-                        <span class="icon is-left">
-                            <i class="fas fa-user-circle"></i>
-                        </span>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field has-animated-label">
+                            <div class="control has-icons-left">
+                                <input type="text" class="input has-animated-label" name="username" id="username" placeholder=" " required/>
+                                <label for="username" class="label is-animated">Nom d'utilisateur</label>
+                                <span class="icon is-left">
+                                    <i class="fas fa-user-circle"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="field has-animated-label">
+                            <div class="control has-icons-left">
+                                <input type="email" class="input has-animated-label" id="email" placeholder=" " required disabled>
+                                <label for="email" class="label is-animated">Email</label>
+                                <span class="icon is-left">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="field has-animated-label">
-                    <div class="control has-icons-left">
-                        <input type="email" class="input has-animated-label" id="email" placeholder=" " required disabled>
-                        <label for="email" class="label is-animated">Email</label>
-                        <span class="icon is-left">
-                            <i class="fas fa-envelope"></i>
-                        </span>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field has-animated-label">
+                            <input type="text" class="input has-animated-label" name="firstName" id="firstName" placeholder=" ">
+                            <label for="firstName" class="label is-animated">Prénom</label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="field has-animated-label">
-                    <input type="text" class="input has-animated-label" name="firstName" id="firstName" placeholder=" ">
-                    <label for="firstName" class="label is-animated">Prénom</label>
-                </div>
-
-
-                <div class="field has-animated-label">
-                    <input type="text" class="input has-animated-label" name="lastName" id="lastName" placeholder=" ">
-                    <label for="lastName" class="label is-animated">Nom</label>
+                    <div class="column">
+                        <div class="field has-animated-label">
+                            <input type="text" class="input has-animated-label" name="lastName" id="lastName" placeholder=" ">
+                            <label for="lastName" class="label is-animated">Nom</label>
+                        </div>
+                    </div>
                 </div>
             </section>
 
