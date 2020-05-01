@@ -22,15 +22,6 @@ Images.allow({
 });
 
 Meteor.methods({
-    'hasProfilePicture'(){
-        if(Meteor.userId() && UsersInformations.findOne({userId: Meteor.userId()}) && UsersInformations.findOne({userId: Meteor.userId()}).profilePicture !== null){
-            // User is logged in and has a profile picture, return the profile picture id
-            return UsersInformations.findOne({userId: Meteor.userId()}).profilePicture;
-        } else{
-            // No profile picture
-            return false;
-        }
-    },
     'findOneProductById'({productId}){
         // Type check to prevent malicious calls
         check(productId, String);
@@ -46,10 +37,11 @@ Meteor.methods({
     'getVoteValue'({productId}){
         // Type check to prevent malicious calls
         check(productId, String);
+
         if(Meteor.userId()){
             const userVotes = UsersInformations.findOne({userId: Meteor.userId()}).votes;
             // Returns the vote for asked productId : it can be a positive or negative number, or undefined if no vote
-            return userVotes[product._id];
+            return userVotes[productId];
         } else{
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
@@ -125,7 +117,6 @@ Meteor.methods({
         check(productName, String);
         check(productDescription, String);
         check(coverImage, String);
-        check(otherImages, String);
 
         if(!Meteor.userId()){
             // User isn't logged in
@@ -194,6 +185,7 @@ Meteor.methods({
                                         Contributions.insert({
                                             userId: Meteor.userId(),
                                             type: 'Ajout',
+                                            status: 'pending',
                                             elementId: addedProductId,
                                             createdAt: new Date().toISOString(),
                                             moderationId: addedModerationId,
@@ -224,7 +216,6 @@ Meteor.methods({
         check(productName, String);
         check(productDescription, String);
         check(coverImage, String);
-        check(otherImages, String);
         check(productId, String);
 
         if(!Meteor.userId()){
@@ -296,6 +287,7 @@ Meteor.methods({
                                             Contributions.insert({
                                                 userId: Meteor.userId(),
                                                 type: 'Proposition de modifications',
+                                                status: 'pending',
                                                 elementId: addedProductId,
                                                 createdAt: new Date().toISOString(),
                                                 moderationId: addedModerationId,

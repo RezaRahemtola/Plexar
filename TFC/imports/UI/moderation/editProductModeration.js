@@ -32,8 +32,10 @@ Template.editProductModeration.helpers({
                 originalNameCharDisplay.innerText = originalName.value.length+" / "+originalName.maxLength;
             }
         });
-        // TODO return uniquement ce qui est necessaire (nom produit original et modifié)
-        return [Session.get('editProductModeration')];
+        // Catching names and returning them (in an array to use each)
+        const originalProductName = Session.get('editProductModeration').originalProduct.name;
+        const editedProductName = Session.get('editProductModeration').editedProduct.name;
+        return [ {originalProductName: originalProductName, editedProductName: editedProductName } ];
     },
     nameDifference: function(){
         const originalProduct = Session.get('editProductModeration').originalProduct;
@@ -85,8 +87,10 @@ Template.editProductModeration.helpers({
                 originalDescriptionCharDisplay.innerText = originalDescription.value.length+" / "+originalDescription.maxLength;
             }
         });
-        // TODO return uniquement ce qui est necessaire (desc produit original et modifié)
-        return [Session.get('editProductModeration')];
+        // Catching descrptions and returning them (in an array to use each)
+        const originalProductDescription = Session.get('editProductModeration').originalProduct.description;
+        const editedProductDescription = Session.get('editProductModeration').editedProduct.description;
+        return [ {originalProductDescription: originalProductDescription, editedProductDescription: editedProductDescription } ];
     },
     descriptionDifference: function(){
         const originalProduct = Session.get('editProductModeration').originalProduct;
@@ -185,6 +189,21 @@ Template.editProductModeration.helpers({
     },
     displayEditedCategories: function(){
         return Session.get('editProductModeration').editedProduct.categories;
+    }
+});
+
+
+Template.editProductModeration.events({
+    'click #rejectModifications'(event){
+        const editedProductId = Session.get('editProductModeration').editedProduct._id;
+        Meteor.call('rejectEditModeration', {editedProductId: editedProductId}, function(error, result){
+            if(error){
+                // There is an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else{
+                Session.set('page', 'moderation');
+            }
+        });
     }
 });
 

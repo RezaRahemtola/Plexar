@@ -14,6 +14,15 @@ import { Images } from '../../imports/databases/images.js';
 
 
 Meteor.methods({
+    'hasProfilePicture'(){
+        if(Meteor.userId() && UsersInformations.findOne({userId: Meteor.userId()}) && UsersInformations.findOne({userId: Meteor.userId()}).profilePicture !== null){
+            // User is logged in and has a profile picture, return the profile picture id
+            return UsersInformations.findOne({userId: Meteor.userId()}).profilePicture;
+        } else{
+            // No profile picture
+            return false;
+        }
+    },
     'changeUsername'({newUsername}){
         // Type check to prevent malicious calls
         check(newUsername, String);
@@ -95,16 +104,24 @@ Meteor.methods({
                 createdAtFormatted = date+ '/' +month+ '/' +year;  // Updating the document with the new creation date
 
                 Meteor.call('findOneProductById', {productId: doc.elementId}, function(error, result){
-                    if(!error){
+                    if(error){
+                        // There was an error
+                        throw new Meteor.Error(error.error, error.reason);
+                    } else if(result){
                         var elementName = result.name;
-                        if(!Moderation.findOne({_id: doc.moderationId})){
-                            // The contribution isn't under moderation, setting the corresponding status
-                            var status = 'Validé';
-                            var statusStyle = 'is-success';
-                        } else{
+                        // Catching the moderation status
+                        if(doc.status === 'pending'){
                             // Contribution is under moderation, setting the corresponding status
                             var status = 'En attente de validation';
                             var statusStyle = 'is-warning';
+                        } else if(doc.status === 'accepted'){
+                            // The contribution has been accepted, setting the corresponding status
+                            var status = 'Validée';
+                            var statusStyle = 'is-success';
+                        } else if(doc.status === 'rejected'){
+                            // The contribution has been rejected, setting the corresponding status
+                            var status = 'Rejetée';
+                            var statusStyle = 'is-danger';
                         }
                         // Pushing the new document to the array
                        userContributions.push({type: doc.type,
@@ -135,10 +152,8 @@ Meteor.methods({
                 if(Products.findOne({_id : productId}) === undefined){
                     // This product is in favorites but doesn't exist in the products db (maybe deleted), we remove it from favorites
                     favoriteProductsId.pop(productId);  // Removing the product from the array
-                    Favorites.update(favoriteId, { $set: {
-                        // Updating the database with the modified array
-                        products: favoriteProductsId
-                    }});
+                    // Updating the database with the modified array
+                    Favorites.update(favoriteId, { $set: { products: favoriteProductsId } } );
                 } else{
                     // Product exists, adding it to the array
                     favoriteProducts.push(Products.findOne({_id : productId}));
@@ -189,9 +204,7 @@ Meteor.methods({
                         throw new Meteor.Error(error.error, error.reason);
                     } else{
                         // Username was changed successfully, updating value in our database
-                        UsersInformations.update(userInformations._id, { $set: {
-                            username: username
-                        }});
+                        UsersInformations.update(userInformations._id, { $set: { username: username } } );
                     }
                     callbacksPending--;  // End of callback function
                 });

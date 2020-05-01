@@ -10,14 +10,14 @@
 
                 {{#each displayName}}
                     <div class="field has-animated-label">
-                        <input type="text" class="input has-animated-label" name="name" id="originalName" value="{{originalProduct.name}}" disabled>
+                        <input type="text" class="input has-animated-label" name="name" id="originalName" value="{{originalProductName}}" disabled>
                         <label for="name" class="label is-animated">Nom du produit (original)</label>
                         <span id="originalNameCharCounter" class="character-counter"></span>
                     </div>
 
                     {{#if nameDifference}}
                         <div class="field has-animated-label">
-                            <input type="text" class="input has-animated-label" name="name" id="editedName" value="{{editedProduct.name}}" disabled>
+                            <input type="text" class="input has-animated-label" name="name" id="editedName" value="{{editedProductName}}" disabled>
                             <label for="name" class="label is-animated">Nom du produit (modifié)</label>
                             <span id="editedNameCharCounter" class="character-counter"></span>
                         </div>
@@ -29,7 +29,7 @@
                 {{#each displayDescription}}
                     <div class="field has-animated-label">
                         <div class="control has-icons-left">
-                            <textarea class="textarea has-animated-label" name="description" id="originalDescription" value="{{originalProduct.description}}" disabled></textarea>
+                            <textarea class="textarea has-animated-label" name="description" id="originalDescription" value="{{originalProductDescription}}" disabled></textarea>
                             <label for="description" class="label is-animated">Description du produit (originale)</label>
                             <span class="icon is-left">
                                 <i class="fas fa-file-alt"></i>
@@ -41,7 +41,7 @@
                     {{#if descriptionDifference}}
                         <div class="field has-animated-label">
                             <div class="control has-icons-left">
-                                <textarea class="textarea has-animated-label" name="description" id="editedDescription" placeholder="{{editedProduct.description}}" disabled></textarea>
+                                <textarea class="textarea has-animated-label" name="description" id="editedDescription" value="{{editedProductDescription}}" disabled></textarea>
                                 <label for="description" class="label is-animated">Description du produit (modifiée)</label>
                                 <span class="icon is-left">
                                     <i class="fas fa-file-alt"></i>
@@ -69,7 +69,7 @@
                             </div>
 
                             {{#if coverImageDifference}}
-                                <span>Image de couverture (modifiée)</span>
+                                <p>Image de couverture (modifiée)</p>
                                 <div class="cover-image width-fit-content" style="position: relative; display: inline-block;">
                                     <img src="{{editedCoverImageUrl}}" class="image is-128x128">
                                 </div>
