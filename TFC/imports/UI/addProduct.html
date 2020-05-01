@@ -6,7 +6,7 @@
         <form id="newProduct" class="container" style="border: ridge grey 0.1rem; padding: 0.8rem;">
 
             <section class="section">
-                <h4 class="title is-4 has-text-centered">Informations</h4>
+                <h4 class="title is-4 has-text-centered">Informations générales</h4>
 
                 <div class="field has-animated-label">
                     <input type="text" class="input has-animated-label" name="name" id="name" placeholder=" " required >
@@ -94,6 +94,21 @@
                 </div>
             </section>
 
+            <section class="section" style="border-top: solid grey 0.1rem;">
+                <h4 class="title is-4 has-text-centered">Autres</h4>
+
+                    <div class="field has-animated-label" id="websiteField">
+                        <div class="control has-icons-left">
+                            <input type="text" class="input has-animated-label" name="website" id="website" placeholder=" ">
+                            <label for="name" class="label is-animated">Site web</label>
+                            <span class="icon is-left">
+                                <i class="fas fa-globe-americas"></i>
+                            </span>
+                        </div>
+                        <p class="help is-success"></p>
+                        <p class="help is-danger"></p>
+                    </div>
+            </section>
 
             <button class="button is-success is-medium is-fullwidth" id="addProduct" type="submit" >Ajouter le produit !</button>
         </form>

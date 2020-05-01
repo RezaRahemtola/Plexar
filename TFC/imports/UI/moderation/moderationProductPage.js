@@ -46,5 +46,15 @@ Template.moderationProductPage.helpers({
             }
             return false;
         }
+    },
+    displayWebsite: function(){
+        if(Session.get('currentProduct')){
+            // Catching the website
+            const website = Session.get('currentProduct').website;
+            if(website !== ""){
+                // If a website has been given we display it
+                return [website];
+            }
+        }
     }
 });

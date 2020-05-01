@@ -166,6 +166,31 @@ Template.addProduct.onRendered(function(){
             }
             select.value = 'add';  // Reseting the select with the default value
         }
+
+        // Live website validation
+        const websiteInput = document.querySelector('input#website');
+        websiteInput.onchange = function(){
+            if(websiteInput.value === ""){
+                // User has removed his input, deleting error messages
+                $('input#website').removeClass("is-danger");
+                document.querySelector('#websiteField p.help.is-danger').textContent = "";
+            } else{
+                Meteor.call('checkUrlInput', {url: websiteInput.value}, function(error, result){
+                    if(error){
+                        // TODO: display error
+
+                    } else if(!result){
+                        // Value isn't a valid url adress
+                        $('input#website').addClass("is-danger");
+                        document.querySelector('#websiteField p.help.is-danger').textContent = "Veuillez entrer un lien valide";  // Adding a danger help message
+                    } else if(result){
+                        // Value is a valid url adress, removing error messages
+                        $('input#website').removeClass("is-danger");
+                        document.querySelector('#websiteField p.help.is-danger').textContent = "";
+                    }
+                });
+            }
+        }
     }
 });
 
@@ -210,8 +235,9 @@ Template.addProduct.events({
         const coverImage = Session.get('coverImageId');
         const otherImages = Session.get('otherImagesId');
         const categories = Session.get('selectedCategories');
+        const website = form.get('website');
 
-        Meteor.call('addNewProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories}, function(error, result){
+        Meteor.call('addNewProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website}, function(error, result){
             if(error){
                 // There was an error
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});

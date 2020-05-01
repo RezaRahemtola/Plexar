@@ -95,6 +95,13 @@
                         {{/each}}
                     </div>
 
+                    {{#each displayWebsite}}
+                        <a class="button" href="{{this}}" target="_blank">
+                            <span class="icon"><i class="fas fa-globe-americas"></i></span>
+                            <p>Voir le site web</p>
+                        </a>
+                    {{/each}}
+
                     <button class="button">
                         <span class="icon"><i class="fas fa-share-alt"></i></span>
                         <p>Partager</p>

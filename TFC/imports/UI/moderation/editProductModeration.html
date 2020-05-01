@@ -6,7 +6,7 @@
         <form class="container" id="editProduct" style="border: ridge grey 0.1rem; padding: 0.8rem;">
 
             <section class="section">
-                <h4 class="title is-4 has-text-centered">Informations</h4>
+                <h4 class="title is-4 has-text-centered">Informations générales</h4>
 
                 {{#each displayName}}
                     <div class="field has-animated-label">
@@ -129,9 +129,40 @@
                 {{else}}
                     <p class="has-text-centered">Pas de modification des catégories</p>
                 {{/if}}
-
-
             </section>
+
+            <section class="section" style="border-top: solid grey 0.1rem;">
+                <h4 class="title is-4 has-text-centered">Autres</h4>
+
+                    <div class="field has-animated-label">
+                        <div class="control has-icons-left">
+                            {{#each displayWebsite}}
+                                <input type="text" class="input has-animated-label" name="originalWebsite" id="originalWebsite" placeholder=" " value={{this}} disabled>
+                            {{/each}}
+                            <label for="name" class="label is-animated">Site web (original)</label>
+                            <span class="icon is-left">
+                                <i class="fas fa-globe-americas"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    {{#if websiteDifference}}
+                        <div class="field has-animated-label">
+                            <div class="control has-icons-left">
+                                {{#each displayEditedWebsite}}
+                                    <input type="text" class="input has-animated-label" name="editedWebsite" id="editedWebsite" placeholder=" " value={{this}} disabled>
+                                {{/each}}
+                                <label for="name" class="label is-animated">Site web (modifié)</label>
+                                <span class="icon is-left">
+                                    <i class="fas fa-globe-americas"></i>
+                                </span>
+                            </div>
+                        </div>
+                    {{else}}
+                        <p class="has-text-centered">Pas de modification du site web</p>
+                    {{/if}}
+            </section>
+
             <div class="columns">
                 <div class="column">
                     <button class="button is-danger is-medium is-fullwidth" id="rejectModifications">Rejeter les modifications</button>

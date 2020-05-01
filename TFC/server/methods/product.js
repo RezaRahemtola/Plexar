@@ -122,11 +122,12 @@ Meteor.methods({
             return returnValue;
         }
     },
-    'addNewProduct'({productName, productDescription, coverImage, otherImages, categories}){
+    'addNewProduct'({productName, productDescription, coverImage, otherImages, categories, website}){
         // Type check to prevent malicious calls
         check(productName, String);
         check(productDescription, String);
         check(coverImage, String);
+        check(website, String);
 
         if(!Meteor.userId()){
             // User isn't logged in
@@ -165,55 +166,79 @@ Meteor.methods({
                         const maxImagesNumber = Rules.product.coverImage.maxLength + Rules.product.otherImages.maxLength;
                         otherImages.slice(0, maxImagesNumber);  // Remove extra images (if there are any)
                         const productImages = otherImages;
-                        // Inserting informations in the database :
+
+                        // Checking website input
                         callbacksPending++;  // Starting a call with a callback function
-                        Products.insert({
-                            name: productName,
-                            description: productDescription,
-                            images: productImages,
-                            score: 0,
-                            categories: categories
-                        }, function(error, addedProductId){
+                        Meteor.call('checkUrlInput', {url: website}, function(error, result){
                             if(error){
-                                // There was an error while adding the product
-                                throw new Meteor.Error('productInsertionError', "Erreur lors de l'ajout du produit, veuillez réessayer.");
-                            } else{
-                                // The product was successfully added, inserting it to the moderation database
-                                callbacksPending++;  // Starting a call with a callback function
-                                Moderation.insert({
-                                    userId: Meteor.userId(),
-                                    elementId: addedProductId,
-                                    reason: "newProduct"
-                                }, function(error, addedModerationId){
-                                    if(error){
-                                        // There was an error while adding the moderation
-                                        throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
-                                        Products.remove(addedProductId);  // Removing the product from the db
-                                    } else{
-                                        // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
-                                        callbacksPending++;  // Starting a call with a callback function
-                                        Contributions.insert({
-                                            userId: Meteor.userId(),
-                                            type: 'Ajout',
-                                            status: 'pending',
-                                            elementId: addedProductId,
-                                            createdAt: new Date().toISOString(),
-                                            moderationId: addedModerationId,
-                                            points: 10
-                                            // TODO: Set le nombre de points en fonction des Rules
-                                        }, function(error, addedContributionId){
-                                            if(error){
-                                                // There was an error while adding the contribution
-                                                throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
-                                                Products.remove(addedProductId);  // Removing the product from the db
-                                                Moderation.remove(addedModerationId);  // Removing the moderation from the db
-                                            }
-                                            callbacksPending--;  // End of callback function
-                                        });
-                                    }
-                                    callbacksPending--;  // End of callback function
-                                });
+                                // TODO: error display
+                            } else if(!result){
+                                // URL isn't correct, throwing an error if it has been filled
+                                if(website !== ""){
+                                    throw new Meteor.Error('invalidWebsite', 'Veuillez entrer un lien valide.');
+                                } else{
+                                    // Website field wasn't filled, we will insert an empty link in the db
+                                }
+                            } else if(result){
+                                // URL is correct, adding protocol ahead if needed
+                                if(!( website.includes('http://') || website.includes('https://') )){
+                                    // Adding http to be sure it will work (some website don't support https)
+                                    website = 'http://' + website;
+                                }
                             }
+
+                            // Inserting informations in the database :
+                            callbacksPending++;  // Starting a call with a callback function
+                            Products.insert({
+                                name: productName,
+                                description: productDescription,
+                                images: productImages,
+                                score: 0,
+                                categories: categories,
+                                website: website
+                            }, function(error, addedProductId){
+                                if(error){
+                                    // There was an error while adding the product
+                                    throw new Meteor.Error('productInsertionError', "Erreur lors de l'ajout du produit, veuillez réessayer.");
+                                } else{
+                                    // The product was successfully added, inserting it to the moderation database
+                                    callbacksPending++;  // Starting a call with a callback function
+                                    Moderation.insert({
+                                        userId: Meteor.userId(),
+                                        elementId: addedProductId,
+                                        reason: "newProduct"
+                                    }, function(error, addedModerationId){
+                                        if(error){
+                                            // There was an error while adding the moderation
+                                            throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
+                                            Products.remove(addedProductId);  // Removing the product from the db
+                                        } else{
+                                            // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
+                                            callbacksPending++;  // Starting a call with a callback function
+                                            Contributions.insert({
+                                                userId: Meteor.userId(),
+                                                type: 'Ajout',
+                                                status: 'pending',
+                                                elementId: addedProductId,
+                                                createdAt: new Date().toISOString(),
+                                                moderationId: addedModerationId,
+                                                points: 10
+                                                // TODO: Set le nombre de points en fonction des Rules
+                                            }, function(error, addedContributionId){
+                                                if(error){
+                                                    // There was an error while adding the contribution
+                                                    throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
+                                                    Products.remove(addedProductId);  // Removing the product from the db
+                                                    Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                                }
+                                                callbacksPending--;  // End of callback function
+                                            });
+                                        }
+                                        callbacksPending--;  // End of callback function
+                                    });
+                                }
+                                callbacksPending--;  // End of callback function
+                            });
                             callbacksPending--;  // End of callback function
                         });
                     }
@@ -221,11 +246,12 @@ Meteor.methods({
             }
         }
     },
-    'addEditedProduct'({productName, productDescription, coverImage, otherImages, categories, productId}){
+    'addEditedProduct'({productName, productDescription, coverImage, otherImages, categories, website, productId}){
         // Type check to prevent malicious calls
         check(productName, String);
         check(productDescription, String);
         check(coverImage, String);
+        check(website, String);
         check(productId, String);
 
         if(!Meteor.userId()){
@@ -263,71 +289,95 @@ Meteor.methods({
                         const maxImagesNumber = Rules.product.coverImage.maxLength + Rules.product.otherImages.maxLength;
                         otherImages.slice(0, maxImagesNumber);  // Remove extra images (if there are any)
                         const productImages = otherImages;
-                        //  Catching the real product to check for modifications
-                        const originalProduct = Products.findOne({_id: productId});
-                        const nameDifference = (originalProduct.name !== productName);
-                        const descriptionDifference = (originalProduct.description !== productDescription);
-                        const imagesDifference = (originalProduct.toString() !== productImages.toString());
-                        const categoriesDifference = (originalProduct.toString() !== categories.toString());
 
-                        const isDifferent = nameDifference || descriptionDifference || imagesDifference || categoriesDifference;
+                        // Checking website input
+                        callbacksPending++;  // Starting a call with a callback function
+                        Meteor.call('checkUrlInput', {url: website}, function(error, result){
+                            if(error){
+                                // TODO: error display
+                            } else if(!result){
+                                // URL isn't correct, throwing an error if it has been filled
+                                if(website !== ""){
+                                    throw new Meteor.Error('invalidWebsite', 'Veuillez entrer un lien valide.');
+                                } else{
+                                    // Website field wasn't filled, we will insert an empty link in the db
+                                }
+                            } else if(result){
+                                // URL is correct, adding protocol ahead if needed
+                                if(!( website.includes('http://') || website.includes('https://') )){
+                                    // Adding http to be sure it will work (some website don't support https)
+                                    website = 'http://' + website;
+                                }
+                            }
 
-                        if(!isDifferent){
-                            // User didin't make any modifications, throwing an error
-                            throw new Meteor.Error('noModifications', "Vous n'avez fait aucune modification.");
-                        } else{
-                            // Inserting informations in the database :
-                            callbacksPending++;  // Starting a call with a callback function
-                            EditedProducts.insert({
-                                originalId: originalProduct._id,
-                                name: productName,
-                                description: productDescription,
-                                images: productImages,
-                                score: originalProduct.score,
-                                categories: categories
-                            }, function(error, addedProductId){
-                                    if(error){
-                                        // There was an error while adding the product
-                                        throw new Meteor.Error('productInsertionError', "Erreur lors de l'ajout du produit, veuillez réessayer.");
-                                    } else{
-                                        // Adding the product to the moderation database
-                                        callbacksPending++;  // Starting a call with a callback function
-                                        Moderation.insert({
-                                            userId: Meteor.userId(),
-                                            elementId: productId,
-                                            reason: "editProduct"
-                                        }, function(error, addedModerationId){
-                                            if(error){
-                                                // There was an error while adding the moderation
-                                                EditedProducts.remove(addedProductId);  // Removing the product from the db
-                                                throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
-                                            } else{
-                                                // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
-                                                callbacksPending++;  // Starting a call with a callback function
-                                                Contributions.insert({
-                                                    userId: Meteor.userId(),
-                                                    type: 'Modification',
-                                                    status: 'pending',
-                                                    elementId: originalProduct._id,
-                                                    createdAt: new Date().toISOString(),
-                                                    moderationId: addedModerationId,
-                                                    points: 10
-                                                }, function(error, addedContributionId){
-                                                    if(error){
-                                                        // There was an error while adding the contribution
-                                                        EditedProducts.remove(addedProductId);  // Removing the product from the db
-                                                        Moderation.remove(addedModerationId);  // Removing the moderation from the db
-                                                        throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
-                                                    }
-                                                    callbacksPending--;  // End of callback function
-                                                });
-                                            }
-                                            callbacksPending--;  // End of callback function
-                                        });
-                                    }
-                                    callbacksPending--;  // End of callback function
-                            });
-                        }
+                            //  Catching the real product to check for modifications
+                            const originalProduct = Products.findOne({_id: productId});
+                            const nameDifference = (originalProduct.name !== productName);
+                            const descriptionDifference = (originalProduct.description !== productDescription);
+                            const imagesDifference = (originalProduct.toString() !== productImages.toString());
+                            const categoriesDifference = (originalProduct.toString() !== categories.toString());
+                            const websiteDifference = (originalProduct.website !== website);
+
+                            const isDifferent = nameDifference || descriptionDifference || imagesDifference || categoriesDifference || websiteDifference;
+
+                            if(!isDifferent){
+                                // User didin't make any modifications, throwing an error
+                                throw new Meteor.Error('noModifications', "Vous n'avez fait aucune modification.");
+                            } else{
+                                // Inserting informations in the database :
+                                callbacksPending++;  // Starting a call with a callback function
+                                EditedProducts.insert({
+                                    originalId: originalProduct._id,
+                                    name: productName,
+                                    description: productDescription,
+                                    images: productImages,
+                                    score: originalProduct.score,
+                                    categories: categories,
+                                    website: website
+                                }, function(error, addedProductId){
+                                        if(error){
+                                            // There was an error while adding the product
+                                            throw new Meteor.Error('productInsertionError', "Erreur lors de l'ajout du produit, veuillez réessayer.");
+                                        } else{
+                                            // Adding the product to the moderation database
+                                            callbacksPending++;  // Starting a call with a callback function
+                                            Moderation.insert({
+                                                userId: Meteor.userId(),
+                                                elementId: productId,
+                                                reason: "editProduct"
+                                            }, function(error, addedModerationId){
+                                                if(error){
+                                                    // There was an error while adding the moderation
+                                                    EditedProducts.remove(addedProductId);  // Removing the product from the db
+                                                    throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
+                                                } else{
+                                                    // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
+                                                    callbacksPending++;  // Starting a call with a callback function
+                                                    Contributions.insert({
+                                                        userId: Meteor.userId(),
+                                                        type: 'Modification',
+                                                        status: 'pending',
+                                                        elementId: originalProduct._id,
+                                                        createdAt: new Date().toISOString(),
+                                                        moderationId: addedModerationId,
+                                                        points: 10
+                                                    }, function(error, addedContributionId){
+                                                        if(error){
+                                                            // There was an error while adding the contribution
+                                                            EditedProducts.remove(addedProductId);  // Removing the product from the db
+                                                            Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                                            throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
+                                                        }
+                                                        callbacksPending--;  // End of callback function
+                                                    });
+                                                }
+                                                callbacksPending--;  // End of callback function
+                                            });
+                                        }
+                                        callbacksPending--;  // End of callback function
+                                });
+                            }
+                        });
                     }
                 }
             }

@@ -187,6 +187,20 @@ Template.editProductModeration.helpers({
     },
     displayEditedCategories: function(){
         return Session.get('editProductModeration').editedProduct.categories;
+    },
+    displayWebsite: function(){
+        return [Session.get('editProductModeration').originalProduct.website];
+    },
+    websiteDifference: function(){
+        // Catching websites
+        const originalWebsite = Session.get('editProductModeration').originalProduct.website;
+        const editedWebsite = Session.get('editProductModeration').editedProduct.website;
+        // Comparing elements (return a boolean)
+        const areElementsDifferent = (originalWebsite !== editedWebsite);
+        return areElementsDifferent;
+    },
+    displayEditedWebsite: function(){
+        return [Session.get('editProductModeration').editedProduct.website]
     }
 });
 

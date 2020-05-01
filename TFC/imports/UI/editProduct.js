@@ -172,6 +172,33 @@ Template.editProduct.onRendered(function(){
                     imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
                 }
             }
+
+            // Live website input validation
+            const websiteInput = document.querySelector('input#website');
+            // Filling input with the current value
+            websiteInput.value = product.website;
+            // Event listener
+            websiteInput.onchange = function(){
+                if(websiteInput.value === ""){
+                    // User has removed his input, deleting error messages
+                    $('input#website').removeClass("is-danger");
+                    document.querySelector('#websiteField p.help.is-danger').textContent = "";
+                } else{
+                    Meteor.call('checkUrlInput', {url: websiteInput.value}, function(error, result){
+                        if(error){
+                            // TODO: display error
+                        } else if(!result){
+                            // Value isn't a valid url adress
+                            $('input#website').addClass("is-danger");
+                            document.querySelector('#websiteField p.help.is-danger').textContent = "Veuillez entrer un lien valide";  // Adding a danger help message
+                        } else if(result){
+                            // Value is a valid url adress, removing error messages
+                            $('input#website').removeClass("is-danger");
+                            document.querySelector('#websiteField p.help.is-danger').textContent = "";
+                        }
+                    });
+                }
+            }
         }
     });
 
@@ -307,8 +334,9 @@ Template.editProduct.events({
         const otherImages = Session.get('editedOtherImagesId');
         const categories = Session.get('selectedCategories');
         const productId = Session.get('currentProduct')._id;
+        const website = form.get('website');
 
-        Meteor.call('addEditedProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, productId: productId}, function(error, result){
+        Meteor.call('addEditedProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website, productId: productId}, function(error, result){
             if(error){
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
             } else{

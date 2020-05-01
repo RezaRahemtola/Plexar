@@ -163,7 +163,8 @@ Meteor.methods({
                 name: editedProduct.name,
                 description: editedProduct.description,
                 images: editedProduct.images,
-                categories: editedProduct.categories
+                categories: editedProduct.categories,
+                website: editedProduct.website
             }}, function(error, result){
                 if(error){
                     // There was an error while updating the product

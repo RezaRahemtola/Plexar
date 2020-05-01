@@ -160,11 +160,21 @@ Template.productPage.helpers({
     },
     moreThanOneImage: function(){
         if(Session.get('currentProduct')){
-            var productImagesId = Session.get('currentProduct').images;  // Return an array with IDs of the product images
+            const productImagesId = Session.get('currentProduct').images;  // Return an array with IDs of the product images
             if(productImagesId.length > 1){
                 return true;
             }
             return false;
+        }
+    },
+    displayWebsite: function(){
+        if(Session.get('currentProduct')){
+            // Catching the website
+            const website = Session.get('currentProduct').website;
+            if(website !== ""){
+                // If a website has been given we display it
+                return [website];
+            }
         }
     }
 });
