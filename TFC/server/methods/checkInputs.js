@@ -125,7 +125,6 @@ Meteor.methods({
                 throw new Meteor.Error('filesNumberError', "Veuillez sélectionner au moins "+otherImageRules.minLength+" fichiers.");
             }
         } else if(files.length > maxFilesLength){
-            console.log(files.length);
             if(maxFilesLength === 1){
                 throw new Meteor.Error('filesNumberError', "Vous ne pouvez pas sélectionner plus d'1 fichier.");
             } else{

@@ -84,10 +84,9 @@
                     <div class="select width-fit-content" style="margin: 0 auto; display: block;">
                         <select id="categories">
                             <option value="add" selected disabled hidden>Ajouter une catégorie</option>
-                            <option value="Alimentation">Alimentation</option>
-                            <option value="Beauté & Hygiène">Beauté & Hygiène</option>
-                            <option value="Informatique">Informatique</option>
-                            <option value='Catégorie 4'>4</option>
+                            {{#each displayCategories}}
+                                <option value="{{this}}">{{this}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     <br>

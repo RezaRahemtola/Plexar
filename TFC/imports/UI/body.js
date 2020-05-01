@@ -51,6 +51,7 @@ Session.set('otherImagesId', []);
 Session.set('productsCounter', 0);
 Session.set('userContributions', []);
 Session.set('profilePicture', 'user.svg');
+Session.set('productCategories', []);
 
 
 Template.body.helpers({

@@ -35,10 +35,9 @@
         <div class="select">
             <select id="categories">
                 <option value="add" selected disabled hidden>Sélectionner</option>
-                <option value="Alimentation">Alimentation</option>
-                <option value="Informatique">Informatique</option>
-                <option value="Catégorie 3">3</option>
-                <option value='Catégorie 4'>4</option>
+                {{#each displayCategories}}
+                    <option value="{{this}}">{{this}}</option>
+                {{/each}}
             </select>
         </div>
 

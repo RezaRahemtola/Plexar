@@ -144,5 +144,51 @@ Meteor.methods({
                 }
             });
         }
+    },
+    'approveEditModeration'({editedProductId}){
+        // Type check to prevent malicious calls
+        check(editedProductId, String);
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // TODO: Check if user is admin
+            // Catching the edited product
+            const editedProduct = EditedProducts.findOne({_id: editedProductId});
+            // Edit proposition was approved, updating the current product with modified informations
+            const productId = editedProduct.originalId;
+            const originalProduct = Products.findOne({_id: productId});
+            Products.update(productId, { $set: {
+                name: editedProduct.name,
+                description: editedProduct.description,
+                images: editedProduct.images,
+                categories: editedProduct.categories
+            }}, function(error, result){
+                if(error){
+                    // There was an error while updating the product
+                    throw new Meteor.Error('productUpdateFailed', 'La mise à jour du produit a échoué, veuillez réessayer.');
+                } else{
+                    // Product was successfully modified, we check images to delete those who aren't in the real product anymore
+                    const oldImages = originalProduct.images;
+                    const newImages = editedProduct.images;
+                    for(var imageId of oldImages){
+                        if(!newImages.includes(imageId)){
+                            // This image isn't used in the product anymore, we can delete it
+                            Images.remove(imageId);
+                        }
+                    }
+
+                    // Now let's catch the correponding contribution to update it's status
+                    const originalProductId = editedProduct.originalId;
+                    const moderationId = Moderation.findOne({elementId: originalProductId})._id;
+                    const contributionId = Contributions.findOne({moderationId: moderationId})._id;
+                    // Updating the status
+                    Contributions.update(contributionId, { $set: { status: 'accepted' } });
+                    // Deleting the moderation
+                    Moderation.remove(moderationId);
+                }
+            });
+        }
     }
 });

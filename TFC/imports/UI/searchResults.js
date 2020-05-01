@@ -91,7 +91,20 @@ Template.searchResults.helpers({
                 searchedProducts.push(product);
             }
         }
+        Session.set("searchedProducts", searchedProducts);
         return Session.get("searchedProducts");  // Return the products array
+    },
+    displayCategories: function(){
+        // Display available categories
+        Meteor.call('getCategories', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+            } else{
+                Session.set('productCategories', result);
+            }
+        });
+        return Session.get('productCategories');
     }
 });
 

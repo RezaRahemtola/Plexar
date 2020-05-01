@@ -211,6 +211,18 @@ Template.editProductModeration.events({
                 Session.set('page', 'moderation');
             }
         });
+    },
+    'click #approveModifications'(event){
+        event.preventDefault();
+        const editedProductId = Session.get('editProductModeration').editedProduct._id;
+        Meteor.call('approveEditModeration', {editedProductId: editedProductId}, function(error, result){
+            if(error){
+                // There is an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else{
+                Session.set('page', 'moderation');
+            }
+        });
     }
 });
 

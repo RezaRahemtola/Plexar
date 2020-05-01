@@ -29,6 +29,11 @@ export const Rules = {
             minLength: 0,
             maxLength: 4,
             maxMbSize: 5
-        }
+        },
+        categories: [
+            'Alimentation',
+            'Beauté & Hygiène',
+            'Informatique'
+        ]
     }
 };

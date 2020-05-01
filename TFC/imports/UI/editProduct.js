@@ -221,6 +221,18 @@ Template.editProduct.helpers({
             otherImages.push(Images.findOne({_id: imageId}));
         }
         return otherImages;
+    },
+    displayCategories: function(){
+        // Display available categories
+        Meteor.call('getCategories', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+            } else{
+                Session.set('productCategories', result);
+            }
+        });
+        return Session.get('productCategories');
     }
 });
 

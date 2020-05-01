@@ -21,5 +21,8 @@ Meteor.methods({
     },
     'productsCounter'(){
         return Products.find().count().toLocaleString();  // toLocaleString() make a space where needed (1000 will be 1 000)
+    },
+    'getCategories'(){
+        return Rules.product.categories;
     }
 });

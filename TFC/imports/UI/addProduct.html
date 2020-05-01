@@ -10,7 +10,7 @@
 
                 <div class="field has-animated-label">
                     <input type="text" class="input has-animated-label" name="name" id="name" placeholder=" " required >
-                    <label for="name" class="label is-animated">Nom du produit</label>
+                    <label for="name" class="label is-animated">Nom du produit <span class="has-text-danger">*</span></label>
                     <span id="nameCharCounter" class="character-counter"></span>
                 </div>
 
@@ -18,7 +18,7 @@
                 <div class="field has-animated-label">
                     <div class="control has-icons-left">
                         <textarea class="textarea has-animated-label" name="description" id="description" placeholder=" " required></textarea>
-                        <label for="description" class="label is-animated">Description du produit</label>
+                        <label for="description" class="label is-animated">Description du produit <span class="has-text-danger">*</span></label>
                         <span class="icon is-left">
                             <i class="fas fa-file-alt"></i>
                         </span>
@@ -32,7 +32,7 @@
 
                 <div class="columns">
                     <div class="column field has-text-centered">
-                        <span>Image de couverture</span>
+                        <span>Image de couverture <span class="has-text-danger">*</span></span>
                         <div class="file has-name is-boxed width-fit-content" style="margin: auto;">
                             <label class="file-label">
                                 <input class="file-input" type="file" name="coverImage" id="coverImage" accept="image/*">
@@ -84,10 +84,9 @@
                     <div class="select width-fit-content" style="margin: 0 auto; display: block;">
                         <select id="categories">
                             <option value="add" selected disabled hidden>Ajouter une catégorie</option>
-                            <option value="Alimentation">Alimentation</option>
-                            <option value="Beauté & Hygiène">Beauté & Hygiène</option>
-                            <option value="Informatique">Informatique</option>
-                            <option value='Catégorie 4'>4</option>
+                            {{#each displayCategories}}
+                                <option value="{{this}}">{{this}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     <br>

@@ -325,8 +325,6 @@ Meteor.methods({
                                                         EditedProducts.remove(addedProductId);  // Removing the product from the db
                                                         Moderation.remove(addedModerationId);  // Removing the moderation from the db
                                                         throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
-                                                    } else{
-                                                        console.log(Contributions.findOne({_id: addedContributionId}));
                                                     }
                                                     callbacksPending--;  // End of callback function
                                                 });

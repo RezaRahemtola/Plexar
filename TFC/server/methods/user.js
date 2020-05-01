@@ -192,7 +192,6 @@ Meteor.methods({
                 Meteor.call('changeUsername', {newUsername: username}, function(error, result){
                     if(error){
                         // There was an error while changing the username
-                        console.log(error);
                         throw new Meteor.Error(error.error, error.reason);
                     } else{
                         // Username was changed successfully, updating value in our database
