@@ -157,10 +157,13 @@ Template.editProductModeration.helpers({
         // Removing the first image (cover image)
         originalImages.splice(0, 1);
         editedImages.splice(0, 1);
-        if(originalImages !== editedImages){
-            return true;
-        }
-        return false;
+        // Comparing length (return a boolean)
+        const isLengthDifferent = (originalImages.length !== editedImages.length);
+        // Comparing elements (return a boolean)
+        const areElementsDifferent = originalImages.every(function(element, index){
+            return element !== editedImages[index];
+        });
+        return isLengthDifferent && areElementsDifferent;
     },
     displayEditedOtherImages: function(){
         // Catching the edited product's images
@@ -182,10 +185,13 @@ Template.editProductModeration.helpers({
         // Catching categories
         const originalCategories = Session.get('editProductModeration').originalProduct.categories;
         const editedCategories = Session.get('editProductModeration').editedProduct.categories;
-        if(originalCategories !== editedCategories){
-            return true;
-        }
-        return false;
+        // Comparing length (return a boolean)
+        const isLengthDifferent = (originalCategories.length !== editedCategories.length);
+        // Comparing elements (return a boolean)
+        const areElementsDifferent = originalCategories.every(function(element, index){
+            return element !== editedCategories[index];
+        });
+        return isLengthDifferent && areElementsDifferent;
     },
     displayEditedCategories: function(){
         return Session.get('editProductModeration').editedProduct.categories;
@@ -195,6 +201,7 @@ Template.editProductModeration.helpers({
 
 Template.editProductModeration.events({
     'click #rejectModifications'(event){
+        event.preventDefault();
         const editedProductId = Session.get('editProductModeration').editedProduct._id;
         Meteor.call('rejectEditModeration', {editedProductId: editedProductId}, function(error, result){
             if(error){

@@ -94,6 +94,7 @@ Meteor.methods({
             var contributionsCursor = Contributions.find({userId: Meteor.userId()}, {sort: { createdAt: -1 }});  // Return user's contributions sorted by date (most recent first)
             var userContributions = [];  // Creating an array to push the formatted contributions
             contributionsCursor.forEach(function(doc){
+                console.log(doc)
                 // Browsing the documents
                 var createdAtFormatted = new Date(doc.createdAt);  // Converting the creation date to a classic format
                 var year = createdAtFormatted.getFullYear();  // Catching the year
@@ -102,38 +103,30 @@ Meteor.methods({
                 if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
                 if(month < 10){ month = '0' + month; }
                 createdAtFormatted = date+ '/' +month+ '/' +year;  // Updating the document with the new creation date
-
-                Meteor.call('findOneProductById', {productId: doc.elementId}, function(error, result){
-                    if(error){
-                        // There was an error
-                        throw new Meteor.Error(error.error, error.reason);
-                    } else if(result){
-                        var elementName = result.name;
-                        // Catching the moderation status
-                        if(doc.status === 'pending'){
-                            // Contribution is under moderation, setting the corresponding status
-                            var status = 'En attente de validation';
-                            var statusStyle = 'is-warning';
-                        } else if(doc.status === 'accepted'){
-                            // The contribution has been accepted, setting the corresponding status
-                            var status = 'Validée';
-                            var statusStyle = 'is-success';
-                        } else if(doc.status === 'rejected'){
-                            // The contribution has been rejected, setting the corresponding status
-                            var status = 'Rejetée';
-                            var statusStyle = 'is-danger';
-                        }
-                        // Pushing the new document to the array
-                       userContributions.push({type: doc.type,
-                                               date: createdAtFormatted,
-                                               elementId: doc.elementId,
-                                               elementName: elementName,
-                                               status: status,
-                                               statusStyle: statusStyle,
-                                               points: doc.points
-                       });
-                    }
-                });
+                const elementName = Products.findOne({_id: doc.elementId}).name;
+                // Catching the moderation status
+                if(doc.status === 'pending'){
+                    // Contribution is under moderation, setting the corresponding status
+                    var status = 'En attente de validation';
+                    var statusStyle = 'is-warning';
+                } else if(doc.status === 'accepted'){
+                    // The contribution has been accepted, setting the corresponding status
+                    var status = 'Validée';
+                    var statusStyle = 'is-success';
+                } else if(doc.status === 'rejected'){
+                    // The contribution has been rejected, setting the corresponding status
+                    var status = 'Rejetée';
+                    var statusStyle = 'is-danger';
+                }
+                // Pushing the new document to the array
+               userContributions.push({type: doc.type,
+                                       date: createdAtFormatted,
+                                       elementId: doc.elementId,
+                                       elementName: elementName,
+                                       status: status,
+                                       statusStyle: statusStyle,
+                                       points: doc.points
+               });
             });
             return userContributions;
         }

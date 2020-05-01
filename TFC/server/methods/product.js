@@ -124,10 +124,10 @@ Meteor.methods({
         } else{
             var callbacksPending = 0;  // No callback is pending for the moment
 
-            if(productName < Rules.product.name.minLength){
-                throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rule.product.name.minLength+' charactères.');
-            } else if(productDescription < Rules.product.description.minLength){
-                throw new Meteor.Error('descriptionTooShort', 'La dexcription doit avoir une longueur minimale de '+Rule.product.description.minLength+' charactères.');
+            if(productName.length < Rules.product.name.minLength){
+                throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rules.product.name.minLength+' charactères.');
+            } else if(productDescription.length < Rules.product.description.minLength){
+                throw new Meteor.Error('descriptionTooShort', 'La dexcription doit avoir une longueur minimale de '+Rules.product.description.minLength+' charactères.');
             } else{
                 // Name and description minLength is ok, removing extra characters (if there are any)
                 productName.slice(0, Rules.product.name.maxLength);
@@ -224,10 +224,10 @@ Meteor.methods({
         } else{
             var callbacksPending = 0;  // No callback is pending for the moment
 
-            if(productName < Rules.product.name.minLength){
-                throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rule.product.name.minLength+' charactères.');
-            } else if(productDescription < Rules.product.description.minLength){
-                throw new Meteor.Error('descriptionTooShort', 'La dexcription doit avoir une longueur minimale de '+Rule.product.description.minLength+' charactères.');
+            if(productName.length < Rules.product.name.minLength){
+                throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rules.product.name.minLength+' charactères.');
+            } else if(productDescription.length < Rules.product.description.minLength){
+                throw new Meteor.Error('descriptionTooShort', 'La dexcription doit avoir une longueur minimale de '+Rules.product.description.minLength+' charactères.');
             } else{
                 // Name and description minLength is ok, removing extra characters (if there are any)
                 productName.slice(0, Rules.product.name.maxLength);
@@ -247,8 +247,6 @@ Meteor.methods({
                         }
                     }
                     if(correctImages === otherImages.length){
-                        const originalProduct = Products.findOne({_id: productId});
-
                         // All images are correct, adding the cover image to the first index of images array
                         otherImages.unshift(coverImage);
                         // Catch the rules for the maximum number of images per product
@@ -256,57 +254,79 @@ Meteor.methods({
                         otherImages.slice(0, maxImagesNumber);  // Remove extra images (if there are any)
                         const productImages = otherImages;
 
-                        // Inserting informations in the database :
-                        callbacksPending++;  // Starting a call with a callback function
-                        EditedProducts.insert({
-                            originalId: originalProduct._id,
-                            name: productName,
-                            description: productDescription,
-                            images: productImages,
-                            score: originalProduct.score,
-                            categories: categories
-                        }, function(error, addedProductId){
-                                if(error){
-                                    // There was an error while adding the product
-                                    throw new Meteor.Error('productInsertionError', "Erreur lors de l'ajout du produit, veuillez réessayer.");
-                                } else{
-                                    // Adding the product to the moderation database
-                                    callbacksPending++;  // Starting a call with a callback function
-                                    Moderation.insert({
-                                        userId: Meteor.userId(),
-                                        elementId: productId,
-                                        reason: "editProduct"
-                                    }, function(error, addedModerationId){
-                                        if(error){
-                                            // There was an error while adding the moderation
-                                            throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
-                                            EditedProducts.remove(addedProductId);  // Removing the product from the db
-                                        } else{
-                                            // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
-                                            callbacksPending++;  // Starting a call with a callback function
-                                            Contributions.insert({
-                                                userId: Meteor.userId(),
-                                                type: 'Proposition de modifications',
-                                                status: 'pending',
-                                                elementId: addedProductId,
-                                                createdAt: new Date().toISOString(),
-                                                moderationId: addedModerationId,
-                                                points: 10
-                                            }, function(error, addedContributionId){
-                                                if(error){
-                                                    // There was an error while adding the contribution
-                                                    throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
-                                                    EditedProducts.remove(addedProductId);  // Removing the product from the db
-                                                    Moderation.remove(addedModerationId);  // Removing the moderation from the db
-                                                }
-                                                callbacksPending--;  // End of callback function
-                                            });
-                                        }
-                                        callbacksPending--;  // End of callback function
-                                    });
-                                }
-                                callbacksPending--;  // End of callback function
+                        //  Catching the real product to check for modifications
+                        const originalProduct = Products.findOne({_id: productId});
+                        const nameDifference = (originalProduct.name !== productName);
+                        const descriptionDifference = (originalProduct.description !== productDescription);
+                        const imagesLengthDifference = (originalProduct.images.length !== productImages.length);
+                        const imagesDifference = originalProduct.images.every(function(element, index){
+                            return element !== productImages[index];
                         });
+                        const categoriesLengthDifference = (originalProduct.categories.length !== categories.length);
+                        const categoriesDifference = originalProduct.categories.every(function(element, index){
+                            return element !== categories[index];
+                        });
+
+                        const isDifferent = nameDifference || descriptionDifference || imagesLengthDifference || imagesDifference || categoriesLengthDifference || categoriesDifference;
+
+                        if(!isDifferent){
+                            // User didin't make any modifications, throwing an error
+                            throw new Meteor.Error('noModifications', "Vous n'avez fait aucune modification.");
+                        } else{
+                            // Inserting informations in the database :
+                            callbacksPending++;  // Starting a call with a callback function
+                            EditedProducts.insert({
+                                originalId: originalProduct._id,
+                                name: productName,
+                                description: productDescription,
+                                images: productImages,
+                                score: originalProduct.score,
+                                categories: categories
+                            }, function(error, addedProductId){
+                                    if(error){
+                                        // There was an error while adding the product
+                                        throw new Meteor.Error('productInsertionError', "Erreur lors de l'ajout du produit, veuillez réessayer.");
+                                    } else{
+                                        // Adding the product to the moderation database
+                                        callbacksPending++;  // Starting a call with a callback function
+                                        Moderation.insert({
+                                            userId: Meteor.userId(),
+                                            elementId: productId,
+                                            reason: "editProduct"
+                                        }, function(error, addedModerationId){
+                                            if(error){
+                                                // There was an error while adding the moderation
+                                                EditedProducts.remove(addedProductId);  // Removing the product from the db
+                                                throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
+                                            } else{
+                                                // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
+                                                callbacksPending++;  // Starting a call with a callback function
+                                                Contributions.insert({
+                                                    userId: Meteor.userId(),
+                                                    type: 'Proposition de modifications',
+                                                    status: 'pending',
+                                                    elementId: originalProduct._id,
+                                                    createdAt: new Date().toISOString(),
+                                                    moderationId: addedModerationId,
+                                                    points: 10
+                                                }, function(error, addedContributionId){
+                                                    if(error){
+                                                        // There was an error while adding the contribution
+                                                        EditedProducts.remove(addedProductId);  // Removing the product from the db
+                                                        Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                                        throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
+                                                    } else{
+                                                        console.log(Contributions.findOne({_id: addedContributionId}));
+                                                    }
+                                                    callbacksPending--;  // End of callback function
+                                                });
+                                            }
+                                            callbacksPending--;  // End of callback function
+                                        });
+                                    }
+                                    callbacksPending--;  // End of callback function
+                            });
+                        }
                     }
                 }
             }
