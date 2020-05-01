@@ -15,120 +15,127 @@ import '../css/form.css';
 Session.set('editProductModeration', null);
 
 
+Template.editProductModeration.onRendered(function(){
+    // Filling fields
+    const originalProduct = Session.get('editProductModeration').originalProduct;
+
+    // Name
+    const originalName = document.querySelector('input#originalName');
+    const originalNameCharDisplay = document.querySelector('span#originalNameCharCounter');
+    originalName.value = originalProduct.name;
+    Meteor.call('getRuleValue', {rulePath: 'Rules.product.name'}, function(error, result){
+        if(error){
+            // There is an error
+            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+        } else{
+            // Rule retrived successfully, setting input min and max length
+            originalName.minLength = result.minLength;
+            originalName.maxLength = result.maxLength;
+            // Displaying char counter
+            originalNameCharDisplay.innerText = originalName.value.length+" / "+originalName.maxLength;
+        }
+    });
+
+    // Description
+    const originalDescription = document.querySelector('textarea#originalDescription');
+    const originalDescriptionCharDisplay = document.querySelector('span#originalDescriptionCharCounter');
+    originalDescription.value = originalProduct.description;
+
+    Meteor.call('getRuleValue', {rulePath: 'Rules.product.description'}, function(error, result){
+        if(error){
+            // There is an error
+            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+        } else{
+            // Auto expand the field to display the text correctly
+            // Sending mandatory informations only to preserve server resources
+            fieldForServer = {value: originalDescription.value, scrollHeight: originalDescription.scrollHeight};
+            Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
+                if(error){
+                    // There is an error
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                } else if(result){
+                    originalDescription.style.height = result;  // Result is the height to apply to the field
+                }
+            });
+            // Setting input min and max length
+            originalDescription.minLength = result.minLength;
+            originalDescription.maxLength = result.maxLength;
+            // Displaying char counter and creating an event listener
+            originalDescriptionCharDisplay.innerText = originalDescription.value.length+" / "+originalDescription.maxLength;
+        }
+    });
+
+    // Cover image
+    const originalCoverImageDisplay = document.querySelector('img#originalCoverImage');
+    const originalCoverImageId = originalProduct.images[0];
+    const originalCoverImageUrl = Images.findOne({_id: originalCoverImageId}).url();
+    originalCoverImageDisplay.src = originalCoverImageUrl;
+});
+
 Template.editProductModeration.helpers({
-    displayName: function(){
+    nameDifference: function(){
+        const originalProduct = Session.get('editProductModeration').originalProduct;
+        const editedProduct = Session.get('editProductModeration').editedProduct;
+        if(originalProduct.name !== editedProduct.name){
+            return true;
+        }
+        return false;
+    },
+    displayEditedName: function(){
+        const editedProduct = Session.get('editProductModeration').editedProduct;
+
         Meteor.call('getRuleValue', {rulePath: 'Rules.product.name'}, function(error, result){
             if(error){
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
-                // Defining original name constants
-                const originalName = document.querySelector('input#originalName');
-                const originalNameCharDisplay = document.querySelector('span#originalNameCharCounter');
+                // Defining edited name constants
+                const editedName = document.querySelector('input#editedName');
+                const editedNameCharDisplay = document.querySelector('span#editedNameCharCounter');
                 // Setting input min and max length
-                originalName.minLength = result.minLength;
-                originalName.maxLength = result.maxLength;
+                editedName.minLength = result.minLength;
+                editedName.maxLength = result.maxLength;
                 // Displaying char counter
-                originalNameCharDisplay.innerText = originalName.value.length+" / "+originalName.maxLength;
+                editedNameCharDisplay.innerText = editedName.value.length+" / "+editedName.maxLength;
             }
         });
-        // Catching names and returning them (in an array to use each)
-        const originalProductName = Session.get('editProductModeration').originalProduct.name;
-        const editedProductName = Session.get('editProductModeration').editedProduct.name;
-        return [ {originalProductName: originalProductName, editedProductName: editedProductName } ];
+        return [editedProduct.name];
     },
-    nameDifference: function(){
+    descriptionDifference: function(){
         const originalProduct = Session.get('editProductModeration').originalProduct;
         const editedProduct = Session.get('editProductModeration').editedProduct;
-        if(originalProduct.name !== editedProduct.name){
-            Meteor.call('getRuleValue', {rulePath: 'Rules.product.name'}, function(error, result){
-                if(error){
-                    // There is an error
-                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                } else{
-                    // Defining edited name constants
-                    const editedName = document.querySelector('input#editedName');
-                    const editedNameCharDisplay = document.querySelector('span#editedNameCharCounter');
-                    // Setting input min and max length
-                    editedName.minLength = result.minLength;
-                    editedName.maxLength = result.maxLength;
-                    // Displaying char counter
-                    editedNameCharDisplay.innerText = editedName.value.length+" / "+editedName.maxLength;
-                }
-            });
+        if(originalProduct.description !== editedProduct.description){
             return true;
         }
         return false;
     },
-    displayDescription: function(){
+    displayEditedDescription: function(){
+        const editedProduct = Session.get('editProductModeration').editedProduct;
         Meteor.call('getRuleValue', {rulePath: 'Rules.product.description'}, function(error, result){
             if(error){
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
                 // Defining product description constants
-                const originalDescription = document.querySelector('textarea#originalDescription');
-                const originalDescriptionCharDisplay = document.querySelector('span#originalDescriptionCharCounter');
+                const editedDescription = document.querySelector('textarea#editedDescription');
+                const editedDescriptionCharDisplay = document.querySelector('span#editedDescriptionCharCounter');
                 // Auto expand the field to display the text correctly
                 // Sending mandatory informations only to preserve server resources
-                fieldForServer = {value: originalDescription.value, scrollHeight: originalDescription.scrollHeight};
+                fieldForServer = {value: editedDescription.value, scrollHeight: editedDescription.scrollHeight};
                 Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
-                    if(error){
-                        // There is an error
-                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                    } else if(result){
-                        originalDescription.style.height = result;  // Result is the height to apply to the field
+                    if(!error && result){
+                        editedDescription.style.height = result;  // Result is the height to apply to the field
                     }
                 });
                 // Setting input min and max length
-                originalDescription.minLength = result.minLength;
-                originalDescription.maxLength = result.maxLength;
+                editedDescription.minLength = result.minLength;
+                editedDescription.maxLength = result.maxLength;
                 // Displaying char counter and creating an event listener
-                originalDescriptionCharDisplay.innerText = originalDescription.value.length+" / "+originalDescription.maxLength;
+                editedDescriptionCharDisplay.innerText = editedDescription.value.length+" / "+editedDescription.maxLength;
             }
         });
-        // Catching descrptions and returning them (in an array to use each)
-        const originalProductDescription = Session.get('editProductModeration').originalProduct.description;
-        const editedProductDescription = Session.get('editProductModeration').editedProduct.description;
-        return [ {originalProductDescription: originalProductDescription, editedProductDescription: editedProductDescription } ];
-    },
-    descriptionDifference: function(){
-        const originalProduct = Session.get('editProductModeration').originalProduct;
-        const editedProduct = Session.get('editProductModeration').editedProduct;
-        if(originalProduct.description !== editedProduct.description){
-            Meteor.call('getRuleValue', {rulePath: 'Rules.product.description'}, function(error, result){
-                if(error){
-                    // There is an error
-                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                } else{
-                    // Defining product description constants
-                    const editedDescription = document.querySelector('textarea#editedDescription');
-                    const editedDescriptionCharDisplay = document.querySelector('span#editedDescriptionCharCounter');
-                    // Auto expand the field to display the text correctly
-                    // Sending mandatory informations only to preserve server resources
-                    fieldForServer = {value: editedDescription.value, scrollHeight: editedDescription.scrollHeight};
-                    Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
-                        if(!error && result){
-                            editedDescription.style.height = result;  // Result is the height to apply to the field
-                        }
-                    });
-                    // Setting input min and max length
-                    editedDescription.minLength = result.minLength;
-                    editedDescription.maxLength = result.maxLength;
-                    // Displaying char counter and creating an event listener
-                    editedDescriptionCharDisplay.innerText = editedDescription.value.length+" / "+editedDescription.maxLength;
-                }
-            });
-            return true;
-        }
-        return false;
-    },
-    displayCoverImage: function(){
-        const originalCoverImage = Session.get('editProductModeration').originalProduct.images[0];
-        const editedCoverImage = Session.get('editProductModeration').editedProduct.images[0];
-        const originalCoverImageUrl = Images.findOne({_id: originalCoverImage}).url();
-        const editedCoverImageUrl = Images.findOne({_id: editedCoverImage}).url();
-        return [ { originalCoverImageUrl: originalCoverImageUrl, editedCoverImageUrl: editedCoverImageUrl} ]
+
+        return [editedProduct.description];
     },
     coverImageDifference: function(){
         const originalCoverImage = Session.get('editProductModeration').originalProduct.images[0];
@@ -137,6 +144,11 @@ Template.editProductModeration.helpers({
             return true;
         }
         return false;
+    },
+    displayEditedCoverImage: function(){
+        const editedCoverImage = Session.get('editProductModeration').editedProduct.images[0];
+        const editedCoverImageUrl = Images.findOne({_id: editedCoverImage}).url();
+        return [editedCoverImageUrl];
     },
     displayOtherImages: function(){
         // Catching the original product's images

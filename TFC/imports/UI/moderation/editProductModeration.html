@@ -8,28 +8,27 @@
             <section class="section">
                 <h4 class="title is-4 has-text-centered">Informations générales</h4>
 
-                {{#each displayName}}
                     <div class="field has-animated-label">
-                        <input type="text" class="input has-animated-label" name="name" id="originalName" value="{{originalProductName}}" disabled>
+                        <input type="text" class="input has-animated-label" name="name" id="originalName" disabled>
                         <label for="name" class="label is-animated">Nom du produit (original)</label>
                         <span id="originalNameCharCounter" class="character-counter"></span>
                     </div>
 
                     {{#if nameDifference}}
                         <div class="field has-animated-label">
-                            <input type="text" class="input has-animated-label" name="name" id="editedName" value="{{editedProductName}}" disabled>
+                            {{#each displayEditedName}}
+                                <input type="text" class="input has-animated-label" name="name" id="editedName" value="{{this}}" disabled>
+                            {{/each}}
                             <label for="name" class="label is-animated">Nom du produit (modifié)</label>
                             <span id="editedNameCharCounter" class="character-counter"></span>
                         </div>
                     {{else}}
                         <p>Pas de modification du nom</p>
                     {{/if}}
-                {{/each}}
 
-                {{#each displayDescription}}
                     <div class="field has-animated-label">
                         <div class="control has-icons-left">
-                            <textarea class="textarea has-animated-label" name="description" id="originalDescription" value="{{originalProductDescription}}" disabled></textarea>
+                            <textarea class="textarea has-animated-label" name="description" id="originalDescription" disabled></textarea>
                             <label for="description" class="label is-animated">Description du produit (originale)</label>
                             <span class="icon is-left">
                                 <i class="fas fa-file-alt"></i>
@@ -41,7 +40,9 @@
                     {{#if descriptionDifference}}
                         <div class="field has-animated-label">
                             <div class="control has-icons-left">
-                                <textarea class="textarea has-animated-label" name="description" id="editedDescription" value="{{editedProductDescription}}" disabled></textarea>
+                                {{#each displayEditedDescription}}
+                                    <textarea class="textarea has-animated-label" name="description" id="editedDescription" value="{{this}}" disabled></textarea>
+                                {{/each}}
                                 <label for="description" class="label is-animated">Description du produit (modifiée)</label>
                                 <span class="icon is-left">
                                     <i class="fas fa-file-alt"></i>
@@ -52,8 +53,6 @@
                     {{else}}
                         <p>Pas de modification de la description</p>
                     {{/if}}
-
-                {{/each}}
             </section>
 
             <section class="section" style="border-top: solid grey 0.1rem;">
@@ -62,21 +61,21 @@
                 <div class="columns">
                     <div class="column field has-text-centered">
 
-                        {{#each displayCoverImage}}
-                            <p>Image de couverture (originale)</p>
-                            <div class="cover-image width-fit-content" style="position: relative; display: inline-block;">
-                                <img src="{{originalCoverImageUrl}}" class="image is-128x128">
-                            </div>
+                        <p>Image de couverture (originale)</p>
+                        <div class="cover-image width-fit-content" style="position: relative; display: inline-block;">
+                            <img src="" class="image is-128x128" id="originalCoverImage">
+                        </div>
 
-                            {{#if coverImageDifference}}
-                                <p>Image de couverture (modifiée)</p>
-                                <div class="cover-image width-fit-content" style="position: relative; display: inline-block;">
-                                    <img src="{{editedCoverImageUrl}}" class="image is-128x128">
-                                </div>
-                            {{else}}
-                                <p>Pas de modification de l'image de couverture</p>
-                            {{/if}}
-                        {{/each}}
+                        {{#if coverImageDifference}}
+                            <p>Image de couverture (modifiée)</p>
+                            <div class="cover-image width-fit-content" style="position: relative; display: inline-block;">
+                                {{#each displayEditedCoverImage}}
+                                    <img src="{{this}}" class="image is-128x128">
+                                {{/each}}
+                            </div>
+                        {{else}}
+                            <p>Pas de modification de l'image de couverture</p>
+                        {{/if}}
                     </div>
 
                     <div class="column field has-text-centered">
