@@ -94,7 +94,6 @@ Meteor.methods({
             var contributionsCursor = Contributions.find({userId: Meteor.userId()}, {sort: { createdAt: -1 }});  // Return user's contributions sorted by date (most recent first)
             var userContributions = [];  // Creating an array to push the formatted contributions
             contributionsCursor.forEach(function(doc){
-                console.log(doc)
                 // Browsing the documents
                 var createdAtFormatted = new Date(doc.createdAt);  // Converting the creation date to a classic format
                 var year = createdAtFormatted.getFullYear();  // Catching the year

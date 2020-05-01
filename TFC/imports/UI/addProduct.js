@@ -81,9 +81,15 @@ Template.addProduct.onRendered(function(){
                                 // File input is correct
                                 coverImageNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
                                 if(Session.get('coverImageId')){
-                                    // There was already a cover image and it was replaced
-                                    Images.remove(Session.get('coverImageId'));  // Remove the old image from the db
-                                    Session.set('coverImageId', null);  // Reset the Id
+                                    // There was already a cover image and it was replaced, removing the old image from the database
+                                    Meteor.call('removeImage', {imageId: Session.get('coverImageId')}, function(error, result){
+                                        if(error){
+                                            // There was an error
+                                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                                        } else{
+                                            Session.set('coverImageId', null);  // Reset the Id
+                                        }
+                                    });
                                 }
                                 Images.insert(coverImageInput.files[0], function(error, fileObj){
                                     if(!error){
@@ -221,29 +227,42 @@ Template.addProduct.events({
         event.preventDefault();
         document.querySelector('input#coverImage').value = null;  // Reset the value of the input
         document.querySelector('span.coverImage.file-name').textContent = "Aucun fichier sélectionné";  // Updating displayed value
-        Images.remove(event.currentTarget.parentElement.id);  // Remove the image from the db
-        Session.set('coverImageId', null);  // Update cover image id
+        const imageId = event.currentTarget.parentElement.id;
+        Meteor.call('removeImage', {imageId: imageId}, function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else{
+                Session.set('coverImageId', null);  // Reset the Id
+            }
+        });
     },
     'click div.other-image button.delete'(event){
         // When the delete button of an other image is clicked
         event.preventDefault();
-        var imageId = event.currentTarget.parentElement.id;  // Current image id is the id of the container (parent element)
-        Images.remove(imageId);  // Remove the image from the db
-        var otherImagesId = Session.get('otherImagesId');  // Catch the array of images
-        var index = otherImagesId.indexOf(imageId);
-        if(index !== -1){
-            otherImagesId.splice(index, 1);  // Removing the image id
-        }
-        Session.set('otherImagesId', otherImagesId);  // Updating the value
-        const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display to update the value
-        if(otherImagesId.length === 0){
-            imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
-        } else if(otherImagesId.length === 1){
-            imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
-        } else{
-            // At least 2 files
-            imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";  // Updating displayed value
-        }
+        const imageId = event.currentTarget.parentElement.id;  // Current image id is the id of the container (parent element)
+        Meteor.call('removeImage', {imageId: imageId}, function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else{
+                var otherImagesId = Session.get('otherImagesId');  // Catch the array of images
+                var index = otherImagesId.indexOf(imageId);
+                if(index !== -1){
+                    otherImagesId.splice(index, 1);  // Removing the image id
+                }
+                Session.set('otherImagesId', otherImagesId);  // Updating the value
+                const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display to update the value
+                if(otherImagesId.length === 0){
+                    imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+                } else if(otherImagesId.length === 1){
+                    imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+                } else{
+                    // At least 2 files
+                    imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";  // Updating displayed value
+                }
+            }
+        });
     }
 });
 

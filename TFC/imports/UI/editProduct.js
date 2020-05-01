@@ -103,7 +103,13 @@ Template.editProduct.onRendered(function(){
                                 // There was already a cover image and it was replaced
                                 if(Session.get('editedCoverImageId') !== Session.get('coverImageId')){
                                     // The replaced cover image wasn't the one of the actual product, we can delete it
-                                    Images.remove(Session.get('editedCoverImageId'));  // Remove the old image from the db
+                                    const imageId = Session.get('editedCoverImageId');
+                                    Meteor.call('removeImage', {imageId: imageId}, function(error, result){
+                                        if(error){
+                                            // There was an error
+                                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                                        }
+                                    });
                                 }
                                 Session.set('editedCoverImageId', null);  // Reseting the value of the cover image
                             }
@@ -240,17 +246,28 @@ Template.editProduct.events({
         document.querySelector('span.coverImage.file-name').textContent = "Aucun fichier sélectionné";  // Updating displayed value
         if(Session.get('editedCoverImageId') !== Session.get('coverImageId')){
             // The deleted cover image wasn't the one of the original product, we can delete it
-            Images.remove(Session.get('editedCoverImageId'));
+            const imageId = Session.get('editedCoverImageId');
+            Meteor.call('removeImage', {imageId: imageId}, function(error, result){
+                if(error){
+                    // There was an error
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                }
+            });
         }
         Session.set('editedCoverImageId', null);  // Update cover image id
     },
     'click div.other-image button.delete'(event){
         // When the delete button of an other image is clicked
         event.preventDefault();
-        var imageId = event.currentTarget.parentElement.id;  // Current image id is the id of the container (parent element)
+        const imageId = event.currentTarget.parentElement.id;  // Current image id is the id of the container (parent element)
         if(!Session.get('otherImagesId').includes(imageId)){
             // This image wasn't one of the real product, we can delete it
-            Images.remove(imageId);  // Remove the image from the db
+            Meteor.call('removeImage', {imageId: imageId}, function(error, result){
+                if(error){
+                    // There was an error
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                }
+            });
         }
         var otherImagesId = Session.get('editedOtherImagesId');  // Catch the array of images
         var index = otherImagesId.indexOf(imageId);

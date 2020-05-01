@@ -17,11 +17,21 @@ import { Rules } from '../rules.js';
 Images.allow({
   insert() { return true; },
   update() { return true; },
-  remove() { return true; },
   download() { return true; }
 });
 
+// Deny client-side remove on the Images collection
+Images.deny({
+    remove() { return true; }
+});
+
 Meteor.methods({
+    'removeImage'({imageId}){
+        // Type check to prevent malicious calls
+        check(imageId, String);
+
+        Images.remove(imageId);
+    },
     'findOneProductById'({productId}){
         // Type check to prevent malicious calls
         check(productId, String);

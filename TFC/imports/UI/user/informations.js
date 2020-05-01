@@ -85,9 +85,14 @@ Template.informations.onRendered(function(){  // When the template is rendered o
                                     if(Session.get('currentProfilePicture') !== 'user.svg' && Session.get('currentProfilePicture') !== profilePicture){
                                         // Current picture was not the default and not the real profile picture, we can delete it
                                         const imageToRemove = Session.get('currentProfilePicture');
-                                          // Reset temporarily the image, else the helper will search for the url of a removed image
+                                        // Reset temporarily the image, else the helper will search for the url of a removed image
                                         Session.set('currentProfilePicture', 'user.svg');
-                                        Images.remove(Session.get('currentProfilePicture'));  // Remove the old image from the db
+                                        Meteor.call('removeImage', {imageId: imageToRemove}, function(error, result){
+                                            if(error){
+                                                // There was an error
+                                                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                                            }
+                                        });
                                     }
                                     Images.insert(fileInput.files[0], function(error, fileObj){
                                         if(fileObj){
