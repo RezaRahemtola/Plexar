@@ -72,7 +72,7 @@ Template.moderation.events({
                     if(error){
                         // There was an error
                         Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                    } else{
+                    } else if(result){
                         // Catching the object with original product and adding the edited one
                         var editModeration = Session.get('editProductModeration');
                         editModeration.editedProduct = result;

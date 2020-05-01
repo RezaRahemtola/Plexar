@@ -263,21 +263,14 @@ Meteor.methods({
                         const maxImagesNumber = Rules.product.coverImage.maxLength + Rules.product.otherImages.maxLength;
                         otherImages.slice(0, maxImagesNumber);  // Remove extra images (if there are any)
                         const productImages = otherImages;
-
                         //  Catching the real product to check for modifications
                         const originalProduct = Products.findOne({_id: productId});
                         const nameDifference = (originalProduct.name !== productName);
                         const descriptionDifference = (originalProduct.description !== productDescription);
-                        const imagesLengthDifference = (originalProduct.images.length !== productImages.length);
-                        const imagesDifference = originalProduct.images.every(function(element, index){
-                            return element !== productImages[index];
-                        });
-                        const categoriesLengthDifference = (originalProduct.categories.length !== categories.length);
-                        const categoriesDifference = originalProduct.categories.every(function(element, index){
-                            return element !== categories[index];
-                        });
+                        const imagesDifference = (originalProduct.toString() !== productImages.toString());
+                        const categoriesDifference = (originalProduct.toString() !== categories.toString());
 
-                        const isDifferent = nameDifference || descriptionDifference || imagesLengthDifference || imagesDifference || categoriesLengthDifference || categoriesDifference;
+                        const isDifferent = nameDifference || descriptionDifference || imagesDifference || categoriesDifference;
 
                         if(!isDifferent){
                             // User didin't make any modifications, throwing an error
@@ -313,7 +306,7 @@ Meteor.methods({
                                                 callbacksPending++;  // Starting a call with a callback function
                                                 Contributions.insert({
                                                     userId: Meteor.userId(),
-                                                    type: 'Proposition de modifications',
+                                                    type: 'Modification',
                                                     status: 'pending',
                                                     elementId: originalProduct._id,
                                                     createdAt: new Date().toISOString(),

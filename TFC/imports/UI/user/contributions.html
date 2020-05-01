@@ -1,6 +1,7 @@
 <template name="contributions">
+    <h5 class="title is-5 has-text-centered">Mes points : {{displayPoints}}</h5>
 
-    <table class="table is-bordered is-striped is-hoverable" style="margin: 4rem auto;">
+    <table class="table is-bordered is-striped is-hoverable" style="margin: 3rem auto;">
         <thead>
             <tr>
                 <th>Date</th>
@@ -15,7 +16,7 @@
                 <tr>
                     <td>{{date}}</td>
                     <td>{{type}}</td>
-                    <td class="productBanner" id="{{elementId}}">{{elementName}}</td>
+                    <td class="productBanner" id="{{elementId}}" style="cursor: pointer;">{{elementName}}</td>
                     <td class="{{statusStyle}}">{{status}}</td>
                     <td>{{points}}</td>
                 </tr>

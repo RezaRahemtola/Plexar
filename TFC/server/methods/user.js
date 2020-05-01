@@ -23,6 +23,31 @@ Meteor.methods({
             return false;
         }
     },
+    'getUserPoints'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // Catching user's contributions
+            const acceptedUserContributions = Contributions.find({userId: Meteor.userId(), status: 'accepted'});
+            // Initializing points
+            var userPoints = 0;
+
+            for(var contribution of acceptedUserContributions){
+                // For each accepted contribution, we add the corresponding points
+                userPoints += contribution.points;
+            }
+            // Now let's update the points in the database
+            const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()});
+            UsersInformations.update(userInformationsId, { $set: { points: userPoints } }, function(error, result){
+                if(error){
+                    // TODO: error display
+                }
+            });
+            return userPoints;
+        }
+    },
     'changeUsername'({newUsername}){
         // Type check to prevent malicious calls
         check(newUsername, String);
@@ -74,7 +99,8 @@ Meteor.methods({
                 lastName: "",
                 profilePicture: null,
                 votes: {},
-                newsletter: newsletterIsChecked
+                newsletter: newsletterIsChecked,
+                points: 0
             });
             // Creating empty favorites of the new user
             Favorites.insert({

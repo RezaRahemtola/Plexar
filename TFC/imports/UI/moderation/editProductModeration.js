@@ -157,13 +157,9 @@ Template.editProductModeration.helpers({
         // Removing the first image (cover image)
         originalImages.splice(0, 1);
         editedImages.splice(0, 1);
-        // Comparing length (return a boolean)
-        const isLengthDifferent = (originalImages.length !== editedImages.length);
-        // Comparing elements (return a boolean)
-        const areElementsDifferent = originalImages.every(function(element, index){
-            return element !== editedImages[index];
-        });
-        return isLengthDifferent && areElementsDifferent;
+        // Comparing elements to see if there's any difference to display
+        const areElementsDifferent = (originalImages.toString() !== editedImages.toString());
+        return areElementsDifferent;
     },
     displayEditedOtherImages: function(){
         // Catching the edited product's images
@@ -185,13 +181,9 @@ Template.editProductModeration.helpers({
         // Catching categories
         const originalCategories = Session.get('editProductModeration').originalProduct.categories;
         const editedCategories = Session.get('editProductModeration').editedProduct.categories;
-        // Comparing length (return a boolean)
-        const isLengthDifferent = (originalCategories.length !== editedCategories.length);
         // Comparing elements (return a boolean)
-        const areElementsDifferent = originalCategories.every(function(element, index){
-            return element !== editedCategories[index];
-        });
-        return isLengthDifferent && areElementsDifferent;
+        const areElementsDifferent = (originalCategories.toString() !== editedCategories.toString());
+        return areElementsDifferent;
     },
     displayEditedCategories: function(){
         return Session.get('editProductModeration').editedProduct.categories;

@@ -185,6 +185,8 @@ Meteor.methods({
                     const contributionId = Contributions.findOne({moderationId: moderationId})._id;
                     // Updating the status
                     Contributions.update(contributionId, { $set: { status: 'accepted' } });
+                    // Deleting the edited product
+                    EditedProducts.remove(editedProductId);
                     // Deleting the moderation
                     Moderation.remove(moderationId);
                 }

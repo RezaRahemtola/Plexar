@@ -33,7 +33,7 @@ export const Rules = {
         categories: [
             'Alimentation',
             'Beauté & Hygiène',
-            'Informatique'
+            'Informatique & High-Tech'
         ]
     }
 };
