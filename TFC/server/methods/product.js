@@ -20,6 +20,11 @@ Images.allow({
   download() { return true; }
 });
 
+Meteor.publish('images', function(){
+  return Images.find();
+});
+
+
 // Deny client-side remove on the Images collection
 Images.deny({
     remove() { return true; }

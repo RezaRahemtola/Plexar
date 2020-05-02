@@ -54,6 +54,11 @@ Session.set('profilePicture', 'user.svg');
 Session.set('productCategories', []);
 
 
+Template.body.onRendered(function(){
+    Meteor.subscribe('images');
+});
+
+
 Template.body.helpers({
     currentPage: function(){
         return Session.get('page');  // Return the page to display
@@ -92,20 +97,17 @@ Template.body.helpers({
 });
 
 Template.body.events({
-    'click .register, click .login, click .logout, click .productBanner, click div.message-header button.delete, click .modal button.delete, click .modal-background, click a#home, click a#addProduct, click #contributions, click #favorite, click #informations, click li#credits, click li#faq'(event){
-        // Prevent default action for all events
-        event.preventDefault();
-    },
-
-
     // Global events :
     'click .register'(event){
+        event.preventDefault();
         Session.set('modal', 'register');  // Display the register modal
     },
     'click .login'(event){
+        event.preventDefault();
         Session.set('modal', 'login');  // Display the login modal
     },
     'click .logout'(event){
+        event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
         Session.set('navigation', navigation);  // Updating the value
@@ -113,6 +115,7 @@ Template.body.events({
         Meteor.logout();  // Log out the user
     },
     'click #return'(event){
+        event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         const lastPage = navigation[navigation.length-1];  // Catching the last page
         navigation.pop();  // We will come back to the last page, so removing it from the navigation
@@ -120,6 +123,7 @@ Template.body.events({
         Session.set('page', lastPage)  // Sending user to the last visited page
     },
     'click .productBanner'(event){
+        event.preventDefault();
         // When a product banner is clicked (like in search result or favorites)
         Session.set('currentProduct', null);  // Reset the variable
         Meteor.call('findOneProductById', {productId: event.currentTarget.id}, function(error, result){
@@ -135,89 +139,79 @@ Template.body.events({
         });
     },
     'click div.message-header button.delete'(event){
+        event.preventDefault();
         // When the closing button of a message is clicked
         Session.set('message', null);  // Remove the message
     },
     'click .modal-card-head .delete, click .modal-background'(event){
+        event.preventDefault();
         // When the closing button of a modal is clicked
         Session.set('modal', null);  // Remove the modal
     },
 
 
     // Navbar events
-    'click a#home'(event){
+    'click a#home, click a#search, click a#addProduct'(event){
+        event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
         Session.set('navigation', navigation);  // Updating the value
+    },
+    'click a#home'(event){
         Session.set('page', 'home');  // Switch to home page
     },
     'click a#search'(event){
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'searchResults');
     },
     'click a#addProduct'(event){
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'addProduct');
     },
 
 
     // Profile dropdown and user profile tabs events
-    'click #contributions'(event){
+    'click #contributions, click #favorite, click #informations, click #moderation'(event){
+        event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
         Session.set('navigation', navigation);  // Updating the value
+    },
+    'click #contributions'(event){
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'contributions');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#contributions").addClass("is-active");  // Set the current tab as the active one
     },
     'click #favorite'(event){
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'favorite');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#favorite").addClass("is-active");  // Set the current tab as the active one
     },
     'click #informations'(event){
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'informations');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#informations").addClass("is-active");  // Set the current tab as the active one
     },
     'click #moderation'(event){
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'moderation');  // Switch to moderation page
     },
 
 
     // Footer events
-    'click li#credits'(event){
+    'click li#credits, click li#faq, click li#about'(event){
+        event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
         Session.set('navigation', navigation);  // Updating the value
+    },
+    'click li#credits'(event){
         Session.set('page', 'credits');  // Switch to credits page
     },
     'click li#faq'(event){
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'faq');  // Switch to FAQ page
     },
     'click li#about'(event){
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'about');  // Switch to about page
     }
 });
