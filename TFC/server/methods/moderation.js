@@ -10,6 +10,14 @@ import { EditedProducts } from '../../imports/databases/editedProducts.js';
 import { Contributions } from '../../imports/databases/contributions.js';
 
 Meteor.methods({
+    'moderationCounter'(){
+        const total = Moderation.find().count().toLocaleString();  // toLocaleString() make a space where needed (1000 will be 1 000)
+        const newProducts = Moderation.find({reason : 'newProduct'}).count().toLocaleString();
+        const editedProducts = Moderation.find({reason : 'editProduct'}).count().toLocaleString();
+        const reports = Moderation.find({reason : {$in: ['duplicate', 'offTopic']} }).count().toLocaleString();
+
+        return {total: total, newProducts: newProducts, editedProducts: editedProducts, reports: reports}
+    },
     'displayModeration'(){
         // Catching the moderation that corresponds to the asked product
         if(!Meteor.userId()){
@@ -42,12 +50,6 @@ Meteor.methods({
                         moderation.reasonText = "Signalement : Produit hors-sujet";
                         moderation.approveText = "Supprimer le produit";
                         moderation.rejectText = "Garder le produit";
-                        break;
-                    case 'incorrectInformations':
-                        moderation.reasonText = "Signalement : Informations incorrectes";
-                        // TODO: Récupérer le champ plus d'infos pour personnaliser les boutons
-                        moderation.approveText = "";
-                        moderation.rejectText = "";
                         break;
                     default:
                         // Unknown reason
@@ -104,7 +106,44 @@ Meteor.methods({
             Contributions.update(contributionId, { $set: { status: 'accepted' } } );
             // Removing the moderation
             Moderation.remove(moderationId);
-            return true;
+        }
+    },
+    'moderationRejected'({moderationId}){
+        // Type check to prevent malicious calls
+        check(moderationId, String);
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // TODO: Vefier que l'user est legitime d'accepter une mdoeration
+            const currentModeration = Moderation.findOne({_id: moderationId});
+            switch(currentModeration.reason){
+                case 'newProduct':
+                    // New product rejected, removing it from the database
+                    const productImages = Products.findOne({_id: currentModeration.elementId}).images;  // Catching the product images
+                    Products.remove(currentModeration.elementId, function(error, result){
+                        if(error){
+                            // There was an error while removing the product
+                            throw new Meteor.Error('removeProductFailed', 'La suppression du produit a échoué, veuillez réessayer.');
+                        } else{
+                            // The product was successfully removed, we can now delete it's images
+                            for(var image of productImages){
+                                Images.remove(image);
+                            }
+                        }
+                    });
+                    break;
+                case 'duplicate':
+                case 'offTopic':
+                    // Duplicate or off topic rejected, we only need to remove the Moderation
+                    break;
+            }
+            // Now let's catch the correponding contribution to update it's status
+            const contributionId = Contributions.findOne({moderationId: moderationId})._id;
+            Contributions.update(contributionId, { $set: { status: 'rejected' } } );
+            // Removing the moderation
+            Moderation.remove(moderationId);
         }
     },
     'rejectEditModeration'({editedProductId}){

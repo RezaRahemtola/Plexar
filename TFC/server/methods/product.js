@@ -214,6 +214,8 @@ Meteor.methods({
                                             Products.remove(addedProductId);  // Removing the product from the db
                                         } else{
                                             // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
+                                            // Catching the points earned :
+                                            const points = Rules.points.productAddition;
                                             callbacksPending++;  // Starting a call with a callback function
                                             Contributions.insert({
                                                 userId: Meteor.userId(),
@@ -222,8 +224,7 @@ Meteor.methods({
                                                 elementId: addedProductId,
                                                 createdAt: new Date().toISOString(),
                                                 moderationId: addedModerationId,
-                                                points: 10
-                                                // TODO: Set le nombre de points en fonction des Rules
+                                                points: points
                                             }, function(error, addedContributionId){
                                                 if(error){
                                                     // There was an error while adding the contribution
@@ -352,6 +353,8 @@ Meteor.methods({
                                                     throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                 } else{
                                                     // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
+                                                    // Catching the points earned :
+                                                    const points = Rules.points.productModification;
                                                     callbacksPending++;  // Starting a call with a callback function
                                                     Contributions.insert({
                                                         userId: Meteor.userId(),
@@ -360,7 +363,7 @@ Meteor.methods({
                                                         elementId: originalProduct._id,
                                                         createdAt: new Date().toISOString(),
                                                         moderationId: addedModerationId,
-                                                        points: 10
+                                                        points: points
                                                     }, function(error, addedContributionId){
                                                         if(error){
                                                             // There was an error while adding the contribution
@@ -429,6 +432,38 @@ Meteor.methods({
             // Check if the given product ID is in the favorite products of the user
             var userFavorite = Favorites.findOne({userId: Meteor.userId()}).products;  // Return the favorites of the current user
             return userFavorite.includes(productId);
+        }
+    },
+    'reportProduct'({productId, reason}){
+        // Type check to prevent malicious calls
+        check(productId, String);
+        check(reason, String);
+
+        if(!Meteor.userId()){
+            // TODO: error
+        } else{
+            Moderation.insert({
+                userId: Meteor.userId(),
+                elementId: productId,
+                reason: reason
+            }, function(error, addedModerationId){
+                if(error){
+                    // TODO: error display
+                } else{
+                    // Moderation was successfully inserted, now let's create the contribution
+                    // Catching the points earned :
+                    const points = Rules.points.productReport;
+                    Contributions.insert({
+                        userId: Meteor.userId(),
+                        type: 'Signalement',
+                        status: 'pending',
+                        elementId: productId,
+                        createdAt: new Date().toISOString(),
+                        moderationId: addedModerationId,
+                        points: points
+                    });
+                }
+            });
         }
     }
 });

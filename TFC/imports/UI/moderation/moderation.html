@@ -1,5 +1,8 @@
 <template name="moderation">
     <h3 class="title is-3 has-text-centered">Modération</h3>
+    {{#each moderationCounter}}
+        <p class="has-text-centered">{{total}} produits sont actuellement en modération dont {{newProducts}} nouveaux ajouts, {{editedProducts}} modifications et {{reports}} signalements.</p>
+    {{/each}}
 
     {{#each displayModeration}}
         {{> moderationBanner}}

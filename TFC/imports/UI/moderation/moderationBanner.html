@@ -29,7 +29,7 @@
         {{else}}
             <div class="has-text-centered">
                 <p>Raison : <br> {{moderation.reasonText}}</p>
-                <button class="button is-danger">{{moderation.rejectText}}</button>
+                <button class="button is-danger moderationRejected" id="{{moderation._id}}">{{moderation.rejectText}}</button>
                 <button class="button is-success moderationAccepted" id="{{moderation._id}}">{{moderation.approveText}}</button>
             </div>
         {{/if}}

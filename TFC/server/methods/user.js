@@ -128,7 +128,15 @@ Meteor.methods({
                 if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
                 if(month < 10){ month = '0' + month; }
                 createdAtFormatted = date+ '/' +month+ '/' +year;  // Updating the document with the new creation date
-                const elementName = Products.findOne({_id: doc.elementId}).name;
+
+                if(Products.findOne({_id: doc.elementId})){
+                    // Product exists
+                    var elementName = Products.findOne({_id: doc.elementId}).name;
+                } else{
+                    // Product doesn't exist anymore
+                    var elementName = "Produit supprimé";
+                }
+
                 // Catching the moderation status
                 if(doc.status === 'pending'){
                     // Contribution is under moderation, setting the corresponding status

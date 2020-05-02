@@ -113,12 +113,14 @@ Template.body.events({
         // When a product banner is clicked (like in search result or favorites)
         Session.set('currentProduct', null);  // Reset the variable
         Meteor.call('findOneProductById', {productId: event.currentTarget.id}, function(error, result){
-            if(!error){
+            if(error){
+                // TODO: error display
+            } else if(result){
                 Session.set('currentProduct', result);
+                Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
+                Session.set('page', 'productPage');  // Redirecting to product page
             }
         });
-        Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
-        Session.set('page', 'productPage');  // Redirecting to product page
     },
     'click div.message-header button.delete'(event){
         // When the closing button of a message is clicked

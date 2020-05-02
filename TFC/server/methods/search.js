@@ -18,6 +18,13 @@ Meteor.methods({
             // For each product we add it to the array if it's not under moderation
             if(!Moderation.findOne({elementId: product._id})){
                 productsToReturn.push(product);
+            } else{
+                // Catching the reason of the moderation
+                const moderationReason = Moderation.findOne({elementId: product._id}).reason;
+                if(moderationReason === 'editProduct'){
+                    // Product is in moderation for a minor reason, we can return it
+                    productsToReturn.push(product);
+                }
             }
         }
         return productsToReturn;  // Returns array of products

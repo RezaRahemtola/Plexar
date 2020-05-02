@@ -33,7 +33,16 @@ export const Rules = {
         categories: [
             'Alimentation',
             'Beauté & Hygiène',
-            'Informatique & High-Tech'
+            'Informatique & High-Tech',
+            'Recondionné & Seconde main',
+            'Habitat & Jardin',
+            'Vêtements & Mode',
         ]
+    },
+    points: {
+        productAddition: 10,
+        productModification: 5,
+        productReport : 2,
+        vote: 1
     }
 };

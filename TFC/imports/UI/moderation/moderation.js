@@ -15,7 +15,7 @@ Template.moderation.helpers({
     displayModeration: function(){
         Meteor.call('displayModeration', function(error, result){
             if(error){
-                // There is an error
+                // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
                 Session.set('moderationElements', result);
@@ -23,6 +23,17 @@ Template.moderation.helpers({
         });
 
         return Session.get('moderationElements');
+    },
+    moderationCounter: function(){
+        Meteor.call('moderationCounter', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                Session.set('moderationCounter', result);
+            }
+        });
+        return [Session.get('moderationCounter')];
     }
 });
 
@@ -49,10 +60,25 @@ Template.moderation.events({
 
         Meteor.call('moderationAccepted', {moderationId: moderationId}, function(error, result){
             if(error){
-                // There is an error
+                // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
                 // Moderation successfully accepted, calling the template helper to refresh the list of product under moderation
+                Template.moderation.__helpers.get('displayModeration').call();
+            }
+        });
+    },
+    'click .moderationRejected'(event){
+        event.preventDefault();
+
+        const moderationId = event.currentTarget.id;
+
+        Meteor.call('moderationRejected', {moderationId: moderationId}, function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else{
+                // Moderation successfully rejected, calling the template helper to refresh the list of product under moderation
                 Template.moderation.__helpers.get('displayModeration').call();
             }
         });

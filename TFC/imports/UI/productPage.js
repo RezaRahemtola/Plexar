@@ -22,7 +22,9 @@ Template.productPage.onRendered(function(){
         const productId = Session.get('currentProduct')._id;
 
         Meteor.call('getVoteValue', {productId: productId}, function(error, result){
-            if(!error && result){
+            if(error){
+                // TODO: error display
+            } else if(result){
                 if(result > 0){
                     // Product has already been upvoted by the user
                     $('#upvote').addClass("has-text-primary");
@@ -86,7 +88,7 @@ Template.productPage.events({
         Meteor.call('updateProductScore', {productId: productId, vote: vote}, function(error, result){
             if(!error && result){
                 // Database was successfully updated, refreshing the Session variable with the updated product
-                Meteor.call('findOneProductById', {productId: product._id}, function(error, result){
+                Meteor.call('findOneProductById', {productId: productId}, function(error, result){
                     if(!error){
                         // Product was succesfully found
                         Session.set('currentProduct', result);
