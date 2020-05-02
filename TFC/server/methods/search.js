@@ -21,8 +21,8 @@ Meteor.methods({
             } else{
                 // Catching the reason of the moderation
                 const moderationReason = Moderation.findOne({elementId: product._id}).reason;
-                if(moderationReason === 'editProduct'){
-                    // Product is in moderation for a minor reason, we can return it
+                if(moderationReason === 'editProduct' || moderationReason === 'duplicate' || moderationReason === 'offTopic'){
+                    // Product is in moderation for a report or an edit suggestion, we can show it
                     productsToReturn.push(product);
                 }
             }

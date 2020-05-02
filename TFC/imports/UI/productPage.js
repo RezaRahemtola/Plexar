@@ -43,9 +43,6 @@ Template.productPage.events({
         // Prevent default action for all events
         event.preventDefault();
     },
-    'click #return'(event){
-        Session.set('page', Session.get('lastPage'));
-    },
     'click #addToFavoriteProducts'(event){
         // User wants to add this product to it's favorites
         const productId = Session.get('currentProduct')._id;
@@ -121,7 +118,9 @@ Template.productPage.events({
             Session.set('modal', 'register');
         } else{
             // User is logged in
-            Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
+            var navigation = Session.get('navigation');  // Catching navigation history
+            navigation.push(Session.get('page'));  // Adding the current page
+            Session.set('navigation', navigation);  // Updating the value
             Session.set('page', 'editProduct');
         }
     }

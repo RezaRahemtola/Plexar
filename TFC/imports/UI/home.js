@@ -24,6 +24,9 @@ Template.home.events({
         var search = Session.get('search');
         search.query = document.getElementById("searchBox").value;
         Session.set('search', search);  // Storing search input value in a variable
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'searchResults');  // Sending the user to the search results page
     }
 });

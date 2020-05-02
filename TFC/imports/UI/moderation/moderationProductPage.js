@@ -12,14 +12,6 @@ import '../css/slideshow.css';
 import { Images } from '../../databases/images.js';
 
 
-Template.moderationProductPage.events({
-    'click #return'(event){
-        event.preventDefault();
-        Session.set('page', Session.get('lastPage'));
-    }
-})
-
-
 Template.moderationProductPage.helpers({
     displayProduct: function(){
         // Return the product that corresponds to the one to display

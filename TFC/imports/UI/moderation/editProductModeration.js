@@ -226,6 +226,9 @@ Template.editProductModeration.events({
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
+                var navigation = Session.get('navigation');  // Catching navigation history
+                navigation.push(Session.get('page'));  // Adding the current page
+                Session.set('navigation', navigation);  // Updating the value
                 Session.set('page', 'moderation');
             }
         });
@@ -238,6 +241,9 @@ Template.editProductModeration.events({
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
+                var navigation = Session.get('navigation');  // Catching navigation history
+                navigation.push(Session.get('page'));  // Adding the current page
+                Session.set('navigation', navigation);  // Updating the value
                 Session.set('page', 'moderation');
             }
         });

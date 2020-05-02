@@ -50,7 +50,9 @@ Template.moderation.events({
                 Session.set('currentProduct', result);
             }
         });
-        Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'moderationProductPage');
     },
     'click .moderationAccepted'(event){
@@ -103,8 +105,9 @@ Template.moderation.events({
                         var editModeration = Session.get('editProductModeration');
                         editModeration.editedProduct = result;
                         Session.set('editProductModeration', editModeration);
-                        Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
-                        Session.set('page', 'editProductModeration')
+                        var navigation = Session.get('navigation');  // Catching navigation history
+                        navigation.push(Session.get('page'));  // Adding the current page
+                        Session.set('navigation', navigation);  // Updating the value
                     }
                 })
             }

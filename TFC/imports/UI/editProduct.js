@@ -342,6 +342,9 @@ Template.editProduct.events({
             } else{
                 // Product was inserted without any error, displaying a success message
                 Session.set('message', {type: "header", headerContent: "Proposition de modification effectuée", style:"is-success"} );
+                var navigation = Session.get('navigation');  // Catching navigation history
+                navigation.push(Session.get('page'));  // Adding the current page
+                Session.set('navigation', navigation);  // Updating the value
                 Session.set('page', 'productPage');
             }
         });

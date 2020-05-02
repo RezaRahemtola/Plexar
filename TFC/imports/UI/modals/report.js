@@ -21,9 +21,9 @@ Template.report.events({
             if(error){
                 // TODO: error display
             } else{
-                // Product was successfully reported, removing the report modal and sending user to the last page visited
+                // Product was successfully reported, removing the report modal and showing a success message
                 Session.set('modal', null);
-                Session.set('page', Session.get('lastPage'));
+                Session.set('message', {type: "header", headerContent: "Signalement effectué avec succès !", style:"is-success"} );
             }
         });
     }

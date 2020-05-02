@@ -41,7 +41,7 @@ import './about.html';
 
 // Initializing Session variables
 Session.set('page', 'home');  // Site loads with home page
-Session.set('lastPage', null);  // No last page (used for return button)
+Session.set('navigation', []);  // Used to store page navigation history to use return button
 Session.set("searchedProducts", [] );  // No search for the moment
 Session.set('message', null);  // No message to display for the moment
 Session.set('modal', null);  // No modal to display for the moment
@@ -106,8 +106,18 @@ Template.body.events({
         Session.set('modal', 'login');  // Display the login modal
     },
     'click .logout'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'home');  // Set the page to default
         Meteor.logout();  // Log out the user
+    },
+    'click #return'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        const lastPage = navigation[navigation.length-1];  // Catching the last page
+        navigation.pop();  // We will come back to the last page, so removing it from the navigation
+        Session.set('navigation', navigation);  // Updating value in Session
+        Session.set('page', lastPage)  // Sending user to the last visited page
     },
     'click .productBanner'(event){
         // When a product banner is clicked (like in search result or favorites)
@@ -117,7 +127,9 @@ Template.body.events({
                 // TODO: error display
             } else if(result){
                 Session.set('currentProduct', result);
-                Session.set('lastPage', Session.get('page'))  // Set the last page to this one to use the return button after
+                var navigation = Session.get('navigation');  // Catching navigation history
+                navigation.push(Session.get('page'));  // Adding the current page
+                Session.set('navigation', navigation);  // Updating the value
                 Session.set('page', 'productPage');  // Redirecting to product page
             }
         });
@@ -134,48 +146,78 @@ Template.body.events({
 
     // Navbar events
     'click a#home'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'home');  // Switch to home page
     },
     'click a#search'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'searchResults');
     },
     'click a#addProduct'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'addProduct');
     },
 
 
     // Profile dropdown and user profile tabs events
     'click #contributions'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'contributions');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#contributions").addClass("is-active");  // Set the current tab as the active one
     },
     'click #favorite'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'favorite');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#favorite").addClass("is-active");  // Set the current tab as the active one
     },
     'click #informations'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'userProfile');  // Switch to userProfile page
         Session.set('userPage', 'informations');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#informations").addClass("is-active");  // Set the current tab as the active one
     },
     'click #moderation'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'moderation');  // Switch to moderation page
     },
 
 
     // Footer events
     'click li#credits'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'credits');  // Switch to credits page
     },
     'click li#faq'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'faq');  // Switch to FAQ page
     },
     'click li#about'(event){
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
         Session.set('page', 'about');  // Switch to about page
     }
 });
