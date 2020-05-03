@@ -10,6 +10,7 @@
 
 // Navbar
 $navbar-item-img-max-height: 3rem;
+$navbar-item-hover-color: inherit;  // No link color when element is hovered
 
 // Colors
 $primary: #e47312;  // Primary color in orange
@@ -22,7 +23,7 @@ $info: #1283e4;
 $input-focus-border-color: transparent;  // No border
 $input-focus-box-shadow-color: rgba(0, 0, 0, 0.25);  // Grey box-shadow when input is focused
 $input-placeholder-color: #909090;  // Shade of grey for placeholders
-$label-weight: inherit;
+$label-weight: inherit;  // Reset default weight so we can set it for animated placeholders
 
 // Images
 $dimensions: 16 24 32 48 64 96 128 150;  // Adding a 150x150 dimension for images
@@ -33,7 +34,7 @@ $footer-background-color: #f3f3f3;  // Shade of grey
 
 
 
-// Import only what you need from Bulma
+// Importing only what we need from Bulma
 
 // Mandatory imports
 @import "../node_modules/bulma/sass/utilities/_all.sass";
@@ -49,7 +50,6 @@ $footer-background-color: #f3f3f3;  // Shade of grey
 @import "../node_modules/bulma/sass/components/dropdown.sass";
 @import "../node_modules/bulma/sass/components/message.sass";
 @import "../node_modules/bulma/sass/components/modal.sass";
-@import "../node_modules/bulma/sass/components/media.sass";
 @import "../node_modules/bulma/sass/components/navbar.sass";
 @import "../node_modules/bulma/sass/components/tabs.sass";
 
