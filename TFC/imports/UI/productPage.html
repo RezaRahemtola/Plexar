@@ -17,7 +17,7 @@
                         <!-- Diplay favorites options only if the user is logged-->
                         {{#if productInFavorites}}
                             <!-- Product is already in the favorites, suggest to remove it -->
-                            <span class="icon" id="removeFromFavoriteProducts"><i class="fas fa-bookmark" style="color: green;"></i></span>
+                            <span class="icon" id="removeFromFavoriteProducts"><i class="fas fa-bookmark has-text-primary"></i></span>
                         {{else}}
                             <!-- Product is not in the favorites, suggest to add it -->
                             <span class="icon" id="addToFavoriteProducts"><i class="far fa-bookmark"></i></span>
@@ -98,23 +98,23 @@
                     {{#each displayWebsite}}
                         <a class="button" href="{{this}}" target="_blank">
                             <span class="icon"><i class="fas fa-globe-americas"></i></span>
-                            <p>Voir le site web</p>
+                            <span>Voir le site web</span>
                         </a>
                     {{/each}}
 
                     <button class="button">
                         <span class="icon"><i class="fas fa-share-alt"></i></span>
-                        <p>Partager</p>
+                        <span>Partager</span>
                     </button>
 
                     <button class="button has-text-danger report" id="{{_id}}">
                         <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
-                        <p>Signaler</p>
+                        <span>Signaler</span>
                     </button>
 
                     <button class="button suggestChanges" id="{{_id}}">
                         <span class="icon"><i class="fas fa-edit"></i></span>
-                        <p>Proposer des modifications</p>
+                        <span>Proposer des modifications</span>
                     </button>
                 </div>
             </div>

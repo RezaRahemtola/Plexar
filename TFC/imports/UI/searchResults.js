@@ -87,6 +87,16 @@ Template.searchResults.helpers({
     },
     displaySelectedCategories: function(){
         return Session.get('search').categories;
+    },
+    noResults: function(){
+        const results = Session.get('searchedProducts');
+        if(results.length > 0){
+            // There is at least one result
+            return false;
+        } else{
+            // There's no result for this search
+            return true;
+        }
     }
 });
 

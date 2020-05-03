@@ -21,6 +21,7 @@ import './searchResults.js';
 import './productBanner.js';
 import './editProduct.js';
 import './contact.js';
+import './collectiveModeration.js';
 
 // Messages imports
 import './messages/header.js';
@@ -178,7 +179,7 @@ Template.body.events({
 
 
     // Navbar events
-    'click a#home, click a#search, click a#addProduct, click a#contact, click a#faq, click #categoriesDropdown .navbar-item'(event){
+    'click a#home, click a#search, click a#addProduct, click a#contact, click a#faq, click #categoriesDropdown .navbar-item, click a#collectiveModeration'(event){
         event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
@@ -207,6 +208,9 @@ Template.body.events({
         search.categories = [selectedCategory];  // Adding a filter with the selected category
         Session.set('search', search);  // Updating the Session value
         Session.set('page', 'searchResults');  // Sending the user to the search results page
+    },
+    'click a#collectiveModeration'(event){
+        Session.set('page', 'collectiveModeration');
     },
 
 

@@ -19,19 +19,19 @@
                 <div class="navbar-start">
 
                     <a class="navbar-item" id="search">
-                        <span class="icon" style="margin-right: 0;"><i class="fas fa-search"></i></span>
-                        Rechercher
+                        <span class="icon"><i class="fas fa-search"></i></span>
+                        <span>Rechercher</span>
                     </a>
 
                     <a class="navbar-item" id="addProduct">
-                        <span class="icon" style="margin-right: 0;"><i class="fas fa-shopping-basket"></i></span>
-                        Ajouter un produit
+                        <span class="icon"><i class="fas fa-shopping-basket"></i></span>
+                        <span>Ajouter un produit</span>
                     </a>
 
                     <div class="navbar-item has-dropdown is-hoverable" id="categoriesDropdown">
                         <a class="navbar-link">
-                            <span class="icon" style="margin-right: 0;"><i class="fas fa-grip-vertical"></i></span>
-                            Catégories
+                            <span class="icon"><i class="fas fa-grip-vertical"></i></span>
+                            <span>Catégories</span>
                         </a>
                         <div class="navbar-dropdown is-hidden-touch">
                             {{#each displayCategories}}
@@ -40,19 +40,24 @@
                         </div>
                     </div>
 
+                    <a class="navbar-item" id="collectiveModeration">
+                        <span class="icon"><i class="fas fa-poll"></i></span>
+                        <span>Modération collective</span>
+                    </a>
+
                     <div class="navbar-item has-dropdown is-hoverable" id="moreDropdown">
                         <a class="navbar-link">More</a>
                         <div class="navbar-dropdown is-hidden-touch">
                             <a class="navbar-item">About</a>
 
                             <a class="navbar-item" id="faq">
-                                <span class="icon" style="margin-right: 0;"><i class="fas fa-question-circle"></i></span>
-                                FAQ
+                                <span class="icon"><i class="fas fa-question-circle"></i></span>
+                                <span>FAQ</span>
                             </a>
 
                             <a class="navbar-item" id="contact">
-                                <span class="icon" style="margin-right: 0;"><i class="fas fa-edit"></i></span>
-                                Contact
+                                <span class="icon"><i class="fas fa-edit"></i></span>
+                                <span>Contact</span>
                             </a>
                             <hr class="navbar-divider">
                             <a class="navbar-item">Report an issue</a>
@@ -160,15 +165,15 @@
             <div class="column" style="background-color: #f3f3f3;">
                 <p>Suivez nous sur</p>
 
-                <a class="icon is-medium" href="https://instagram.com/plexar.app/" target="_blank">
+                <a class="icon is-medium" href="https://instagram.com/plexar.app/" title="Plexar sur Instagram" target="_blank">
                     <img src="instagram.svg" alt="Instagram">
                 </a>
 
-                <span class="icon is-medium">
+                <a class="icon is-medium" href="https://twitter.com/PlexarApp" title="Plexar sur Twitter" target="_blank">
                     <img src="twitter.svg" alt="Twitter">
-                </span>
+                </a>
 
-                <a class="icon is-medium" href="https://linkedin.com/company/plexarapp/" target="_blank">
+                <a class="icon is-medium" href="https://linkedin.com/company/plexarapp/" title="Plexar sur LinkedIn" target="_blank">
                     <img src="linkedin.svg" alt="LinkedIn">
                 </a>
             </div>
