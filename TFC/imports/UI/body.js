@@ -94,6 +94,18 @@ Template.body.helpers({
         });
 
         return Session.get('profilePicture');
+    },
+    displayCategories: function(){
+        // Display available categories
+        Meteor.call('getCategories', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+            } else{
+                Session.set('productCategories', result);
+            }
+        });
+        return Session.get('productCategories');
     }
 });
 
@@ -233,12 +245,20 @@ $(document).ready(function(){
         // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
         $(".navbar-burger, .navbar-menu").toggleClass("is-active");
     });
-    // Display dropdown when clicked in mobile mode, checking for click events on the navbar dropdown link
+    // Display more dropdown when clicked in mobile mode, checking for click events on the navbar dropdown link
     $("#moreDropdown .navbar-link").click(function(){
         // If navbar is in mobile mode
         if($(".navbar-burger").hasClass("is-active")){
             // Toggle dropdown options display
-            $('#moreDropdown .navbar-dropdown').toggleClass("is-hidden-mobile");
+            $('#moreDropdown .navbar-dropdown').toggleClass("is-hidden-touch");
+        }
+    });
+    // Display categories dropdown when clicked in mobile mode, checking for click events on the navbar dropdown link
+    $("#categoriesDropdown .navbar-link").click(function(){
+        // If navbar is in mobile mode
+        if($(".navbar-burger").hasClass("is-active")){
+            // Toggle dropdown options display
+            $('#categoriesDropdown .navbar-dropdown').toggleClass("is-hidden-touch");
         }
     });
     // Hide the global navbar dropdown when one of it's element is clicked in mobile mode

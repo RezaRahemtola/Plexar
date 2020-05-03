@@ -1,8 +1,13 @@
 <template name="addProduct">
     {{#if currentUser}}
-        <div class="container" style="border: ridge grey 0.1rem; border-bottom: none;">
-            <h3 class="title has-text-centered">Ajouter un produit</h3>
-        </div>
+        <header class="card-header container" style="border: ridge grey 0.1rem; border-bottom: none;">
+            <div class="card-header-icon" id="return">
+                <span class="icon"><i class="fas fa-reply"></i></span>
+                <p>Retour</p>
+            </div>
+
+            <h3 class="card-header-title title is-3 is-centered" style="margin-bottom: 0;">Ajouter un produit</h3>
+        </header>
         <form id="newProduct" class="container" style="border: ridge grey 0.1rem; padding: 0.8rem;">
 
             <section class="section">

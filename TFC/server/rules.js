@@ -32,11 +32,11 @@ export const Rules = {
         },
         categories: [
             'Alimentation',
-            'Beauté & Hygiène',
+            'Habitat & Jardin',
             'Informatique & High-Tech',
             'Recondionné & Seconde main',
-            'Habitat & Jardin',
-            'Vêtements & Mode',
+            'Santé & Hygiène',
+            'Vêtements & Accessoires',
         ]
     },
     points: {

@@ -28,14 +28,21 @@
                         Ajouter un produit
                     </a>
 
-                    <a class="navbar-item" id="categories">
-                        <span class="icon" style="margin-right: 0;"><i class="fas fa-grip-vertical"></i></span>
-                        Catégories
-                    </a>
+                    <div class="navbar-item has-dropdown is-hoverable" id="categoriesDropdown">
+                        <a class="navbar-link">
+                            <span class="icon" style="margin-right: 0;"><i class="fas fa-grip-vertical"></i></span>
+                            Catégories
+                        </a>
+                        <div class="navbar-dropdown is-hidden-touch">
+                            {{#each displayCategories}}
+                                <a class="navbar-item">{{this}}</a>
+                            {{/each}}
+                        </div>
+                    </div>
 
                     <div class="navbar-item has-dropdown is-hoverable" id="moreDropdown">
                         <a class="navbar-link">More</a>
-                        <div class="navbar-dropdown is-hidden-mobile">
+                        <div class="navbar-dropdown is-hidden-touch">
                             <a class="navbar-item">About</a>
 
                             <a class="navbar-item" id="faq">
@@ -64,7 +71,7 @@
                                         <img src={{displayProfilePicture}} alt="Photo de profil" class="image is-48x48"/>
                                     </a>
                                     <!-- Dropdown menu -->
-                                    <div class="navbar-dropdown is-right is-hidden-mobile">
+                                    <div class="navbar-dropdown is-right is-hidden-touch">
                                         <a class="navbar-item" id="favorite">
                                             <span class="icon"><i class="fas fa-bookmark"></i></span>
                                             <span>Mes favoris</span>
@@ -99,7 +106,7 @@
                                         // If navbar is in mobile mode
                                         if($(".navbar-burger").hasClass("is-active")){
                                             // Toggle dropdown options display
-                                            $('#profileDropdown .navbar-dropdown').toggleClass("is-hidden-mobile");
+                                            $('#profileDropdown .navbar-dropdown').toggleClass("is-hidden-touch");
                                         }
                                     });
                                 </script>

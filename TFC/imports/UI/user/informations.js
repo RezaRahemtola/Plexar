@@ -69,7 +69,7 @@ Template.informations.onRendered(function(){  // When the template is rendered o
                         serverFiles.push({size: file.size, type: file.type});
                     }
 
-                    Meteor.call('checkProductCoverImageInput', {files: serverFiles}, function(error, result){
+                    Meteor.call('checkProfilePictureInput', {files: serverFiles}, function(error, result){
                         if(error){
                             // There is an error
                             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -119,7 +119,6 @@ Template.informations.helpers({
         } else{
             return 'user.svg';
         }
-
     }
 });
 

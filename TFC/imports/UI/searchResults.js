@@ -64,7 +64,10 @@ Template.searchResults.helpers({
         return Session.get('search').query;
     },
     displayProductsResults: function(){
-        Meteor.call('searchForProducts', {text: Session.get("search").query}, function(error, result){
+        const searchQuery = Session.get("search").query;
+        const searchCategories = Session.get("search").categories;
+
+        Meteor.call('searchForProducts', {text: searchQuery, categories: searchCategories}, function(error, result){
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -73,25 +76,6 @@ Template.searchResults.helpers({
                 Session.set("searchedProducts", result);
             }
         });
-        var searchedProducts = [];  // We will save the products in an array
-        for(var product of Session.get("searchedProducts")){
-            // For each product ID we add the product to the array
-            if(Session.get('search').categories.length > 0){
-                // User wants to filter results by categories
-                var matchingCategories = 0;
-                for(var category of Session.get('search').categories){
-                    if(product.categories.includes(category)){
-                        matchingCategories++;
-                    }
-                }
-                if(matchingCategories > 0){
-                    searchedProducts.push(product);
-                }
-            } else{
-                searchedProducts.push(product);
-            }
-        }
-        Session.set("searchedProducts", searchedProducts);
         return Session.get("searchedProducts");  // Return the products array
     },
     displayCategories: function(){
