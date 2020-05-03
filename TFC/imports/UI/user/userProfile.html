@@ -9,24 +9,30 @@
                         <span>Mes favoris</span>
                     </a>
                 </li>
+
                 <li id="contributions">
                     <a>
                         <span class="icon"><i class="fas fa-list"></i></span>
                         <span>Mes contributions</span>
                     </a>
                 </li>
+
                 <li id="informations">
                     <a>
                         <span class="icon"><i class="fas fa-user"></i></span>
                         <span>Mes informations</span>
                     </a>
                 </li>
-                <li id="moderation">
-                    <a>
-                        <span class="icon"><i class="fas fa-tools"></i></span>
-                        <span>Modération</span>
-                    </a>
-                </li>
+
+                {{#if userIsAdmin}}
+                    <li id="moderation">
+                        <a>
+                            <span class="icon"><i class="fas fa-tools"></i></span>
+                            <span>Modération</span>
+                        </a>
+                    </li>
+                {{/if}}
+
                 <li class="logout">
                     <a>
                         <span class="icon"><i class="fas fa-power-off"></i></span>

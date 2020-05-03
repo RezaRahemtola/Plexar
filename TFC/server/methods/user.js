@@ -14,6 +14,23 @@ import { Images } from '../../imports/databases/images.js';
 
 
 Meteor.methods({
+    'userIsAdmin'(){
+        // Checking if user is admin :
+        if(!Meteor.userId()){
+            // User isn't logged in, so he's not admin
+            return false;
+        } else{
+            // Catching user email address :
+            const userEmail = Meteor.user().emails[0].address;
+            if(!Meteor.settings.admin.list.includes(userEmail)){
+                // User isn't in the admin list
+                return false;
+            } else{
+                // User is in the admin list
+                return true;
+            }
+        }
+    },
     'hasProfilePicture'(){
         if(Meteor.userId() && UsersInformations.findOne({userId: Meteor.userId()}) && UsersInformations.findOne({userId: Meteor.userId()}).profilePicture !== null){
             // User is logged in and has a profile picture, return the profile picture id

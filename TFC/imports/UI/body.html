@@ -87,10 +87,12 @@
                                             <span>Mes informations</span>
                                         </a>
 
-                                        <a class="navbar-item" id="moderation">
-                                            <span class="icon"><i class="fas fa-tools"></i></span>
-                                            <span>Modération</span>
-                                        </a>
+                                        {{#if userIsAdmin}}
+                                            <a class="navbar-item" id="moderation">
+                                                <span class="icon"><i class="fas fa-tools"></i></span>
+                                                <span>Modération</span>
+                                            </a>
+                                        {{/if}}
 
                                         <hr class="navbar-divider">
 

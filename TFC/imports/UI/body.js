@@ -53,6 +53,7 @@ Session.set('productsCounter', 0);
 Session.set('userContributions', []);
 Session.set('profilePicture', 'user.svg');
 Session.set('productCategories', []);
+Session.set('userIsAdmin', false);  // By default the current user isn't admin
 
 
 Template.body.onRendered(function(){
@@ -106,6 +107,19 @@ Template.body.helpers({
             }
         });
         return Session.get('productCategories');
+    },
+    userIsAdmin: function(){
+        // Checking is user is admin
+        Meteor.call('userIsAdmin', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+            } else if(result === true || result === false){
+                // Method successfully executed, saving the result
+                Session.set('userIsAdmin', result);
+            }
+        });
+        return Session.get('userIsAdmin');
     }
 });
 
@@ -164,7 +178,7 @@ Template.body.events({
 
 
     // Navbar events
-    'click a#home, click a#search, click a#addProduct, click a#contact, click a#faq'(event){
+    'click a#home, click a#search, click a#addProduct, click a#contact, click a#faq, click #categoriesDropdown .navbar-item'(event){
         event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
@@ -185,10 +199,19 @@ Template.body.events({
     'click a#faq'(event){
         Session.set('page', 'faq');  // Switch to FAQ page
     },
+    'click #categoriesDropdown .navbar-item'(event){
+        // A category of the categories dropdown is clicked
+        const selectedCategory = event.currentTarget.innerText;  // Catching the clicked category
+        var search = Session.get('search');  // Catching the current search
+        search.query = "";  // Resetting the text query so we will find all the products
+        search.categories = [selectedCategory];  // Adding a filter with the selected category
+        Session.set('search', search);  // Updating the Session value
+        Session.set('page', 'searchResults');  // Sending the user to the search results page
+    },
 
 
     // Profile dropdown and user profile tabs events
-    'click #contributions, click #favorite, click #informations, click #moderation'(event){
+    'click #contributions, click #favorite, click #informations'(event){
         event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
@@ -213,7 +236,20 @@ Template.body.events({
         $("li#informations").addClass("is-active");  // Set the current tab as the active one
     },
     'click #moderation'(event){
-        Session.set('page', 'moderation');  // Switch to moderation page
+        event.preventDefault();
+        // Checking is user is admin
+        Meteor.call('userIsAdmin', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+            } else if(result){
+                // User is admin
+                var navigation = Session.get('navigation');  // Catching navigation history
+                navigation.push(Session.get('page'));  // Adding the current page
+                Session.set('navigation', navigation);  // Updating the value
+                Session.set('page', 'moderation');  // Switch to moderation page
+            }
+        });
     },
 
 

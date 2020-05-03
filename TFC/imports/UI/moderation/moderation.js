@@ -34,6 +34,19 @@ Template.moderation.helpers({
             }
         });
         return [Session.get('moderationCounter')];
+    },
+    userIsAdmin: function(){
+        // Checking is user is admin
+        Meteor.call('userIsAdmin', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+            } else if(result === true || result === false){
+                // Method successfully executed, saving the result
+                Session.set('userIsAdmin', result);
+            }
+        });
+        return Session.get('userIsAdmin');
     }
 });
 

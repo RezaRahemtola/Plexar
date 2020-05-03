@@ -42,16 +42,11 @@ Template.searchResults.onRendered(function(){
     const select = document.querySelector("select#categories");  // Catching the select element
 
     select.onchange = function(){
-        var search = Session.get('search');  // Catching the search object
-        var selectedOption = select.value;  // Catch the value attribute of the selected option
+        var search = Session.get('search');  // Catching the current search
+        const selectedOption = select.value;  // Catching the clicked category
         if(selectedOption !== 'add' && !search.categories.includes(selectedOption)){
-            // The selected option isn't the default one and isn't already selected, displaying the category tag
-            var newElement = document.createElement("div");  // Creating a new element to contain the tag
-            newElement.className = "control";  // Adding a class for a better display
-            // Adding the tag in the div :
-            newElement.innerHTML = '<div class="tags has-addons"> <a class="tag is-link">'+selectedOption+'</a> <a class="tag is-delete"></a> </div>';
-            document.getElementById("categoryTags").appendChild(newElement);  // Inserting it in the category tags container
-            search.categories.push(selectedOption);  // Adding the category to the selected ones
+            // The selected option isn't the default one and isn't already selected, adding it to the filter
+            search.categories.push(selectedOption);
             Session.set('search', search);  // Updating the value of the Session variable
         }
         select.value = 'add';  // Reseting the select with the default value
@@ -89,6 +84,9 @@ Template.searchResults.helpers({
             }
         });
         return Session.get('productCategories');
+    },
+    displaySelectedCategories: function(){
+        return Session.get('search').categories;
     }
 });
 

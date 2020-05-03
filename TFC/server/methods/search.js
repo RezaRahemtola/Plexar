@@ -16,8 +16,11 @@ Meteor.methods({
             // Categories isn't an array
             throw new Meteor.Error('categoriesNotArray', 'Une erreur est survenue lors du filtrage par catégories, veuillez réessayer.');
         } else{
-            if(categories.length > 0){
-                // User wants to filter by categories, returning the products that contains all the asked categories
+            if(categories.length > 0 && text === ""){
+                // User wants to search by categories, returning the products that contains all the asked categories
+                var matchingProducts = Products.find({categories: { $all: categories } }).fetch();
+            } else if(categories.length > 0 && text !== ""){
+                // User wants to search a text with categories filter, returning the products that contains the text and all the asked categories
                 var matchingProducts = Products.find({$text: { $search: text}, categories: { $all: categories } }).fetch();
             } else{
                 // No need to filter by categories, returning the products that match the search query
