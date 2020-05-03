@@ -20,6 +20,7 @@ import './moderation/moderation.js';
 import './searchResults.js';
 import './productBanner.js';
 import './editProduct.js';
+import './contact.js';
 
 // Messages imports
 import './messages/header.js';
@@ -151,7 +152,7 @@ Template.body.events({
 
 
     // Navbar events
-    'click a#home, click a#search, click a#addProduct'(event){
+    'click a#home, click a#search, click a#addProduct, click a#contact, click a#faq'(event){
         event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
@@ -165,6 +166,12 @@ Template.body.events({
     },
     'click a#addProduct'(event){
         Session.set('page', 'addProduct');
+    },
+    'click a#contact'(event){
+        Session.set('page', 'contact');  // Switch to contact page
+    },
+    'click a#faq'(event){
+        Session.set('page', 'faq');  // Switch to FAQ page
     },
 
 
@@ -199,7 +206,7 @@ Template.body.events({
 
 
     // Footer events
-    'click li#credits, click li#faq, click li#about'(event){
+    'click li#credits, click li#faq, click li#about, click #contact'(event){
         event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
@@ -213,6 +220,9 @@ Template.body.events({
     },
     'click li#about'(event){
         Session.set('page', 'about');  // Switch to about page
+    },
+    'click li#contact'(event){
+        Session.set('page', 'contact');  // Switch to contact page
     }
 });
 
@@ -223,12 +233,19 @@ $(document).ready(function(){
         // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
         $(".navbar-burger, .navbar-menu").toggleClass("is-active");
     });
-    // Check for click events on the navbar dropdown link
+    // Display dropdown when clicked in mobile mode, checking for click events on the navbar dropdown link
     $("#moreDropdown .navbar-link").click(function(){
         // If navbar is in mobile mode
         if($(".navbar-burger").hasClass("is-active")){
             // Toggle dropdown options display
             $('#moreDropdown .navbar-dropdown').toggleClass("is-hidden-mobile");
+        }
+    });
+    // Hide the global navbar dropdown when one of it's element is clicked in mobile mode
+    $(".navbar-item").click(function(event){
+        // If navbar is in mobile mode and clicked item isn't a dropdown
+        if($(".navbar-burger").hasClass("is-active") && !($(event.target).hasClass("navbar-link"))){
+            $(".navbar-burger, .navbar-menu").removeClass("is-active");
         }
     });
 });

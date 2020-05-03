@@ -128,5 +128,10 @@ Template.searchResults.events({
         search.categories.splice(index, 1);  // Removing the category
         Session.set('search', search);  // Updating the value of the Session variable
         tagToRemove.parentNode.removeChild(tagToRemove);  // Removing the tag
+    },
+    'click button#filter'(event){
+        event.preventDefault();
+        // Display or hide the filters on mobile & tablet
+        $("#filterContainer").toggleClass("is-hidden-touch");
     }
 });

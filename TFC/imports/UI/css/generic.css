@@ -24,8 +24,5 @@
 /* Styling links */
 .link{
     cursor: pointer;  /* Default links cursor */
-    background: linear-gradient(180deg, #e47312, #e47312) no-repeat 0 1.5rem;  /* Underline in primary orange color */
-    transition: background-position-y .20s ease-out;  /* Transition to cover the whole background when link is hovered */
+    border-bottom: 0.1rem solid #e47312;
 }
-
-.link:hover {background-position-y: 0;}

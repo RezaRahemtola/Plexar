@@ -1,49 +1,68 @@
 <template name="searchResults">
-
+    <br>
     <form id="searchForm">
-        <div class="field has-addons width-fit-content" style="margin: 0 auto;">
-            <div class="control">
-                <input type="search" class="input is-rounded" id="searchBox" placeholder="Rechercher" value="{{getSearchQuery}}"/>
+        <div class="columns is-mobile">
+            <div class="column is-three-quarters-mobile is-four-fifths-tablet is-full-desktop" style="padding-right: 0.4rem;">
+                <div class="field has-addons" style="justify-content: center;">
+                    <div class="control" style="width: 70%; max-width: 100%;">
+                        <input type="search" class="input is-rounded" id="searchBox" placeholder="Rechercher" value="{{getSearchQuery}}"/>
+                    </div>
+                    <div class="control">
+                        <button type="submit" class="button is-rounded">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="control">
-                <button type="submit" class="button is-rounded">
-                    <i class="fas fa-search"></i>
+
+            <div class="column is-hidden-desktop" style="padding-left: 0;">
+                <button class="button" id="filter">
+                    <span class="icon" style="margin-right: 0;"><i class="fas fa-sort-amount-down"></i></span>
+                    Filtrer
                 </button>
             </div>
         </div>
+
+        <div class="is-hidden-touch" id="filterContainer">
+            <div class="columns">
+                <div class="column">
+                    <div class="field has-addons width-fit-content" style="margin: 0 auto;">
+                        <button type="button" class="button is-static">Trier par :</button>
+                        <div class="control has-icons-left">
+                            <div class="select">
+                                <select id="sortResults">
+                                    <option value="popularity" selected>Popularité</option>
+                                    <option value="A-Z">Ordre alphabétique</option>
+                                    <option value="Z-A">Ordre alphabétique inversé</option>
+                                    <option value='random'>Aléatoire</option>
+                                </select>
+                            </div>
+                            <div id="sortResultsIconContainer" class="icon is-left" style="color: black;">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="field has-addons width-fit-content" style="margin: 0 auto;">
+                        <button type="button" class="button is-static">Filtrer par catégories :</button>
+                        <div class="select">
+                            <select id="categories">
+                                <option value="add" selected disabled hidden>Sélectionner</option>
+                                {{#each displayCategories}}
+                                    <option value="{{this}}">{{this}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <br>
+                    </div>
+                    <br>
+                    <div class="field is-grouped is-grouped-multiline width-fit-content" id="categoryTags" style="margin: 0 auto;"></div>
+                </div>
+            </div>
+        </div>
     </form>
-
-    <div class="field has-addons">
-        <button type="button" class="button is-static">Trier par :</button>
-        <div class="control has-icons-left">
-            <div class="select">
-                <select id="sortResults">
-                    <option value="popularity" selected>Popularité</option>
-                    <option value="A-Z">Ordre alphabétique</option>
-                    <option value="Z-A">Ordre alphabétique inversé</option>
-                    <option value='random'>Aléatoire</option>
-                </select>
-            </div>
-            <div id="sortResultsIconContainer" class="icon is-left" style="color: black;">
-                <i class="fas fa-heart"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="field has-addons">
-        <button type="button" class="button is-static">Filtrer par catégories :</button>
-        <div class="select">
-            <select id="categories">
-                <option value="add" selected disabled hidden>Sélectionner</option>
-                {{#each displayCategories}}
-                    <option value="{{this}}">{{this}}</option>
-                {{/each}}
-            </select>
-        </div>
-
-        <div class="field is-grouped is-grouped-multiline" id="categoryTags"></div>
-
-    </div>
 
     {{#each displayProductsResults}}
         {{> productBanner}}

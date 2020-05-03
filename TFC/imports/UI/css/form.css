@@ -40,7 +40,7 @@ textarea:focus + label.is-animated, textarea.has-animated-label:not(:placeholder
 }
 
 .file-name{
-    text-align: center;;
+    text-align: center;
 }
 
 /* Remove the scollbar */

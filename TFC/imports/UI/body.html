@@ -23,14 +23,30 @@
                         Rechercher
                     </a>
 
-                    <a class="navbar-item" id="addProduct">Ajouter un produit</a>
+                    <a class="navbar-item" id="addProduct">
+                        <span class="icon" style="margin-right: 0;"><i class="fas fa-shopping-basket"></i></span>
+                        Ajouter un produit
+                    </a>
+
+                    <a class="navbar-item" id="categories">
+                        <span class="icon" style="margin-right: 0;"><i class="fas fa-grip-vertical"></i></span>
+                        Catégories
+                    </a>
 
                     <div class="navbar-item has-dropdown is-hoverable" id="moreDropdown">
                         <a class="navbar-link">More</a>
                         <div class="navbar-dropdown is-hidden-mobile">
                             <a class="navbar-item">About</a>
-                            <a class="navbar-item">Jobs</a>
-                            <a class="navbar-item">Contact</a>
+
+                            <a class="navbar-item" id="faq">
+                                <span class="icon" style="margin-right: 0;"><i class="fas fa-question-circle"></i></span>
+                                FAQ
+                            </a>
+
+                            <a class="navbar-item" id="contact">
+                                <span class="icon" style="margin-right: 0;"><i class="fas fa-edit"></i></span>
+                                Contact
+                            </a>
                             <hr class="navbar-divider">
                             <a class="navbar-item">Report an issue</a>
                         </div>
@@ -125,7 +141,7 @@
 
                     <div class="column">
                         <ul>
-                            <li class="link width-fit-content">Nous contacter</li>
+                            <li class="link width-fit-content" id="contact">Nous contacter</li>
                             <li class="link width-fit-content" id="faq">Foire aux questions</li>
                         </ul>
                     </div>

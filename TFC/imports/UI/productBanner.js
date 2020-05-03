@@ -2,7 +2,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-// HTML imports
+// HTML import
 import './productBanner.html';
 
 // CSS imports
