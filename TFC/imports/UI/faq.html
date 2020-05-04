@@ -1,29 +1,48 @@
 <template name="faq">
-    <br>
+    <div id="accordion_first">
+        <article class="message">
+            <div class="message-header">
+                <p>Question 1 <a href="#collapsible-message-accordion-1" data-action="collapse">Collapse/Expand</a></p>
+            </div>
+            <div id="collapsible-message-accordion-1" class="message-body is-collapsible" data-parent="accordion_first">
+                <div class="message-body-content">
+    				Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis
+    				placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum
+    				<a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales, arcu et
+    				sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et
+    				sem eget, facilisis sodales sem.
+                </div>
+            </div>
+        </article>
 
-    <div class="has-text-centered">
-        <h3 class="title is-3">Vos questions, nos réponses</h3>
+        <article class="message">
+            <div class="message-header">
+                <p>Question 2 <a href="#collapsible-message-accordion-2" data-action="collapse">Collapse/Expand</a></p>
+            </div>
+            <div id="collapsible-message-accordion-2" class="message-body is-collapsible" data-parent="accordion_first">
+                <div class="message-body-content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis
+                    placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum
+                    <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales, arcu et
+                    sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et
+                    sem eget, facilisis sodales sem.
+                </div>
+            </div>
+        </article>
+
+        <article class="message">
+            <div class="message-header">
+                <p>Question 3 <a href="#collapsible-message-accordion-3" data-action="collapse">Collapse/Expand</a></p>
+            </div>
+            <div id="collapsible-message-accordion-3" class="message-body is-collapsible" data-parent="accordion_first">
+                <div class="message-body-content">
+    				Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis
+    				placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum
+    				<a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales, arcu et
+    				sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et
+    				sem eget, facilisis sodales sem.
+                </div>
+            </div>
+        </article>
     </div>
-
-    <br>
-    <form id="searchForm">
-        <div class="field has-addons" style="justify-content: center;">
-
-            <div class="control" style="width: 25em; max-width: 100%;">
-                <input type="search" class="input is-rounded" id="searchBox" placeholder="Saississez votre question"/>
-            </div>
-
-            <div class="control">
-                <button type="submit" class="button is-rounded">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-
-        </div>
-      </form>
-      <br>
-
-      <hr style="margin: 0;">
-      <br>
-      <h3 class="title is-3">Nos réponses</h3>
 </template>

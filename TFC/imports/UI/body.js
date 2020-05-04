@@ -22,6 +22,7 @@ import './productBanner.js';
 import './editProduct.js';
 import './contact.js';
 import './collectiveModeration.js';
+import './faq.js';
 
 // Messages imports
 import './messages/header.js';
@@ -38,7 +39,6 @@ import { Images } from '../databases/images.js';
 
 // Alone Template
 import './credits.html';
-import './faq.html';
 import './about.html';
 
 // Initializing Session variables
@@ -179,7 +179,7 @@ Template.body.events({
 
 
     // Navbar events
-    'click a#home, click a#search, click a#addProduct, click a#contact, click a#faq, click #categoriesDropdown .navbar-item, click a#collectiveModeration'(event){
+    'click a#home, click a#search, click a#addProduct, click a#contact, click a#faq, click a#about, click #categoriesDropdown .navbar-item, click a#collectiveModeration'(event){
         event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
@@ -199,6 +199,9 @@ Template.body.events({
     },
     'click a#faq'(event){
         Session.set('page', 'faq');  // Switch to FAQ page
+    },
+    'click a#about'(event){
+        Session.set('page', 'about');  // Switch to about page
     },
     'click #categoriesDropdown .navbar-item'(event){
         // A category of the categories dropdown is clicked
