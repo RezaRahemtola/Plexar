@@ -10,7 +10,7 @@ import '../imports/databases/_all.js';
 import './methods/_all.js';
 
 import { Products } from '../imports/databases/products.js';
-import { Moderation } from '../imports/databases/moderation.js';
+
 
 Meteor.startup(function(){
     // code to run on server at startup
