@@ -50,3 +50,14 @@ Template.login.events({
         Session.set('modal', 'forgotPassword');
     }
 });
+
+
+Template.login.helpers({
+    messageToDisplay: function(){
+        var message = Session.get('message');
+        if(message !== null){
+            // There is a message to display
+            return message.type;  // Return the message to display
+        }
+    }
+});
