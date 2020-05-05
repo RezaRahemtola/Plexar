@@ -43,6 +43,10 @@ export const Rules = {
         productAddition: 10,
         productModification: 5,
         productReport : 2,
-        vote: 1
+    },
+    moderation: {
+        votesToApprove: 5,
+        votesToReject: -5,
+        dailyVotingLimit: 10
     }
 };

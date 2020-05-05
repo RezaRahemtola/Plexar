@@ -43,11 +43,11 @@ Meteor.methods({
 
         return Products.findOne({_id : productId});
     },
-    'findOneEditedProductByOriginalId'({originalId}){
+    'findOneEditedProductById'({editedProductId}){
         // Type check to prevent malicious calls
-        check(originalId, String);
+        check(editedProductId, String);
 
-        return EditedProducts.findOne({originalId: originalId});
+        return EditedProducts.findOne({_id: editedProductId});
     },
     'getVoteValue'({productId}){
         // Type check to prevent malicious calls
@@ -221,7 +221,9 @@ Meteor.methods({
                                             Moderation.insert({
                                                 userId: Meteor.userId(),
                                                 elementId: addedProductId,
-                                                reason: "newProduct"
+                                                reason: "newProduct",
+                                                createdAt: new Date().toISOString(),
+                                                score: 0
                                             }, function(error, addedModerationId){
                                                 if(error){
                                                     // There was an error while adding the moderation
@@ -371,8 +373,10 @@ Meteor.methods({
                                                     callbacksPending++;  // Starting a call with a callback function
                                                     Moderation.insert({
                                                         userId: Meteor.userId(),
-                                                        elementId: productId,
-                                                        reason: "editProduct"
+                                                        elementId: addedProductId,
+                                                        reason: "editProduct",
+                                                        createdAt: new Date().toISOString(),
+                                                        score: 0
                                                     }, function(error, addedModerationId){
                                                         if(error){
                                                             // There was an error while adding the moderation
@@ -469,12 +473,15 @@ Meteor.methods({
         check(reason, String);
 
         if(!Meteor.userId()){
-            // TODO: error
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
             Moderation.insert({
                 userId: Meteor.userId(),
                 elementId: productId,
-                reason: reason
+                reason: reason,
+                createdAt: new Date().toISOString(),
+                score: 0
             }, function(error, addedModerationId){
                 if(error){
                     // TODO: error display

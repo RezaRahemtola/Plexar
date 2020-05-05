@@ -1,4 +1,5 @@
 // Import all the databases
+import './collectiveModeration.js';
 import './contributions.js';
 import './editedProducts.js';
 import './favorites.js';

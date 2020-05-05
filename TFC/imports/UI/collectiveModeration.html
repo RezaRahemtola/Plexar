@@ -7,6 +7,21 @@
             Chaque ajout, modification ou signalement est soumis à la validation de la communauté
             <a class="icon has-text-primary" title="En savoir plus"><i class="fas fa-info-circle"></i></a>
         </p>
+
+        {{#if userIsAdmin}}
+            {{#each moderationCounter}}
+                <p class="has-text-centered">{{total}} produits sont actuellement en modération dont {{newProducts}} nouveaux ajouts, {{editedProducts}} modifications et {{reports}} signalements.</p>
+            {{/each}}
+        {{/if}}
+
+        <br>
+
+        {{#each displayModeration}}
+            {{> moderationBanner}}
+        {{/each}}
+
+
+
     {{else}}
         <p class="subtitle">
             <span class="register link has-text-weight-semibold">Inscrivez-vous</span>

@@ -220,8 +220,9 @@ Template.editProductModeration.helpers({
 Template.editProductModeration.events({
     'click #rejectModifications'(event){
         event.preventDefault();
-        const editedProductId = Session.get('editProductModeration').editedProduct._id;
-        Meteor.call('rejectEditModeration', {editedProductId: editedProductId}, function(error, result){
+        // Catching the moderationId
+        const moderationId = Session.get('editProductModeration').moderationId;
+        Meteor.call('moderationRejected', {moderationId: moderationId}, function(error, result){
             if(error){
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -235,8 +236,10 @@ Template.editProductModeration.events({
     },
     'click #approveModifications'(event){
         event.preventDefault();
-        const editedProductId = Session.get('editProductModeration').editedProduct._id;
-        Meteor.call('approveEditModeration', {editedProductId: editedProductId}, function(error, result){
+        // Catching the moderationId
+        const moderationId = Session.get('editProductModeration').moderationId;
+
+        Meteor.call('moderationAccepted', {moderationId: moderationId}, function(error, result){
             if(error){
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message

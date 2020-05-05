@@ -11,6 +11,7 @@ import { Contributions } from '../../imports/databases/contributions.js';
 import { Moderation } from '../../imports/databases/moderation.js';
 import { Products } from '../../imports/databases/products.js';
 import { Images } from '../../imports/databases/images.js';
+import { CollectiveModeration } from '../../imports/databases/collectiveModeration.js';
 
 
 Meteor.methods({
@@ -119,10 +120,18 @@ Meteor.methods({
                 newsletter: newsletterIsChecked,
                 points: 0
             });
+
             // Creating empty favorites of the new user
             Favorites.insert({
                 userId: Meteor.userId(),
                 products: []
+            });
+
+            // Creating empty participations to collective moderation
+            CollectiveModeration.insert({
+                userId: Meteor.userId(),
+                alreadyVoted: [],
+                dailyVotes: {}
             });
             // User was successfully created
             return true;
