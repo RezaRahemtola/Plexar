@@ -2,8 +2,17 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-// HTML imports
+// HTML import
 import './collectiveModeration.html';
+
+// JS imports
+import './moderationBanner.js';
+import './editProductModeration.js';
+import './moderationProductPage.js';
+
+// Initializing Session variables
+Session.set('currentDailyVotes', 0);
+Session.set('currentDailyVotesLimit', 0);
 
 
 Template.collectiveModeration.helpers({
@@ -42,6 +51,30 @@ Template.collectiveModeration.helpers({
             }
         });
         return Session.get('userIsAdmin');
+    },
+    displayCurrentDailyVotes: function(){
+        // Display user's number of participations to collective moderation today
+        Meteor.call('displayCurrentDailyVotes', function(error, result){
+            if(error){
+                // TODO: error display
+            } else if(result){
+                // Saving the result in a Session variable to display it after
+                Session.set('currentDailyVotes', result);
+            }
+        });
+        return Session.get('currentDailyVotes');
+    },
+    displayCurrentDailyVotesLimit: function(){
+        // Display user's limit of participations to collective moderation
+        Meteor.call('displayCurrentDailyVotesLimit', function(error, result){
+            if(error){
+                // TODO: error display
+            } else if(result){
+                // Saving the result in a Session variable to display it after
+                Session.set('currentDailyVotesLimit', result);
+            }
+        });
+        return Session.get('currentDailyVotesLimit');
     }
 });
 

@@ -12,6 +12,42 @@ import { CollectiveModeration } from '../../imports/databases/collectiveModerati
 import { Rules } from '../rules.js';
 
 Meteor.methods({
+    'displayCurrentDailyVotes'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // User is logged in, catching his daily votes
+            const dailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
+
+            // Catching the current date
+            var year = new Date().getFullYear();  // Catching the year
+            var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+            var date = new Date().getDate();  // Catching the date
+            if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+            if(month < 10){ month = '0' + month; }
+            const currentDate = date+ '/' +month+ '/' +year;
+
+            if(dailyVotes[currentDate] !== undefined){
+                // User has already voted in collective moderation today, returning number of participations
+                return dailyVotes[currentDate];
+            } else{
+                // User hasn't voted in collective moderation today, returning 0
+                return 0;
+            }
+        }
+    },
+    'displayCurrentDailyVotesLimit'(){
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // User is logged in, returning default dailyVotes limit
+            // TODO: faire en fonction des paliers
+            return Rules.moderation.dailyVotingLimit;
+        }
+    },
     'findModerationElementId'({moderationId}){
         // Type check to prevent malicious calls
         check(moderationId, String);

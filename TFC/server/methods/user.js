@@ -47,7 +47,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // Catching user's contributions
+            // Catching user's accepted contributions
             const acceptedUserContributions = Contributions.find({userId: Meteor.userId(), status: 'accepted'});
             // Initializing points
             var userPoints = 0;
@@ -56,6 +56,16 @@ Meteor.methods({
                 // For each accepted contribution, we add the corresponding points
                 userPoints += contribution.points;
             }
+
+            // Now we catch daily votes in collective moderation and the points it should give
+            const userDailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
+            const collectiveModerationPoints = Rules.points.collectiveModerationVote;
+
+            for(dailyVotes of Object.values(userDailyVotes)){
+                // For each day we add the number of votes this day multiplied by the number of points it should give
+                userPoints += dailyVotes * collectiveModerationPoints;
+            }
+
             // Now let's update the points in the database
             const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()});
             UsersInformations.update(userInformationsId, { $set: { points: userPoints } }, function(error, result){

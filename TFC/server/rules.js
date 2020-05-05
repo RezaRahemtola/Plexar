@@ -43,6 +43,7 @@ export const Rules = {
         productAddition: 10,
         productModification: 5,
         productReport : 2,
+        collectiveModerationVote: 1
     },
     moderation: {
         votesToApprove: 5,

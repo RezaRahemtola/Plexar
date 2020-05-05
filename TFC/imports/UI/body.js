@@ -16,12 +16,11 @@ import './home.js';
 import './addProduct.js';
 import './productPage.js';
 import './user/userProfile.js';
-import './moderation/moderation.js';
+import './moderation/collectiveModeration.js';
 import './searchResults.js';
 import './productBanner.js';
 import './editProduct.js';
 import './contact.js';
-import './collectiveModeration.js';
 import './faq.js';
 
 // Messages imports
