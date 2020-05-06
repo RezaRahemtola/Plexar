@@ -230,7 +230,7 @@ Template.editProductModeration.events({
                 var navigation = Session.get('navigation');  // Catching navigation history
                 navigation.push(Session.get('page'));  // Adding the current page
                 Session.set('navigation', navigation);  // Updating the value
-                Session.set('page', 'moderation');
+                Session.set('page', 'collectiveModeration');
             }
         });
     },
@@ -247,7 +247,7 @@ Template.editProductModeration.events({
                 var navigation = Session.get('navigation');  // Catching navigation history
                 navigation.push(Session.get('page'));  // Adding the current page
                 Session.set('navigation', navigation);  // Updating the value
-                Session.set('page', 'moderation');
+                Session.set('page', 'collectiveModeration');
             }
         });
     }

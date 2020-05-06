@@ -23,7 +23,8 @@ Template.productPage.onRendered(function(){
 
         Meteor.call('getVoteValue', {productId: productId}, function(error, result){
             if(error){
-                // TODO: error display
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
                 if(result > 0){
                     // Product has already been upvoted by the user
@@ -63,7 +64,7 @@ Template.productPage.events({
         const productId = Session.get('currentProduct')._id;
         Meteor.call('removeProductFromFavorite', {productId: productId}, function(error, result){
             if(error){
-                // There is an error
+                // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
                 // Product was successfully removed from favorite, showing a confirmation message
@@ -83,7 +84,10 @@ Template.productPage.events({
         $('#upvote, #downvote').removeClass("has-text-primary");
 
         Meteor.call('updateProductScore', {productId: productId, vote: vote}, function(error, result){
-            if(!error && result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
                 // Database was successfully updated, refreshing the Session variable with the updated product
                 Meteor.call('findOneProductById', {productId: productId}, function(error, result){
                     if(!error){
@@ -102,26 +106,54 @@ Template.productPage.events({
         });
     },
     'click .report'(event){
-        // TODO: En fonction du nombre de points/admin de l'user, instant valider le report et effectuer l'action correspondante
         if(!Meteor.user()){
             // User isn't logged in
             Session.set('modal', 'register');
         } else{
-            // User is logged in
-            Session.set('modal', 'report');
+            // User is logged in, checking if the product is already in moderation
+
+            // Catching productId for the call
+            const productId = Session.get('currentProduct')._id;
+
+            Meteor.call('checkIfProductInModeration', {productId: productId}, function(error, result){
+                if(error){
+                    // There was an error
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                } else if(result){
+                    // Product is already in moderation, display an helping message
+                    Session.set('message', {type:"header", headerContent:"Ce produit est déjà en modération, veuillez réessayer ultérieurement.", style:"is-warning"} );
+                } else{
+                    // Product isn't already under moderation, we can display the report modal
+                    Session.set('modal', 'report');
+                }
+            });
         }
     },
     'click .suggestChanges'(event){
-        // TODO: En fonction du nombre de points/admin de l'user, instant valider la modification
         if(!Meteor.user()){
             // User isn't logged in
             Session.set('modal', 'register');
         } else{
-            // User is logged in
-            var navigation = Session.get('navigation');  // Catching navigation history
-            navigation.push(Session.get('page'));  // Adding the current page
-            Session.set('navigation', navigation);  // Updating the value
-            Session.set('page', 'editProduct');
+            // User is logged in, checking if the product is already in moderation
+
+            // Catching productId for the call
+            const productId = Session.get('currentProduct')._id;
+
+            Meteor.call('checkIfProductInModeration', {productId: productId}, function(error, result){
+                if(error){
+                    // There was an error
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                } else if(result){
+                    // Product is already in moderation, display an helping message
+                    Session.set('message', {type:"header", headerContent:"Ce produit est déjà en modération, veuillez réessayer ultérieurement.", style:"is-warning"} );
+                } else{
+                    // Product isn't already under moderation, we can send the user to the edit page
+                    var navigation = Session.get('navigation');  // Catching navigation history
+                    navigation.push(Session.get('page'));  // Adding the current page
+                    Session.set('navigation', navigation);  // Updating the value
+                    Session.set('page', 'editProduct');
+                }
+            });
         }
     }
 })

@@ -142,7 +142,8 @@ Template.body.events({
         Session.set('currentProduct', null);  // Reset the variable
         Meteor.call('findOneProductById', {productId: event.currentTarget.id}, function(error, result){
             if(error){
-                // TODO: error display
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
                 Session.set('currentProduct', result);
                 var navigation = Session.get('navigation');  // Catching navigation history

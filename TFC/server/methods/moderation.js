@@ -12,6 +12,29 @@ import { CollectiveModeration } from '../../imports/databases/collectiveModerati
 import { Rules } from '../rules.js';
 
 Meteor.methods({
+    'checkIfProductInModeration'({productId}){
+        // Type check to prevent malicious calls
+        check(productId, String);
+
+        // Checking if the given productId corresponds to the elementId field of the moderation database
+        const isUnderModeration = Moderation.findOne({elementId: productId});
+
+        if(isUnderModeration){
+            // A moderation was found, returning true
+            return true;
+        } else{
+            // No moderation found, checking edits propositions (because elementId field of moderation contains editedProductId for edit propositions)
+            const isUnderEdit = EditedProducts.findOne({originalId: productId});
+            if(isUnderEdit){
+                // This product is under edit
+                return true;
+            } else{
+                // Product isn't under moderation and isn't under edit, we can return false
+                return false;
+            }
+        }
+
+    },
     'displayCurrentDailyVotes'(){
 
         if(!Meteor.userId()){

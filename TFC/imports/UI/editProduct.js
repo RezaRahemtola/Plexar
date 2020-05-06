@@ -186,7 +186,8 @@ Template.editProduct.onRendered(function(){
                 } else{
                     Meteor.call('checkUrlInput', {url: websiteInput.value}, function(error, result){
                         if(error){
-                            // TODO: display error
+                            // There was an error
+                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                         } else if(!result){
                             // Value isn't a valid url adress
                             $('input#website').addClass("is-danger");
@@ -326,8 +327,10 @@ Template.editProduct.events({
     },
     'click #submitModifications'(event){
         event.preventDefault();
+        // Catching the form
         const form = new FormData(document.querySelector('form#editProduct'));
 
+        // Catching all fields
         const productName = form.get('name');
         const productDescription = form.get('description');
         const coverImage = Session.get('editedCoverImageId');
@@ -336,16 +339,28 @@ Template.editProduct.events({
         const productId = Session.get('currentProduct')._id;
         const website = form.get('website');
 
-        Meteor.call('addEditedProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website, productId: productId}, function(error, result){
+        // Checking that the product isn't already under moderation
+        Meteor.call('checkIfProductInModeration', {productId: productId}, function(error, result){
             if(error){
-                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // Product is already in moderation, display an helping message
+                Session.set('message', {type:"header", headerContent:"Ce produit est déjà en modération, veuillez réessayer ultérieurement.", style:"is-warning"} );
             } else{
-                // Product was inserted without any error, displaying a success message
-                Session.set('message', {type: "header", headerContent: "Proposition de modification effectuée", style:"is-success"} );
-                var navigation = Session.get('navigation');  // Catching navigation history
-                navigation.push(Session.get('page'));  // Adding the current page
-                Session.set('navigation', navigation);  // Updating the value
-                Session.set('page', 'productPage');
+                // Product isn't already under moderation, we can create the edit proposition
+                Meteor.call('addEditedProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website, productId: productId}, function(error, result){
+                    if(error){
+                        Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+                    } else{
+                        // Product was inserted without any error, displaying a success message
+                        Session.set('message', {type: "header", headerContent: "Proposition de modification effectuée", style:"is-success"} );
+                        var navigation = Session.get('navigation');  // Catching navigation history
+                        navigation.push(Session.get('page'));  // Adding the current page
+                        Session.set('navigation', navigation);  // Updating the value
+                        Session.set('page', 'productPage');
+                    }
+                });
             }
         });
     }

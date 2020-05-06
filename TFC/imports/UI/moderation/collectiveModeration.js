@@ -56,7 +56,8 @@ Template.collectiveModeration.helpers({
         // Display user's number of participations to collective moderation today
         Meteor.call('displayCurrentDailyVotes', function(error, result){
             if(error){
-                // TODO: error display
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
                 // Saving the result in a Session variable to display it after
                 Session.set('currentDailyVotes', result);
@@ -68,7 +69,8 @@ Template.collectiveModeration.helpers({
         // Display user's limit of participations to collective moderation
         Meteor.call('displayCurrentDailyVotesLimit', function(error, result){
             if(error){
-                // TODO: error display
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
                 // Saving the result in a Session variable to display it after
                 Session.set('currentDailyVotesLimit', result);

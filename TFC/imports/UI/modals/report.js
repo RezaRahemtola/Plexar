@@ -14,16 +14,30 @@ import { Moderation } from '../../databases/moderation.js';
 
 Template.report.events({
     'click #reportSubmit' (event){
-        // TODO: En fonction du nombre de points/admin de l'user, instant valider le report et effectuer l'action correspondante
+        // Catching parameters for the report
         const productId = document.querySelector('button.report').id;
         const checkedOption = document.querySelector("input[type='radio'][name='reportReason']:checked").id;
-        Meteor.call('reportProduct', {productId: productId, reason: checkedOption}, function(error, result){
+
+        // Checking that the product isn't already under moderation
+        Meteor.call('checkIfProductInModeration', {productId: productId}, function(error, result){
             if(error){
-                // TODO: error display
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // Product is already in moderation, display an helping message
+                Session.set('message', {type:"header", headerContent:"Ce produit est déjà en modération, veuillez réessayer ultérieurement.", style:"is-warning"} );
             } else{
-                // Product was successfully reported, removing the report modal and showing a success message
-                Session.set('modal', null);
-                Session.set('message', {type: "header", headerContent: "Signalement effectué avec succès !", style:"is-success"} );
+                // Product isn't already under moderation, we can create the report
+                Meteor.call('reportProduct', {productId: productId, reason: checkedOption}, function(error, result){
+                    if(error){
+                        // There was an error
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    } else{
+                        // Product was successfully reported, removing the report modal and showing a success message
+                        Session.set('modal', null);
+                        Session.set('message', {type: "header", headerContent: "Signalement effectué avec succès !", style:"is-success"} );
+                    }
+                });
             }
         });
     }

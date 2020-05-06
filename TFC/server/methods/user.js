@@ -70,7 +70,8 @@ Meteor.methods({
             const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()});
             UsersInformations.update(userInformationsId, { $set: { points: userPoints } }, function(error, result){
                 if(error){
-                    // TODO: error display
+                    // There was an error
+                    throw new Meteor.Error('pointsUpdateError', "Une erreur est survenue lors de la mise à jour de vos points, veuillez réessayer.")
                 }
             });
             return userPoints;

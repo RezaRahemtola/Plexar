@@ -177,8 +177,8 @@ Template.addProduct.onRendered(function(){
             } else{
                 Meteor.call('checkUrlInput', {url: websiteInput.value}, function(error, result){
                     if(error){
-                        // TODO: display error
-
+                        // There was an error
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                     } else if(!result){
                         // Value isn't a valid url adress
                         $('input#website').addClass("is-danger");
