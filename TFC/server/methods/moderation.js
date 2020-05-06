@@ -303,24 +303,6 @@ Meteor.methods({
             Meteor.call('checkModerationDecision', {moderationId: moderationId});
         }
     },
-    'approveEditModeration'({editedProductId}){
-        // Type check to prevent malicious calls
-        check(editedProductId, String);
-
-        if(!Meteor.userId()){
-            // User isn't logged in
-            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
-        } else{
-            // Checking if user is admin :
-            const userEmail = Meteor.user().emails[0].address;
-            if(!Meteor.settings.admin.list.includes(userEmail)){
-                // User isn't in the admin list
-                throw new Meteor.Error('userNotAdmin', 'Accès refusé, cette action est réservée aux administrateurs.')
-            } else{
-
-            }
-        }
-    },
     'checkModerationDecision'({moderationId}){
         // Type check to prevent malicious calls
         check(moderationId, String);

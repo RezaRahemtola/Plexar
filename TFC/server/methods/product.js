@@ -249,6 +249,20 @@ Meteor.methods({
                                                             throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                             Products.remove(addedProductId);  // Removing the product from the db
                                                             Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                                        } else{
+                                                            // Everything was successfully executed, now we check if the user is admin to instant validate his proposition
+
+                                                            const userEmail = Meteor.user().emails[0].address;
+                                                            if(Meteor.settings.admin.list.includes(userEmail)){
+                                                                // User is an admin, calling the method to accept the moderation
+                                                                callbacksPending++;  // Starting a call with a callback function
+                                                                Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
+                                                                    if(error){
+                                                                        // TODO: error display
+                                                                    }
+                                                                    callbacksPending--;  // End of callback function
+                                                                });
+                                                            }
                                                         }
                                                         callbacksPending--;  // End of callback function
                                                     });
@@ -414,6 +428,18 @@ Meteor.methods({
                                                                             EditedProducts.remove(addedProductId);  // Removing the product from the db
                                                                             Moderation.remove(addedModerationId);  // Removing the moderation from the db
                                                                             throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
+                                                                        } else{
+                                                                            // Everything was executed successfully, checking if user is admin to instant validate the proposition
+
+                                                                            const userEmail = Meteor.user().emails[0].address;
+                                                                            if(Meteor.settings.admin.list.includes(userEmail)){
+                                                                                // User is admin, calling the method to accept the moderation
+                                                                                Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
+                                                                                    if(error){
+                                                                                        // TODO: error display
+                                                                                    }
+                                                                                });
+                                                                            }
                                                                         }
                                                                         callbacksPending--;  // End of callback function
                                                                     });
@@ -524,6 +550,24 @@ Meteor.methods({
                                 createdAt: new Date().toISOString(),
                                 moderationId: addedModerationId,
                                 points: points
+                            }, function(error, addedContributionId){
+                                if(error){
+                                    // There was an error while adding the contribution
+                                    Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                    throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
+                                } else{
+                                    // Everything executed successfully, checking if the user is an admin to instant validate the report
+
+                                    const userEmail = Meteor.user().emails[0].address;
+                                    if(Meteor.settings.admin.list.includes(userEmail)){
+                                        // User is admin, calling the method to accept the report
+                                        Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
+                                            if(error){
+                                                // TODO: error display
+                                            }
+                                        });
+                                    }
+                                }
                             });
                         }
                     });
