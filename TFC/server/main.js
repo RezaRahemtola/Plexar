@@ -1,7 +1,6 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
-import { Email } from 'meteor/email';
 
 // Importing databases
 import '../imports/databases/_all.js';
@@ -19,14 +18,8 @@ Meteor.startup(function(){
         const { username, password, host, port, isSecure } = Meteor.settings.smtp;
         const scheme = isSecure ? 'smtps' : 'smtp';
         process.env.MAIL_URL = `${scheme}://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}:${port}`;
-        
-        Accounts.emailTemplates.from = "Plexar <evan.houssette@gmail.com>";
 
+        // Calling the method to define email settings and templates
+        Meteor.call('creatingEmailSettings');
     }
-    Accounts.config({
-        sendVerificationEmail: true
-    });
-    Accounts.onEmailVerificationLink = function(token, done){
-        Accounts.verifyEmail(token);
-    };
 });

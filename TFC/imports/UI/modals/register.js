@@ -102,7 +102,7 @@ Template.register.events({
                             Meteor.call('createNewUser', {username: username, email: email, newsletterIsChecked: newsletterIsChecked}, function(error, result){
                                 if(result){
                                     // User was successfully created and is logged in
-                                    Session.set('message', {type:"header", headerContent:"Votre compte a bien été créé", style:"is-success"});  // Display a success message
+                                    Session.set('message', {type:"header", headerContent:"Votre compte a bien été créé et un email de vérification vous a été envoyé, veuillez consulter votre boîte mail.", style:"is-success"});  // Display a success message
                                     Session.set('modal', null);  // Remove the modal
                                 }
                             });
