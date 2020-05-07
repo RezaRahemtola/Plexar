@@ -19,11 +19,14 @@ Meteor.startup(function(){
         const { username, password, host, port, isSecure } = Meteor.settings.smtp;
         const scheme = isSecure ? 'smtps' : 'smtp';
         process.env.MAIL_URL = `${scheme}://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}:${port}`;
+        
+        Accounts.emailTemplates.from = "Plexar <evan.houssette@gmail.com>";
+
     }
-    /*Accounts.config({
+    Accounts.config({
         sendVerificationEmail: true
     });
     Accounts.onEmailVerificationLink = function(token, done){
         Accounts.verifyEmail(token);
-    };*/
+    };
 });
