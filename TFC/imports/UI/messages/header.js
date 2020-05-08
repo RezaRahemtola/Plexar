@@ -5,6 +5,7 @@ import { Template } from 'meteor/templating';
 // HTML imports
 import './header.html';
 
+
 Template.header.helpers({
     style: function(){
         // Get the message and return it's style (the class to apply)

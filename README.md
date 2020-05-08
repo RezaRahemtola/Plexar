@@ -5,6 +5,8 @@ Si la Web App ne se lance pas, exécuter les commandes suivantes et réessayer :
 
 meteor add session
 
+meteor add email
+
 meteor add accounts-ui accounts-password
 
 meteor npm install jquery

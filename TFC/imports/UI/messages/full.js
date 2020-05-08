@@ -5,6 +5,7 @@ import { Template } from 'meteor/templating';
 // HTML imports
 import './full.html';
 
+
 Template.header.helpers({
     style: function(){
         return Session.get('message').style;

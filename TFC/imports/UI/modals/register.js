@@ -88,6 +88,10 @@ Template.register.events({
                 $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
             } else if(result){
                 // No error in password fields, creating the new user
+
+                // This call can take a few seconds to complete, showing a waiting message
+                Session.set('message', {type:"header", headerContent:"Création de votre compte en cours..."});
+
                 Accounts.createUser({
                     username: username,
                     email: email,

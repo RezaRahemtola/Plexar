@@ -26,6 +26,7 @@ import './faq.js';
 // Messages imports
 import './messages/header.js';
 import './messages/full.js';
+import './messages/verifyEmail.js';
 
 // Modals imports
 import './modals/register.js';
@@ -71,6 +72,14 @@ Template.body.helpers({
         if(message !== null && modal === null){
             // There is a message to display and no modal is active
             return message.type;  // Return the message to display
+        } else if(Meteor.user()){
+            // User is logged in, checking if user's email is verified
+            const hasVerifiedEmail = Meteor.user().emails[0].verified;
+            if(!hasVerifiedEmail){
+                // User email isn't verified, display a message
+                const userEmail = Meteor.user().emails[0].address;
+                Session.set('message', {type:"verifyEmail"} );  // Set the message
+            }
         }
     },
     currentModal: function(){

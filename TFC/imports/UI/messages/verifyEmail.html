@@ -1,0 +1,16 @@
+<template name="verifyEmail">
+    {{#if messageToDisplay}}
+        <article class="message is-warning">
+            <div class="message-header">
+                <p>Un email de vérification a été envoyé à {{userEmail}}, veuillez consulter votre boîte mail.</p>
+                <button class="delete" aria-label="delete"></button>
+            </div>
+            <div class="message-body" style="color: initial;">
+                <p>
+                    <span>Vous n'avez rien reçu ? Consultez vos spam / indésirables et si vous n'avez toujours rien nous pouvons</span>
+                    <a id="resendVerificationEmail">renvoyer l'email</a>
+                </p>
+            </div>
+        </article>
+    {{/if}}
+</template>

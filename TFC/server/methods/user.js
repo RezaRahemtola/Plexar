@@ -85,6 +85,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
+            // User is logged in
             Accounts.setUsername(Meteor.userId(), newUsername);
         }
     },
@@ -107,7 +108,20 @@ Meteor.methods({
         return (Accounts.findUserByEmail(email)) ? true : false;
     },
     'sendVerificationEmail'(){
-        Accounts.sendVerificationEmail(Meteor.userId());
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // User is logged in, checking if his email is verified
+            const hasVerifiedEmail = Meteor.user().emails[0].verified;
+            if(!hasVerifiedEmail){
+                // Email isn't verified, sending the verification email
+                Accounts.sendVerificationEmail(Meteor.userId());
+            } else{
+                // Email is verified, throwing an error
+                throw new Meteor.Error('emailAlreadyVerified', 'Votre adresse email est déjà validée.');
+            }
+        }
     },
     'createNewUser'({username, email, newsletterIsChecked}){
         // Type check to prevent malicious calls

@@ -61,7 +61,7 @@ Meteor.methods({
                             Vérifier votre adresse e-mail
                         </a>
                         <br/>
-                        <p>Si le bouton ci-dessus ne fonctionne pas, copiez ce lien dans votre navigateur : <a href="` + url + `">`+ url +`</a></p>`;
+                        <p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur : <a href="` + url + `">`+ url +`</a></p>`;
             }
         };
         Accounts.emailTemplates.resetPassword = {
@@ -76,7 +76,7 @@ Meteor.methods({
                             Réinitialiser votre mot de passe
                         </a>
                         <br/>
-                        <p>Si le bouton ci-dessus ne fonctionne pas, copiez ce lien dans votre navigateur : <a href="` + url + `">`+ url +`</a></p>
+                        <p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur : <a href="` + url + `">`+ url +`</a></p>
                         <p>Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail en toute sécurité.</p>`;
             }
         };
