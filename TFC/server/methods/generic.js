@@ -26,10 +26,31 @@ Meteor.methods({
     'getCategories'(){
         return Rules.product.categories;
     },
+    'sendContactMessage'({email, subject, message}){
+        // Type check to prevent malicious calls
+        check(email, String);
+        check(subject, String);
+        check(message, String);
+
+        // TODO: length verifications
+        const to = Rules.email.receptionAddress;
+        const from = Rules.email.sendingAddress;
+        const emailSubject = "Formulaire de contact";
+
+        // Creating the body content of the email
+        const html = `<h3>Sujet: `+ subject +`</h3>
+                      <h4>Adresse email : `+ email +`</h4>
+                      <p>Message : `+ message +`</p>`;
+
+        // Sending email :
+        Email.send({to: to, from: from, subject: emailSubject, html: html});
+
+        return true;
+    },
     'creatingEmailSettings'(){
 
         // Defining default sending address
-        Accounts.emailTemplates.from = "Plexar <evan.houssette@gmail.com>";
+        Accounts.emailTemplates.from = Rules.email.sendingAddress;
 
         // Enable verification email
         Accounts.config({

@@ -38,6 +38,7 @@ Template.login.events({
         var password = form.get('password');
         Meteor.loginWithPassword(email, password, function(error){
             if(error){
+                // There was an error while logging in
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});
                 $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
             } else{

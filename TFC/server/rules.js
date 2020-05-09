@@ -49,5 +49,9 @@ export const Rules = {
         votesToApprove: 5,
         votesToReject: -5,
         dailyVotingLimit: 10
+    },
+    email: {
+        sendingAddress: "Plexar <evan.houssette@gmail.com>",
+        receptionAddress: "Reza Rahemtola <rahemtola.reza@gmail.com>"
     }
 };
