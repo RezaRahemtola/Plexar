@@ -13,7 +13,7 @@ Template.login.onRendered(function(){
     // Live email validation
     const emailInput = document.querySelector('input#email');
     emailInput.onchange = function(){
-        // Value looks like a valid email adress, checking if it's already taken
+        // Value looks like a valid email address, checking if it's already taken
         Meteor.call('checkIfEmailIsTaken', {email: emailInput.value}, function(error, result){
             if(!result){
                 // Email is not already used

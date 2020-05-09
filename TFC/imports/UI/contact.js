@@ -13,6 +13,23 @@ Template.contact.onRendered(function(){
         const userEmail = Meteor.user().emails[0].address;
         emailInput.value = userEmail;
     }
+
+
+    // Live email validation
+    const emailInput = document.querySelector('input#email');
+    emailInput.onchange = function(){
+        Meteor.call('checkEmailInput', {email: emailInput.value}, function(error, result){
+            if(error){
+                // Value isn't a valid email address
+                $('input#email').addClass("is-danger");
+                document.querySelector('#emailField p.help.is-danger').textContent = "Veuillez entrer une adresse email valide";  // Adding a danger help message
+            } else{
+                // Value is a valid email address, removing danger display
+                $('input#email').removeClass("is-danger");
+                document.querySelector('#emailField p.help.is-danger').textContent = "";  // Removing the danger help message
+            }
+        });
+    }
 });
 
 

@@ -59,7 +59,7 @@ Meteor.methods({
         if(regex.test(email)){
             return true;
         } else{
-            throw new Meteor.Error('invalidEmail');
+            throw new Meteor.Error('invalidEmail', 'Adresse email invalide.');
         }
     },
     'checkUrlInput'({url}){

@@ -237,19 +237,32 @@ Template.addProduct.events({
         const categories = Session.get('selectedCategories');
         const website = form.get('website');
 
-        Meteor.call('addNewProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website}, function(error, result){
-            if(error){
-                // There was an error
-                Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
-            } else{
-                // Product was inserted without any error, displaying a success message
-                Session.set('message', {type: "header", headerContent: "Produit ajouté avec succès !", style:"is-success"} );
-                var navigation = Session.get('navigation');  // Catching navigation history
-                navigation.push(Session.get('page'));  // Adding the current page
-                Session.set('navigation', navigation);  // Updating the value
-                Session.set('page', 'home');
-            }
-        });
+        // Checking that mandatory inputs are filled :
+        if(productName === ""){
+            // Product name field is empty, showing an error message
+            Session.set('message', {type: "header", headerContent: "Veuillez renseigner le nom du produit.", style:"is-danger"});
+        } else if(productDescription === ""){
+            // Product description field is empty, showing an error message
+            Session.set('message', {type: "header", headerContent: "Veuillez renseigner la description du produit.", style:"is-danger"});
+        } else if(coverImage === null){
+            // No cover image, showing an error message
+            Session.set('message', {type: "header", headerContent: "Veuillez ajouter une image de couverture.", style:"is-danger"});
+        } else{
+            // All mandatory field were filled, calling the server method
+            Meteor.call('addNewProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website}, function(error, result){
+                if(error){
+                    // There was an error
+                    Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+                } else{
+                    // Product was inserted without any error, displaying a success message
+                    Session.set('message', {type: "header", headerContent: "Produit ajouté avec succès !", style:"is-success"} );
+                    var navigation = Session.get('navigation');  // Catching navigation history
+                    navigation.push(Session.get('page'));  // Adding the current page
+                    Session.set('navigation', navigation);  // Updating the value
+                    Session.set('page', 'home');
+                }
+            });
+        }
     },
     'click a.tag.is-delete'(event){
         // Link to delete a category tag is cliked

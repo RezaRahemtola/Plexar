@@ -165,8 +165,6 @@ Meteor.methods({
                     } else{
                         // All parameters are of the correct type
 
-                        var callbacksPending = 0;  // No callback is pending for the moment
-
                         if(productName.length < Rules.product.name.minLength){
                             throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rules.product.name.minLength+' charactères.');
                         } else if(productDescription.length < Rules.product.description.minLength){
@@ -200,7 +198,6 @@ Meteor.methods({
                                     const productImages = otherImages;
 
                                     // Checking website input
-                                    callbacksPending++;  // Starting a call with a callback function
                                     Meteor.call('checkUrlInput', {url: website}, function(error, result){
                                         if(error){
                                             // There was an error
@@ -221,7 +218,6 @@ Meteor.methods({
                                         }
 
                                         // Inserting informations in the database :
-                                        callbacksPending++;  // Starting a call with a callback function
                                         Products.insert({
                                             name: productName,
                                             description: productDescription,
@@ -235,7 +231,6 @@ Meteor.methods({
                                                 throw new Meteor.Error('productInsertionError', "Erreur lors de l'ajout du produit, veuillez réessayer.");
                                             } else{
                                                 // The product was successfully added, inserting it to the moderation database
-                                                callbacksPending++;  // Starting a call with a callback function
                                                 Moderation.insert({
                                                     userId: Meteor.userId(),
                                                     elementId: addedProductId,
@@ -251,7 +246,6 @@ Meteor.methods({
                                                         // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
                                                         // Catching the points earned :
                                                         const points = Rules.points.productAddition;
-                                                        callbacksPending++;  // Starting a call with a callback function
                                                         Contributions.insert({
                                                             userId: Meteor.userId(),
                                                             type: 'Ajout',
@@ -272,24 +266,19 @@ Meteor.methods({
                                                                 const userEmail = Meteor.user().emails[0].address;
                                                                 if(Meteor.settings.admin.list.includes(userEmail)){
                                                                     // User is an admin, calling the method to accept the moderation
-                                                                    callbacksPending++;  // Starting a call with a callback function
                                                                     Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
                                                                         if(error){
-                                                                            // TODO: error display
+                                                                            // There was an error while accepting the moderation
+                                                                            throw new Meteor.Error('adminModerationAcceptedError', "Une erreur a eu lieu lors de la validation automatique de l'ajout.");
                                                                         }
-                                                                        callbacksPending--;  // End of callback function
                                                                     });
                                                                 }
                                                             }
-                                                            callbacksPending--;  // End of callback function
                                                         });
                                                     }
-                                                    callbacksPending--;  // End of callback function
                                                 });
                                             }
-                                            callbacksPending--;  // End of callback function
                                         });
-                                        callbacksPending--;  // End of callback function
                                     });
                                 }
                             }
@@ -329,8 +318,6 @@ Meteor.methods({
                     } else{
                         // All parameters are of the correct type
 
-                        var callbacksPending = 0;  // No callback is pending for the moment
-
                         if(productName.length < Rules.product.name.minLength){
                             throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rules.product.name.minLength+' charactères.');
                         } else if(productDescription.length < Rules.product.description.minLength){
@@ -362,7 +349,6 @@ Meteor.methods({
                                     const productImages = otherImages;
 
                                     // Checking website input
-                                    callbacksPending++;  // Starting a call with a callback function
                                     Meteor.call('checkUrlInput', {url: website}, function(error, result){
                                         if(error){
                                             // There was an error
@@ -408,7 +394,6 @@ Meteor.methods({
                                                     // Product isn't already under moderation, we can add the edit proposition
 
                                                     // Inserting informations in the database :
-                                                    callbacksPending++;  // Starting a call with a callback function
                                                     EditedProducts.insert({
                                                         originalId: originalProduct._id,
                                                         name: productName,
@@ -423,7 +408,6 @@ Meteor.methods({
                                                                 throw new Meteor.Error('productInsertionError', "Erreur lors de l'ajout du produit, veuillez réessayer.");
                                                             } else{
                                                                 // Adding the product to the moderation database
-                                                                callbacksPending++;  // Starting a call with a callback function
                                                                 Moderation.insert({
                                                                     userId: Meteor.userId(),
                                                                     elementId: addedProductId,
@@ -437,9 +421,10 @@ Meteor.methods({
                                                                         throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                     } else{
                                                                         // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
+
                                                                         // Catching the points earned :
                                                                         const points = Rules.points.productModification;
-                                                                        callbacksPending++;  // Starting a call with a callback function
+
                                                                         Contributions.insert({
                                                                             userId: Meteor.userId(),
                                                                             type: 'Modification',
@@ -462,18 +447,16 @@ Meteor.methods({
                                                                                     // User is admin, calling the method to accept the moderation
                                                                                     Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
                                                                                         if(error){
-                                                                                            // TODO: error display
+                                                                                            // There was an error while accepting the moderation
+                                                                                            throw new Meteor.Error('adminModerationAcceptedError', "Une erreur a eu lieu lors de la validation automatique de la modification.");
                                                                                         }
                                                                                     });
                                                                                 }
                                                                             }
-                                                                            callbacksPending--;  // End of callback function
                                                                         });
                                                                     }
-                                                                    callbacksPending--;  // End of callback function
                                                                 });
                                                             }
-                                                            callbacksPending--;  // End of callback function
                                                     });
                                                 }
                                             });
@@ -598,7 +581,8 @@ Meteor.methods({
                                             // User is admin, calling the method to accept the report
                                             Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
                                                 if(error){
-                                                    // TODO: error display
+                                                    // There was an error while accepting the moderation
+                                                    throw new Meteor.Error('adminModerationAcceptedError', "Une erreur a eu lieu lors de la validation automatique du signalement.");
                                                 }
                                             });
                                         }

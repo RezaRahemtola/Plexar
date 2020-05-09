@@ -110,8 +110,12 @@ Template.collectiveModeration.events({
             } else{
                 // Moderation successfully accepted, calling the template helper to refresh the list of product under moderation
                 Template.collectiveModeration.__helpers.get('displayModeration').call();
-                // Refreshing stats display for admins
-                Template.collectiveModeration.__helpers.get('moderationCounter').call();
+                // Checking if user is admin
+                const userIsAdmin = Session.get('userIsAdmin');
+                if(userIsAdmin){
+                    // Refreshing stats displayed for admins
+                    Template.collectiveModeration.__helpers.get('moderationCounter').call();
+                }
             }
         });
     },
@@ -127,8 +131,12 @@ Template.collectiveModeration.events({
             } else{
                 // Moderation successfully rejected, calling the template helper to refresh the list of product under moderation
                 Template.collectiveModeration.__helpers.get('displayModeration').call();
-                // Refreshing stats display for admins
-                Template.collectiveModeration.__helpers.get('moderationCounter').call();
+                // Checking if user is admin
+                const userIsAdmin = Session.get('userIsAdmin');
+                if(userIsAdmin){
+                    // Refreshing stats displayed for admins
+                    Template.collectiveModeration.__helpers.get('moderationCounter').call();
+                }
             }
         });
     },
