@@ -47,14 +47,14 @@ Meteor.methods({
 
         return true;
     },
-    'creatingEmailSettings'(){
+    'setAccountsSettings'(){
 
         // Defining default sending address
         Accounts.emailTemplates.from = Rules.email.sendingAddress;
 
-        // Enable verification email
         Accounts.config({
-            sendVerificationEmail: true
+            sendVerificationEmail: true, // Enable verification email
+            loginExpirationInDays: null  // Disable login expiration
         });
 
         // When an email verification link is clicked, verifyEmail with the given token

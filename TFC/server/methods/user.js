@@ -261,7 +261,6 @@ Meteor.methods({
         } else{
             // Catching current user's informations
             const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
-            var callbacksPending = 0;  // No callback is pending for the moment
 
             // Updating non-sensitive informations in our database
             UsersInformations.update(userInformations._id, { $set: {
@@ -273,7 +272,6 @@ Meteor.methods({
             // Checking if username is different to update it
             if(Meteor.user().username !== username){
                 // Username is different than the current one, changing it
-                callbacksPending++;  // Starting a call with a callback function
                 Meteor.call('changeUsername', {newUsername: username}, function(error, result){
                     if(error){
                         // There was an error while changing the username
@@ -282,7 +280,6 @@ Meteor.methods({
                         // Username was changed successfully, updating value in our database
                         UsersInformations.update(userInformations._id, { $set: { username: username } } );
                     }
-                    callbacksPending--;  // End of callback function
                 });
             }
 

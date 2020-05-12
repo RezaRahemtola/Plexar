@@ -53,9 +53,13 @@ Template.contact.events({
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});
             } else if(result){
                 // Email was successfully sent, displaying a confirmation email
-                Session.set('page', 'home');
                 $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
                 Session.set('message', {type:"header", headerContent:"Message envoyé, nous reviendrons vers vous dès que possible", style:"is-success"});
+                // Sending user to home page
+                var navigation = Session.get('navigation');  // Catching navigation history
+                navigation.push(Session.get('page'));  // Adding the current page
+                Session.set('navigation', navigation);  // Updating the value
+                Session.set('page', 'home');
             }
         });
     }

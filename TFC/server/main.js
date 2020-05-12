@@ -20,6 +20,6 @@ Meteor.startup(function(){
         process.env.MAIL_URL = `${scheme}://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}:${port}`;
 
         // Calling the method to define email settings and templates
-        Meteor.call('creatingEmailSettings');
+        Meteor.call('setAccountsSettings');
     }
 });

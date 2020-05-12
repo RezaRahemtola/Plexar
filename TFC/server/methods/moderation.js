@@ -140,8 +140,8 @@ Meteor.methods({
                 var elementsToReturn = []
                 for(var moderation of moderationElements){
                     // For each moderation, we add a text for the buttons depending on the reason
-                    if(elementsToReturn.length < maxDailyVotes && !votedModeration.includes(moderation._id)){
-                        // We will only return the number of elements that the user can vote and on which he hasn't already vote
+                    if(elementsToReturn.length < maxDailyVotes && !votedModeration.includes(moderation._id) && moderation.userId !== Meteor.userId()){
+                        // We will only return the number of elements that the user can vote, on which he hasn't already vote and those not created by him
                         switch(moderation.reason){
                             case 'newProduct':
                                 moderation.reasonText = "Proposition d'ajout";
