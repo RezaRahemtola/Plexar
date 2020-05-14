@@ -100,8 +100,25 @@ Template.collectiveModeration.events({
     },
     'click .moderationAccepted'(event){
         event.preventDefault();
-
+        // Catching moderationId for the call
         const moderationId = event.currentTarget.id;
+
+        /* We will remove this moderation from the list to avoid the following error :
+        if any information is removed from databases, display functions will throw errors as they'll not be able to retrive it */
+
+        // Catching the elements
+        const moderationElements = Session.get('moderationElements');
+
+        // Looping on the elements to find the current one
+        for(const [index, element] of moderationElements.entries()){
+            if(element._id === moderationId){
+                // This element is the one we are looking for, removing it
+                moderationElements.pop(index);
+                // Updating the Session variable with the modified array
+                Session.set('moderationElements', moderationElements);
+                break;  // We've found the element, exiting the loop
+            }
+        }
 
         Meteor.call('moderationAccepted', {moderationId: moderationId}, function(error, result){
             if(error){
@@ -121,8 +138,25 @@ Template.collectiveModeration.events({
     },
     'click .moderationRejected'(event){
         event.preventDefault();
-
+        // Catching moderationId for the call
         const moderationId = event.currentTarget.id;
+
+        /* We will remove this moderation from the list to avoid the following error :
+        if any information is removed from databases, display functions will throw errors as they'll not be able to retrive it */
+
+        // Catching the elements
+        const moderationElements = Session.get('moderationElements');
+
+        // Looping on the elements to find the current one
+        for(const [index, element] of moderationElements.entries()){
+            if(element._id === moderationId){
+                // This element is the one we are looking for, removing it
+                moderationElements.pop(index);
+                // Updating the Session variable with the modified array
+                Session.set('moderationElements', moderationElements);
+                break;  // We've found the element, exiting the loop
+            }
+        }
 
         Meteor.call('moderationRejected', {moderationId: moderationId}, function(error, result){
             if(error){
