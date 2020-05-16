@@ -36,6 +36,7 @@ export const Rules = {
             'Informatique & High-Tech',
             'Recondionné & Seconde main',
             'Santé & Hygiène',
+            'Sites web & Applications',
             'Vêtements & Accessoires',
         ]
     },
