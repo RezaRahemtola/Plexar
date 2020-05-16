@@ -9,7 +9,10 @@ import './home.html';
 Template.home.helpers({
     productsCounter: function(){
         Meteor.call('productsCounter', function(error, result){
-            if(!error){
+            if(error){
+                // TODO: error display
+            } else{
+                // Number of product was successfully returned, saving it a Session variable
                 Session.set('productsCounter', result);
             }
         });
@@ -21,9 +24,13 @@ Template.home.helpers({
 Template.home.events({
     'submit form#searchForm'(event){
         event.preventDefault();
+        // Catching the search object
         var search = Session.get('search');
+        // Updating the query with the given text input
         search.query = document.getElementById("searchBox").value;
-        Session.set('search', search);  // Storing search input value in a variable
+        // Saving the search in a Session variable
+        Session.set('search', search);
+        // Switching page
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
         Session.set('navigation', navigation);  // Updating the value

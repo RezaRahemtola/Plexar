@@ -59,6 +59,7 @@ Template.searchResults.helpers({
         return Session.get('search').query;
     },
     displayProductsResults: function(){
+        // Catching asked search parameters for the call
         const searchQuery = Session.get("search").query;
         const searchCategories = Session.get("search").categories;
 

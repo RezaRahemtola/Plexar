@@ -99,7 +99,16 @@
                         </select>
                     </div>
                     <br>
-                    <div class="field is-grouped is-grouped-multiline width-fit-content" id="categoryTags" style="margin: 1rem auto;"></div>
+                    <div class="field is-grouped is-grouped-multiline width-fit-content" id="categoryTags" style="margin: 1rem auto;">
+                        {{#each displaySelectedCategories}}
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <a class="tag is-link">{{this}}</a>
+                                    <a class="tag is-delete"></a>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
                 </div>
             </section>
 

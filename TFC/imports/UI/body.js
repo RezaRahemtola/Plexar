@@ -58,6 +58,7 @@ Session.set('userIsAdmin', false);  // By default the current user isn't admin
 
 
 Template.body.onRendered(function(){
+    // Subscribing to allow operations on the Images database
     Meteor.subscribe('images');
 });
 
@@ -67,8 +68,9 @@ Template.body.helpers({
         return Session.get('page');  // Return the page to display
     },
     currentMessage: function(){
-        var message = Session.get('message');
-        var modal = Session.get('modal');
+        // Catching current message & modal
+        const message = Session.get('message');
+        const modal = Session.get('modal');
         if(message !== null && modal === null){
             // There is a message to display and no modal is active
             return message.type;  // Return the message to display
@@ -76,14 +78,14 @@ Template.body.helpers({
             // User is logged in, checking if user's email is verified
             const hasVerifiedEmail = Meteor.user().emails[0].verified;
             if(!hasVerifiedEmail){
-                // User email isn't verified, display a message
-                const userEmail = Meteor.user().emails[0].address;
+                // User email isn't verified, display a warning message
                 Session.set('message', {type:"verifyEmail"} );  // Set the message
             }
         }
     },
     currentModal: function(){
         if(Session.get('modal') !== null){
+            // There is an active modal
             return Session.get('modal');  // Return the modal to display
         }
     },
@@ -94,8 +96,8 @@ Template.body.helpers({
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
                 // The current user has a profile picture, imageId was returned
-                const profilePictureId = result  // Catch the result
-                const image = Images.findOne({_id: profilePictureId}).url();  // Find the url
+                const profilePictureId = result  // Saving the result
+                const image = Images.findOne({_id: profilePictureId}).url();  // Find the url of this image
                 Session.set('profilePicture', image);
             } else{
                 // Current user doesn't have a profile picture, set it to the default one
@@ -112,6 +114,7 @@ Template.body.helpers({
                 // There was an error
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
             } else{
+                // Available categories were successfully returned, saving them in a Session variable
                 Session.set('productCategories', result);
             }
         });
@@ -154,6 +157,7 @@ Template.body.events({
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
+                // Product was successfully returned, saving it in a Session variable
                 Session.set('currentProduct', result);
                 var navigation = Session.get('navigation');  // Catching navigation history
                 navigation.push(Session.get('page'));  // Adding the current page
@@ -185,10 +189,10 @@ Template.body.events({
         Session.set('page', 'home');  // Switch to home page
     },
     'click a#search'(event){
-        Session.set('page', 'searchResults');
+        Session.set('page', 'searchResults');  // Switch to search results page
     },
     'click a#addProduct'(event){
-        Session.set('page', 'addProduct');
+        Session.set('page', 'addProduct');  // Switch to add product form page
     },
     'click a#contact'(event){
         Session.set('page', 'contact');  // Switch to contact page
@@ -209,7 +213,7 @@ Template.body.events({
         Session.set('page', 'searchResults');  // Sending the user to the search results page
     },
     'click a#collectiveModeration'(event){
-        Session.set('page', 'collectiveModeration');
+        Session.set('page', 'collectiveModeration');  // Switch to collective moderation page
     },
 
 
@@ -221,19 +225,22 @@ Template.body.events({
         Session.set('navigation', navigation);  // Updating the value
     },
     'click #contributions'(event){
-        Session.set('page', 'userProfile');  // Switch to userProfile page
+        // Switch to userProfile page in contributions tab
+        Session.set('page', 'userProfile');
         Session.set('userPage', 'contributions');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#contributions").addClass("is-active");  // Set the current tab as the active one
     },
     'click #favorite'(event){
-        Session.set('page', 'userProfile');  // Switch to userProfile page
+        // Switch to userProfile page in favorite tab
+        Session.set('page', 'userProfile');
         Session.set('userPage', 'favorite');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#favorite").addClass("is-active");  // Set the current tab as the active one
     },
     'click #informations'(event){
-        Session.set('page', 'userProfile');  // Switch to userProfile page
+        // Switch to userProfile page in informations tab
+        Session.set('page', 'userProfile');
         Session.set('userPage', 'informations');
         $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
         $("li#informations").addClass("is-active");  // Set the current tab as the active one

@@ -147,20 +147,13 @@ Template.addProduct.onRendered(function(){
 
 
         // Dynamically check and show selected categories
-        var selectedCategories = [];  // Creating a array to store the categories
-        Session.set('selectedCategories', selectedCategories);  // Saving it in a Session variable to allow removing from events
-
+        Session.set('selectedCategories', []);  // // Creating an array to store the categories and saving it in a Session variable to allow removing from events
         const select = document.querySelector("select#categories");  // Catching the select element
         select.onchange = function(){
             var selectedCategories = Session.get('selectedCategories');  // Catching the array of categories that are already selected
-            var selectedOption = select.value;  // Catch the value attribute of the selected option
+            const selectedOption = select.value;  // Catch the value attribute of the selected option
             if(selectedOption !== 'add' && !selectedCategories.includes(selectedOption)){
                 // The selected option isn't the default one and isn't already selected, displaying the category tag
-                var newElement = document.createElement("div");  // Creating a new element to contain the tag
-                newElement.className = "control";  // Adding a class for a better display
-                // Adding the tag in the div :
-                newElement.innerHTML = '<div class="tags has-addons"> <a class="tag is-link">'+selectedOption+'</a> <a class="tag is-delete"></a> </div>';
-                document.getElementById("categoryTags").appendChild(newElement);  // Inserting it in the category tags container
                 selectedCategories.push(selectedOption);  // Adding the category to the selected ones
                 Session.set('selectedCategories', selectedCategories);  // Updating the value of the Session variable
             }
@@ -216,10 +209,14 @@ Template.addProduct.helpers({
                 // There was an error
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
             } else{
+                // Available categories were successfully retrieved, saving them in a Session variable
                 Session.set('productCategories', result);
             }
         });
         return Session.get('productCategories');
+    },
+    displaySelectedCategories: function(){
+        return Session.get('selectedCategories');
     }
 });
 
@@ -228,7 +225,7 @@ Template.addProduct.events({
     'click button#addProduct'(event){
         event.preventDefault();
 
-        // Catching inputs :
+        // Catching inputs for the call :
         const form = new FormData(document.getElementById('newProduct'));
         const productName = form.get('name');
         const productDescription = form.get('description');
@@ -259,7 +256,7 @@ Template.addProduct.events({
                     var navigation = Session.get('navigation');  // Catching navigation history
                     navigation.push(Session.get('page'));  // Adding the current page
                     Session.set('navigation', navigation);  // Updating the value
-                    Session.set('page', 'home');
+                    Session.set('page', 'home');  // Switching to home page
                 }
             });
         }

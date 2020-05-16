@@ -13,8 +13,7 @@ Template.verifyEmail.helpers({
     userEmail: function(){
         if(Meteor.user()){
             // User is logged in, catching it's email
-            const userEmail = Meteor.user().emails[0].address;
-            return userEmail;
+            return Meteor.user().emails[0].address;
         }
     }
 });
