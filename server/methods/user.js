@@ -77,6 +77,37 @@ Meteor.methods({
             return userPoints;
         }
     },
+    'getUserLevel'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // Catching user's informations to calculate the level based on the points
+            const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
+            // Catching the possibles levels
+            const levels = Rules.levels;
+            var currentLevel = userInformations.level;
+            for(var level of levels){
+                // For each existing level, checking if the user has enough points to reach it
+                if(userInformations.points >= level.pointsNeeded){
+                    // User has enough points for this level, updating current level
+                    currentLevel = level.name;
+                } else{
+                    // We've reached the level available for the user, ending the loop
+                    break;
+                }
+            }
+            // Updating the level in the database
+            UsersInformations.update(userInformations._id, { $set: { level: currentLevel } }, function(error, result){
+                if(error){
+                    // There was an error wgile updating the level
+                    throw new Meteor.Error('levelUpdateError', "Une erreur est survenue lors de la mise à jour de votre niveau, veuillez réessayer.")
+                }
+            });
+            return currentLevel;
+        }
+    },
     'changeUsername'({newUsername}){
         // Type check to prevent malicious calls
         check(newUsername, String);
@@ -143,7 +174,8 @@ Meteor.methods({
                 profilePicture: null,
                 votes: {},
                 newsletter: newsletterIsChecked,
-                points: 0
+                points: 0,
+                level: "1"
             });
 
             // Creating empty favorites of the new user

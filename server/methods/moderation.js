@@ -198,6 +198,8 @@ Meteor.methods({
         // Type check to prevent malicious calls
         check(moderationId, String);
 
+        // TODO: DRY code for end of if admin/ else non-admin
+
         if(!Meteor.userId()){
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
@@ -213,50 +215,104 @@ Meteor.methods({
                 const userEmail = Meteor.user().emails[0].address;
                 if(!Meteor.settings.admin.list.includes(userEmail)){
                     // User isn't in the admin list, he will only update the vote
-                    // TODO : régler le nombre en fonction du palier
-                    const voteToApply = 1;
-                    // Catching the current score and updating it
-                    var currentScore = Moderation.findOne({_id: moderationId}).score;
-                    currentScore += voteToApply;
-                    // Updating the value in the database
-                    Moderation.update(moderationId, { $set: { score: currentScore } } );
+                    // Updating user points to then catch the corresponding level and it's vote multiplicator
+                    Meteor.call('getUserPoints', function(error, result){
+                        if(error){
+                            // There was an error while retrieving user's points
+                            throw new Meteor.Error('getUserPointsError', "Une erreur a eu lieu lors de la mise à jour de vos points, veuillez réessayer.");
+                        } else if(typeof(result) === "number"){
+                            // User's points were successfully retrieved and updated, now let's find the corresponding level
+                            Meteor.call('getUserLevel', function(error, result){
+                                if(error){
+                                    // There was an error while retrieving user's level
+                                    throw new Meteor.Error('getUserLevelError', "Une erreur est survenue lors de la mise à jour de votre niveau, veuillez réessayer.");
+                                } else if(result){
+                                    // User's level was successfully retrieved and updated, catching the corresponding vote multiplicator
+                                    const userLevelName = result;
+                                    const levels = Rules.levels;  // Catching array of available levels with their properties
+                                    // Retrieving the level that corresponds to the user one
+                                    const userLevel = levels.find(function(level){
+                                        return level.name === userLevelName;
+                                    });
+                                    // Defining the vote to apply based on the level
+                                    const voteToApply = userLevel.voteMultiplicator;
+                                    // Catching the current score and updating it
+                                    var currentScore = Moderation.findOne({_id: moderationId}).score;
+                                    currentScore += voteToApply;
+                                    // Updating the value in the database
+                                    Moderation.update(moderationId, { $set: { score: currentScore } } );
+
+                                    // Adding this moderation to those on which the user has voted
+                                    const collectiveModerationId = CollectiveModeration.findOne({userId: Meteor.userId()})._id;
+                                    var dailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
+
+                                    // Catching the current date
+                                    var year = new Date().getFullYear();  // Catching the year
+                                    var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                                    var date = new Date().getDate();  // Catching the date
+                                    if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                                    if(month < 10){ month = '0' + month; }
+                                    const currentDate = date+ '/' +month+ '/' +year;
+
+                                    if(dailyVotes[currentDate] !== undefined){
+                                        // User has already voted in collective moderation today, we will only update the number
+                                        var todayVotes = dailyVotes[currentDate];
+                                        todayVotes++;
+                                        dailyVotes[currentDate] = todayVotes;
+                                    } else{
+                                        // User hasn't vote for collective moderation today, we create a new daily vote of 1
+                                        dailyVotes[currentDate] = 1;
+                                    }
+                                    // Updating daily votes value in the database
+                                    CollectiveModeration.update(collectiveModerationId, { $set: { dailyVotes: dailyVotes } } );
+
+                                    var alreadyVotedModeration = CollectiveModeration.findOne({userId: Meteor.userId()}).alreadyVoted;
+                                    alreadyVotedModeration.push(moderationId);
+                                    // Updating the value with the modified array
+                                    CollectiveModeration.update(collectiveModerationId, { $set: { alreadyVoted: alreadyVotedModeration } } );
+                                    // Calling the method to check if the score to accept/reject the moderation was reached
+                                    Meteor.call('checkModerationDecision', {moderationId: moderationId});
+                                }
+                            });
+                        }
+                    });
                 } else{
                     // User is an admin, set the score to the amount it needs to be accepted
                     const votesToApprove = Rules.moderation.votesToApprove;
                     // Updating the value in the database
                     Moderation.update(moderationId, { $set: { score: votesToApprove } } );
+
+                    // Adding this moderation to those on which the user has voted
+                    const collectiveModerationId = CollectiveModeration.findOne({userId: Meteor.userId()})._id;
+                    var dailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
+
+                    // Catching the current date
+                    var year = new Date().getFullYear();  // Catching the year
+                    var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                    var date = new Date().getDate();  // Catching the date
+                    if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                    if(month < 10){ month = '0' + month; }
+                    const currentDate = date+ '/' +month+ '/' +year;
+
+                    if(dailyVotes[currentDate] !== undefined){
+                        // User has already voted in collective moderation today, we will only update the number
+                        var todayVotes = dailyVotes[currentDate];
+                        todayVotes++;
+                        dailyVotes[currentDate] = todayVotes;
+                    } else{
+                        // User hasn't vote for collective moderation today, we create a new daily vote of 1
+                        dailyVotes[currentDate] = 1;
+                    }
+                    // Updating daily votes value in the database
+                    CollectiveModeration.update(collectiveModerationId, { $set: { dailyVotes: dailyVotes } } );
+
+                    var alreadyVotedModeration = CollectiveModeration.findOne({userId: Meteor.userId()}).alreadyVoted;
+                    alreadyVotedModeration.push(moderationId);
+                    // Updating the value with the modified array
+                    CollectiveModeration.update(collectiveModerationId, { $set: { alreadyVoted: alreadyVotedModeration } } );
+                    // Calling the method to check if the score to accept/reject the moderation was reached
+                    Meteor.call('checkModerationDecision', {moderationId: moderationId});
                 }
-
-                // Adding this moderation to those on which the user has voted
-                const collectiveModerationId = CollectiveModeration.findOne({userId: Meteor.userId()})._id;
-                var dailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
-
-                // Catching the current date
-                var year = new Date().getFullYear();  // Catching the year
-                var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
-                var date = new Date().getDate();  // Catching the date
-                if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
-                if(month < 10){ month = '0' + month; }
-                const currentDate = date+ '/' +month+ '/' +year;
-
-                if(dailyVotes[currentDate] !== undefined){
-                    // User has already voted in collective moderation today, we will only update the number
-                    var todayVotes = dailyVotes[currentDate];
-                    todayVotes++;
-                    dailyVotes[currentDate] = todayVotes;
-                } else{
-                    // User hasn't vote for collective moderation today, we create a new daily vote of 1
-                    dailyVotes[currentDate] = 1;
-                }
-                // Updating daily votes value in the database
-                CollectiveModeration.update(collectiveModerationId, { $set: { dailyVotes: dailyVotes } } );
-
-                var alreadyVotedModeration = CollectiveModeration.findOne({userId: Meteor.userId()}).alreadyVoted;
-                alreadyVotedModeration.push(moderationId);
-                // Updating the value with the modified array
-                CollectiveModeration.update(collectiveModerationId, { $set: { alreadyVoted: alreadyVotedModeration } } );
-                // Calling the method to check if the score to accept/reject the moderation was reached
-                Meteor.call('checkModerationDecision', {moderationId: moderationId});
             }
         }
     },
@@ -264,6 +320,8 @@ Meteor.methods({
         // Type check to prevent malicious calls
         check(moderationId, String);
 
+        // TODO: DRY code for end of if admin/ else non-admin
+
         if(!Meteor.userId()){
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
@@ -275,54 +333,107 @@ Meteor.methods({
                 throw new Meteor.Error('emailNotVerified', 'Vous devez vérifier votre adresse email pour effectuer cette action.');
             } else{
                 // Email is verified, checking if he's admin :
-
                 const userEmail = Meteor.user().emails[0].address;
                 if(!Meteor.settings.admin.list.includes(userEmail)){
                     // User isn't in the admin list, he will only update the vote
-                    // TODO : régler le nombre en fonction du palier
-                    const voteToApply = -1;
-                    // Catching the current score and updating it
-                    var currentScore = Moderation.findOne({_id: moderationId}).score;
-                    currentScore += voteToApply;
-                    // Updating the value in the database
-                    Moderation.update(moderationId, { $set: { score: currentScore } } );
+                    // Updating user points to then catch the corresponding level and it's vote multiplicator
+                    Meteor.call('getUserPoints', function(error, result){
+                        if(error){
+                            // There was an error while retrieving user's points
+                            throw new Meteor.Error('getUserPointsError', "Une erreur a eu lieu lors de la mise à jour de vos points, veuillez réessayer.");
+                        } else if(typeof(result) === "number"){
+                            // User's points were successfully retrieved and updated, now let's find the corresponding level
+                            Meteor.call('getUserLevel', function(error, result){
+                                if(error){
+                                    // There was an error while retrieving user's level
+                                    throw new Meteor.Error('getUserLevelError', "Une erreur est survenue lors de la mise à jour de votre niveau, veuillez réessayer.");
+                                } else if(result){
+                                    // User's level was successfully retrieved and updated, catching the corresponding vote multiplicator
+                                    const userLevelName = result;
+                                    const levels = Rules.levels;  // Catching array of available levels with their properties
+                                    // Retrieving the level that corresponds to the user one
+                                    const userLevel = levels.find(function(level){
+                                        return level.name === userLevelName;
+                                    });
+                                    // Defining the vote to apply based on the level
+                                    const voteToApply = -userLevel.voteMultiplicator;
+                                    // Catching the current score and updating it
+                                    var currentScore = Moderation.findOne({_id: moderationId}).score;
+                                    currentScore += voteToApply;
+                                    // Updating the value in the database
+                                    Moderation.update(moderationId, { $set: { score: currentScore } } );
+
+                                    // Adding this moderation to those on which the user has voted
+                                    const collectiveModerationId = CollectiveModeration.findOne({userId: Meteor.userId()})._id;
+                                    var dailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
+
+                                    // Catching the current date
+                                    var year = new Date().getFullYear();  // Catching the year
+                                    var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                                    var date = new Date().getDate();  // Catching the date
+                                    if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                                    if(month < 10){ month = '0' + month; }
+                                    const currentDate = date+ '/' +month+ '/' +year;
+
+                                    if(dailyVotes[currentDate] !== undefined){
+                                        // User has already voted in collective moderation today, we will only update the number
+                                        var todayVotes = dailyVotes[currentDate];
+                                        todayVotes++;
+                                        dailyVotes[currentDate] = todayVotes;
+                                    } else{
+                                        // User hasn't vote for collective moderation today, we create a new daily vote of 1
+                                        dailyVotes[currentDate] = 1;
+                                    }
+                                    // Updating daily votes value in the database
+                                    CollectiveModeration.update(collectiveModerationId, { $set: { dailyVotes: dailyVotes } } );
+
+                                    var alreadyVotedModeration = CollectiveModeration.findOne({userId: Meteor.userId()}).alreadyVoted;
+                                    alreadyVotedModeration.push(moderationId);
+                                    // Updating the value with the modified array
+                                    CollectiveModeration.update(collectiveModerationId, { $set: { alreadyVoted: alreadyVotedModeration } } );
+                                    // Calling the method to check if the score to accept/reject the moderation was reached
+                                    Meteor.call('checkModerationDecision', {moderationId: moderationId});
+                                }
+                            });
+                        }
+                    });
                 } else{
                     // User is an admin, set the score to the amount it needs to reject
                     const votesToReject = Rules.moderation.votesToReject;
                     // Updating the value in the database
                     Moderation.update(moderationId, { $set: { score: votesToReject } } );
+
+                    // Adding this moderation to those on which the user has voted
+                    const collectiveModerationId = CollectiveModeration.findOne({userId: Meteor.userId()})._id;
+                    var dailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
+
+                    // Catching the current date
+                    var year = new Date().getFullYear();  // Catching the year
+                    var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                    var date = new Date().getDate();  // Catching the date
+                    if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                    if(month < 10){ month = '0' + month; }
+                    const currentDate = date+ '/' +month+ '/' +year;
+
+                    if(dailyVotes[currentDate] !== undefined){
+                        // User has already voted in collective moderation today, we will only update the number
+                        var todayVotes = dailyVotes[currentDate];
+                        todayVotes++;
+                        dailyVotes[currentDate] = todayVotes;
+                    } else{
+                        // User hasn't vote for collective moderation today, we create a new daily vote of 1
+                        dailyVotes[currentDate] = 1;
+                    }
+                    // Updating daily votes value in the database
+                    CollectiveModeration.update(collectiveModerationId, { $set: { dailyVotes: dailyVotes } } );
+
+                    var alreadyVotedModeration = CollectiveModeration.findOne({userId: Meteor.userId()}).alreadyVoted;
+                    alreadyVotedModeration.push(moderationId);
+                    // Updating the value with the modified array
+                    CollectiveModeration.update(collectiveModerationId, { $set: { alreadyVoted: alreadyVotedModeration } } );
+                    // Calling the method to check if the score to accept/reject the moderation was reached
+                    Meteor.call('checkModerationDecision', {moderationId: moderationId});
                 }
-
-                // Adding this moderation to those on which the user has voted
-                const collectiveModerationId = CollectiveModeration.findOne({userId: Meteor.userId()})._id;
-                var dailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
-
-                // Catching the current date
-                var year = new Date().getFullYear();  // Catching the year
-                var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
-                var date = new Date().getDate();  // Catching the date
-                if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
-                if(month < 10){ month = '0' + month; }
-                const currentDate = date+ '/' +month+ '/' +year;
-
-                if(dailyVotes[currentDate] !== undefined){
-                    // User has already voted in collective moderation today, we will only update the number
-                    var todayVotes = dailyVotes[currentDate];
-                    todayVotes++;
-                    dailyVotes[currentDate] = todayVotes;
-                } else{
-                    // User hasn't vote for collective moderation today, we create a new daily vote of 1
-                    dailyVotes[currentDate] = 1;
-                }
-                // Updating daily votes value in the database
-                CollectiveModeration.update(collectiveModerationId, { $set: { dailyVotes: dailyVotes } } );
-
-                var alreadyVotedModeration = CollectiveModeration.findOne({userId: Meteor.userId()}).alreadyVoted;
-                alreadyVotedModeration.push(moderationId);
-                // Updating the value with the modified array
-                CollectiveModeration.update(collectiveModerationId, { $set: { alreadyVoted: alreadyVotedModeration } } );
-                // Calling the method to check if the score to accept/reject the moderation was reached
-                Meteor.call('checkModerationDecision', {moderationId: moderationId});
             }
         }
     },

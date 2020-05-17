@@ -40,6 +40,26 @@ export const Rules = {
             'Vêtements & Accessoires',
         ]
     },
+    levels: [
+        {
+            name: "1",
+            pointsNeeded: 0,
+            dailyVotingLimit: 10,
+            voteMultiplicator: 1
+        },
+        {
+            name: "2",
+            pointsNeeded: 100,
+            dailyVotingLimit: 10,
+            voteMultiplicator: 1
+        },
+        {
+            name: "3",
+            pointsNeeded: 300,
+            dailyVotingLimit: 10,
+            voteMultiplicator: 1
+        }
+    ],
     points: {
         productAddition: 10,
         productModification: 5,
