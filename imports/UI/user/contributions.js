@@ -30,5 +30,27 @@ Template.contributions.helpers({
             }
         });
         return Session.get('userPoints');
+    },
+    displayUserLevel: function(){
+        Meteor.call('getUserLevel', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // User level was successfully retrieved, saving it in a Session variable
+                Session.set('userLevel', result);
+            }
+        });
+        return Session.get('userLevel');
+    }
+});
+
+
+Template.contributions.events({
+    'click #infoPointsAndLevels'(event){
+        event.preventDefault();
+        // More informations icon is clicked
+        Session.set('displayedFaqQuestion', 'pointsAndLevels');  // Updating the value of the question to display
+        Session.set('page', 'faq');  // Sending the user to faq page
     }
 });

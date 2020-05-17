@@ -55,6 +55,7 @@ Session.set('userContributions', []);
 Session.set('profilePicture', 'user.svg');
 Session.set('productCategories', []);
 Session.set('userIsAdmin', false);  // By default the current user isn't admin
+Session.set('userLevel', null);  // We don't need the user level for the moment
 
 
 Template.body.onRendered(function(){

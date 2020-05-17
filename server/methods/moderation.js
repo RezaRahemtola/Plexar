@@ -9,6 +9,7 @@ import { Moderation } from '../../imports/databases/moderation.js';
 import { EditedProducts } from '../../imports/databases/editedProducts.js';
 import { Contributions } from '../../imports/databases/contributions.js';
 import { CollectiveModeration } from '../../imports/databases/collectiveModeration.js';
+import { UsersInformations } from '../../imports/databases/usersInformations.js';
 import { Rules } from '../rules.js';
 
 Meteor.methods({
@@ -66,9 +67,15 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // User is logged in, returning default dailyVotes limit
-            // TODO: faire en fonction des paliers
-            return Rules.moderation.dailyVotingLimit;
+            // User is logged in, catching his level
+            const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
+            const levels = Rules.levels;  // Catching array of available levels with their properties
+            // Retrieving the level that corresponds to the user one
+            const userLevel = levels.find(function(level){
+                return level.name === userLevelName;
+            });
+            // Returning the asked property
+            return userLevel.dailyVotingLimit;
         }
     },
     'findModerationElementId'({moderationId}){
@@ -108,8 +115,15 @@ Meteor.methods({
 
                 const userEmail = Meteor.user().emails[0].address;
                 if(!Meteor.settings.admin.list.includes(userEmail)){
-                    // User isn't in the admin list, so he will have a limit of daily votes
-                    var maxDailyVotes = Rules.moderation.dailyVotingLimit;
+                    // User isn't in the admin list, so he will have a limit of daily votes that corresponds to his level
+                    const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
+                    const levels = Rules.levels;  // Catching array of available levels with their properties
+                    // Retrieving the level that corresponds to the user one
+                    const userLevel = levels.find(function(level){
+                        return level.name === userLevelName;
+                    });
+                    // Catching the voting limit
+                    var maxDailyVotes = userLevel.dailyVotingLimit;
 
                     // Catching daily votes of the user to see if he has already voted today
                     var dailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
