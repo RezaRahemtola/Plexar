@@ -108,6 +108,30 @@ Meteor.methods({
             return currentLevel;
         }
     },
+    'getBestContributors'(){
+
+        // Returning 5 users sorted by points in descending order
+        const bestContributors = UsersInformations.find({}, {sort: { points: -1 }, limit: 5});
+        var contributorsToReturn = [];  // Creating an array in which we'll add informations we need to return
+        var rank = 1;  // Rank variable to return
+        for(var contributor of bestContributors){
+            if(contributor.profilePicture === null){
+                // User doesn't have a profile picture, returning the default one
+                var profilePicture = 'user.svg';
+            } else{
+                // User has a profile picture, returning it
+                var profilePicture = contributor.profilePicture;
+            }
+            contributorsToReturn.push({
+                username: contributor.username,
+                points: contributor.points,
+                profilePicture: profilePicture,
+                rank: rank
+            });
+            rank++;  // Incrementing the rank for the next contributor
+        }
+        return contributorsToReturn;
+    },
     'changeUsername'({newUsername}){
         // Type check to prevent malicious calls
         check(newUsername, String);

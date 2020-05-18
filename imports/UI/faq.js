@@ -5,7 +5,7 @@ import { Template } from 'meteor/templating';
 // HTML import
 import './faq.html';
 
-// Collaosible bulma extension import
+// Collapsible bulma extension import
 import bulmaCollapsible from '@creativebulma/bulma-collapsible';
 
 // Initializing Session variable
@@ -23,6 +23,18 @@ Template.faq.onRendered(function(){
         const answerToDisplay = document.querySelector('div.is-collapsible#'+askedQuestion);
         // Call method directly on bulmaCollapsible instance registered on the node
         answerToDisplay.bulmaCollapsible('expand');
+    }
+});
+
+
+Template.faq.events({
+    'click a#bestContributors'(event){
+        event.preventDefault();
+        // Link to best contributors page was clicked
+        var navigation = Session.get('navigation');  // Catching navigation history
+        navigation.push(Session.get('page'));  // Adding the current page
+        Session.set('navigation', navigation);  // Updating the value
+        Session.set('page', 'bestContributors');
     }
 });
 

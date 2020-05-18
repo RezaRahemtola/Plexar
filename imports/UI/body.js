@@ -22,6 +22,7 @@ import './productBanner.js';
 import './editProduct.js';
 import './contact.js';
 import './faq.js';
+import './bestContributors.js';
 
 // Messages imports
 import './messages/header.js';
