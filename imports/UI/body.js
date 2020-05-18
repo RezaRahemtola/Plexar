@@ -39,7 +39,6 @@ import './modals/report.js';
 import { Images } from '../databases/images.js';
 
 // Alone Template
-import './credits.html';
 import './about.html';
 
 // Initializing Session variables
@@ -250,14 +249,11 @@ Template.body.events({
 
 
     // Footer events
-    'click li#credits, click li#faq, click li#about, click #contact'(event){
+    'click li#faq, click li#about, click li#contact, click li#linkBestContributorsFooter'(event){
         event.preventDefault();
         var navigation = Session.get('navigation');  // Catching navigation history
         navigation.push(Session.get('page'));  // Adding the current page
         Session.set('navigation', navigation);  // Updating the value
-    },
-    'click li#credits'(event){
-        Session.set('page', 'credits');  // Switch to credits page
     },
     'click li#faq'(event){
         Session.set('page', 'faq');  // Switch to FAQ page
@@ -267,6 +263,9 @@ Template.body.events({
     },
     'click li#contact'(event){
         Session.set('page', 'contact');  // Switch to contact page
+    },
+    'click li#linkBestContributorsFooter'(event){
+        Session.set('page', 'bestContributors');  // Switch to contact page
     }
 });
 

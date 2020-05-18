@@ -111,7 +111,7 @@ Meteor.methods({
     'getBestContributors'(){
 
         // Returning 5 users sorted by points in descending order
-        const bestContributors = UsersInformations.find({}, {sort: { points: -1 }, limit: 5});
+        const bestContributors = UsersInformations.find({}, {sort: { points: -1 }, limit: 10});
         var contributorsToReturn = [];  // Creating an array in which we'll add informations we need to return
         var rank = 1;  // Rank variable to return
         for(var contributor of bestContributors){
@@ -119,8 +119,8 @@ Meteor.methods({
                 // User doesn't have a profile picture, returning the default one
                 var profilePicture = 'user.svg';
             } else{
-                // User has a profile picture, returning it
-                var profilePicture = contributor.profilePicture;
+                // User has a profile picture, finding the url in the Images database
+                var profilePicture = Images.findOne({_id: contributor.profilePicture}).url();
             }
             contributorsToReturn.push({
                 username: contributor.username,
