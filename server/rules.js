@@ -45,18 +45,21 @@ export const Rules = {
             name: "1",
             pointsNeeded: 0,
             dailyVotingLimit: 10,
+            dailyContributionsLimit: 15,
             voteMultiplicator: 1
         },
         {
             name: "2",
             pointsNeeded: 100,
             dailyVotingLimit: 10,
+            dailyContributionsLimit: 15,
             voteMultiplicator: 1
         },
         {
             name: "3",
             pointsNeeded: 300,
             dailyVotingLimit: 10,
+            dailyContributionsLimit: 15,
             voteMultiplicator: 1
         }
     ],
@@ -68,8 +71,7 @@ export const Rules = {
     },
     moderation: {
         votesToApprove: 5,
-        votesToReject: -5,
-        dailyVotingLimit: 10
+        votesToReject: -5
     },
     email: {
         sendingAddress: "Plexar <evan.houssette@gmail.com>",

@@ -173,6 +173,7 @@ Meteor.methods({
                 lastName: "",
                 profilePicture: null,
                 votes: {},
+                dailyContributions: {},
                 newsletter: newsletterIsChecked,
                 points: 0,
                 level: "1"

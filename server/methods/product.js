@@ -163,7 +163,40 @@ Meteor.methods({
                         // Categories isn't an array
                         throw new Meteor.Error('categoriesNotArray', "Une erreur est survenue lors de l'ajout des catégories, veuillez réessayer.");
                     } else{
-                        // All parameters are of the correct type
+                        // All parameters are of the correct type, checking if user hasn't reach his daily contributions limit
+
+                        // Checking if user is admin
+                        const userEmail = Meteor.user().emails[0].address;
+                        if(!Meteor.settings.admin.list.includes(userEmail)){
+                            // User isn't in the admin list, so he will have a limit of daily contributions that corresponds to his level
+                            const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
+                            const levels = Rules.levels;  // Catching array of available levels with their properties
+                            // Retrieving the level that corresponds to the user one
+                            const userLevel = levels.find(function(level){
+                                return level.name === userLevelName;
+                            });
+                            // Catching the contributions limit
+                            var dailyContributionsLimit = userLevel.dailyContributionsLimit;
+
+                            // Catching daily contributions of the user to see if he has already voted today
+                            var dailyContributions = UsersInformations.findOne({userId: Meteor.userId()}).dailyContributions;
+
+                            // Catching the current date
+                            var year = new Date().getFullYear();  // Catching the year
+                            var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                            var date = new Date().getDate();  // Catching the date
+                            if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                            if(month < 10){ month = '0' + month; }
+                            const currentDate = date+ '/' +month+ '/' +year;
+
+                            if(dailyContributions[currentDate] !== undefined){
+                                // User has already contribute today, checking if he hasn't reach his limit
+                                if(dailyContributions[currentDate] >= dailyContributionsLimit){
+                                    // User has reach the limit, throwing an error
+                                    throw new Meteor.Error('dailyContributionsLimitReached', "Vous avez atteint votre limite de "+ dailyContributionsLimit +" contributions quotidiennes.");
+                                }
+                            }
+                        }
 
                         if(productName.length < Rules.product.name.minLength){
                             throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rules.product.name.minLength+' charactères.');
@@ -261,18 +294,46 @@ Meteor.methods({
                                                                 Products.remove(addedProductId);  // Removing the product from the db
                                                                 Moderation.remove(addedModerationId);  // Removing the moderation from the db
                                                             } else{
-                                                                // Everything was successfully executed, now we check if the user is admin to instant validate his proposition
+                                                                // Adding this contribution to the count of daily contributions
+                                                                const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
+                                                                var dailyContributions = UsersInformations.findOne({userId: Meteor.userId()}).dailyContributions;
 
-                                                                const userEmail = Meteor.user().emails[0].address;
-                                                                if(Meteor.settings.admin.list.includes(userEmail)){
-                                                                    // User is an admin, calling the method to accept the moderation
-                                                                    Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
-                                                                        if(error){
-                                                                            // There was an error while accepting the moderation
-                                                                            throw new Meteor.Error('adminModerationAcceptedError', "Une erreur a eu lieu lors de la validation automatique de l'ajout.");
-                                                                        }
-                                                                    });
+                                                                // Catching the current date
+                                                                var year = new Date().getFullYear();  // Catching the year
+                                                                var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                                                                var date = new Date().getDate();  // Catching the date
+                                                                if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                                                                if(month < 10){ month = '0' + month; }
+                                                                const currentDate = date+ '/' +month+ '/' +year;
+
+                                                                if(dailyContributions[currentDate] !== undefined){
+                                                                    // User has already contributed today, we will only update the number
+                                                                    var todayContributions = dailyContributions[currentDate];
+                                                                    todayContributions++;
+                                                                    dailyContributions[currentDate] = todayContributions;
+                                                                } else{
+                                                                    // User hasn't contribute today, we create a new daily contribution of 1
+                                                                    dailyContributions[currentDate] = 1;
                                                                 }
+                                                                // Updating daily contributions value in the database
+                                                                UsersInformations.update(userInformationsId, { $set: { dailyContributions: dailyContributions } },
+                                                                    function(error, result){
+                                                                        if(error){
+                                                                            // TODO: error et delete les contributions moderztion etc..
+                                                                        } else{
+                                                                            // Everything was successfully executed, now we check if the user is admin to instant validate his proposition
+                                                                            const userEmail = Meteor.user().emails[0].address;
+                                                                            if(Meteor.settings.admin.list.includes(userEmail)){
+                                                                                // User is an admin, calling the method to accept the moderation
+                                                                                Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
+                                                                                    if(error){
+                                                                                        // There was an error while accepting the moderation
+                                                                                        throw new Meteor.Error('adminModerationAcceptedError', "Une erreur a eu lieu lors de la validation automatique de l'ajout.");
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        }
+                                                                });
                                                             }
                                                         });
                                                     }
@@ -316,7 +377,40 @@ Meteor.methods({
                         // Categories isn't an array
                         throw new Meteor.Error('categoriesNotArray', "Une erreur est survenue lors de l'ajout des catégories, veuillez réessayer.");
                     } else{
-                        // All parameters are of the correct type
+                        // All parameters are of the correct type, checking if user hasn't reach his daily contributions limit
+
+                        // Checking if user is admin
+                        const userEmail = Meteor.user().emails[0].address;
+                        if(!Meteor.settings.admin.list.includes(userEmail)){
+                            // User isn't in the admin list, so he will have a limit of daily contributions that corresponds to his level
+                            const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
+                            const levels = Rules.levels;  // Catching array of available levels with their properties
+                            // Retrieving the level that corresponds to the user one
+                            const userLevel = levels.find(function(level){
+                                return level.name === userLevelName;
+                            });
+                            // Catching the contributions limit
+                            var dailyContributionsLimit = userLevel.dailyContributionsLimit;
+
+                            // Catching daily contributions of the user to see if he has already voted today
+                            var dailyContributions = UsersInformations.findOne({userId: Meteor.userId()}).dailyContributions;
+
+                            // Catching the current date
+                            var year = new Date().getFullYear();  // Catching the year
+                            var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                            var date = new Date().getDate();  // Catching the date
+                            if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                            if(month < 10){ month = '0' + month; }
+                            const currentDate = date+ '/' +month+ '/' +year;
+
+                            if(dailyContributions[currentDate] !== undefined){
+                                // User has already contribute today, checking if he hasn't reach his limit
+                                if(dailyContributions[currentDate] >= dailyContributionsLimit){
+                                    // User has reach the limit, throwing an error
+                                    throw new Meteor.Error('dailyContributionsLimitReached', "Vous avez atteint votre limite de "+ dailyContributionsLimit +" contributions quotidiennes.");
+                                }
+                            }
+                        }
 
                         if(productName.length < Rules.product.name.minLength){
                             throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rules.product.name.minLength+' charactères.');
@@ -440,18 +534,46 @@ Meteor.methods({
                                                                                 Moderation.remove(addedModerationId);  // Removing the moderation from the db
                                                                                 throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                             } else{
-                                                                                // Everything was executed successfully, checking if user is admin to instant validate the proposition
+                                                                                // Adding this contribution to the count of daily contributions
+                                                                                const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
+                                                                                var dailyContributions = UsersInformations.findOne({userId: Meteor.userId()}).dailyContributions;
 
-                                                                                const userEmail = Meteor.user().emails[0].address;
-                                                                                if(Meteor.settings.admin.list.includes(userEmail)){
-                                                                                    // User is admin, calling the method to accept the moderation
-                                                                                    Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
-                                                                                        if(error){
-                                                                                            // There was an error while accepting the moderation
-                                                                                            throw new Meteor.Error('adminModerationAcceptedError', "Une erreur a eu lieu lors de la validation automatique de la modification.");
-                                                                                        }
-                                                                                    });
+                                                                                // Catching the current date
+                                                                                var year = new Date().getFullYear();  // Catching the year
+                                                                                var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                                                                                var date = new Date().getDate();  // Catching the date
+                                                                                if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                                                                                if(month < 10){ month = '0' + month; }
+                                                                                const currentDate = date+ '/' +month+ '/' +year;
+
+                                                                                if(dailyContributions[currentDate] !== undefined){
+                                                                                    // User has already contributed today, we will only update the number
+                                                                                    var todayContributions = dailyContributions[currentDate];
+                                                                                    todayContributions++;
+                                                                                    dailyContributions[currentDate] = todayContributions;
+                                                                                } else{
+                                                                                    // User hasn't contribute today, we create a new daily contribution of 1
+                                                                                    dailyContributions[currentDate] = 1;
                                                                                 }
+                                                                                // Updating daily contributions value in the database
+                                                                                UsersInformations.update(userInformationsId, { $set: { dailyContributions: dailyContributions } },
+                                                                                    function(error, result){
+                                                                                        if(error){
+                                                                                            // TODO: error + delete contributions moderation etc
+                                                                                        } else{
+                                                                                            // Everything was executed successfully, checking if user is admin to instant validate the proposition
+                                                                                            const userEmail = Meteor.user().emails[0].address;
+                                                                                            if(Meteor.settings.admin.list.includes(userEmail)){
+                                                                                                // User is admin, calling the method to accept the moderation
+                                                                                                Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
+                                                                                                    if(error){
+                                                                                                        // There was an error while accepting the moderation
+                                                                                                        throw new Meteor.Error('adminModerationAcceptedError', "Une erreur a eu lieu lors de la validation automatique de la modification.");
+                                                                                                    }
+                                                                                                });
+                                                                                            }
+                                                                                        }
+                                                                                });
                                                                             }
                                                                         });
                                                                     }
@@ -533,7 +655,40 @@ Meteor.methods({
                 // Email isn't verified
                 throw new Meteor.Error('emailNotVerified', 'Vous devez vérifier votre adresse email pour effectuer cette action.');
             } else{
-                // Email is verified
+                // Email is verified, checking if user hasn't reach his daily contributions limit
+
+                // Checking if user is admin
+                const userEmail = Meteor.user().emails[0].address;
+                if(!Meteor.settings.admin.list.includes(userEmail)){
+                    // User isn't in the admin list, so he will have a limit of daily contributions that corresponds to his level
+                    const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
+                    const levels = Rules.levels;  // Catching array of available levels with their properties
+                    // Retrieving the level that corresponds to the user one
+                    const userLevel = levels.find(function(level){
+                        return level.name === userLevelName;
+                    });
+                    // Catching the contributions limit
+                    var dailyContributionsLimit = userLevel.dailyContributionsLimit;
+
+                    // Catching daily contributions of the user to see if he has already voted today
+                    var dailyContributions = UsersInformations.findOne({userId: Meteor.userId()}).dailyContributions;
+
+                    // Catching the current date
+                    var year = new Date().getFullYear();  // Catching the year
+                    var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                    var date = new Date().getDate();  // Catching the date
+                    if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                    if(month < 10){ month = '0' + month; }
+                    const currentDate = date+ '/' +month+ '/' +year;
+
+                    if(dailyContributions[currentDate] !== undefined){
+                        // User has already contribute today, checking if he hasn't reach his limit
+                        if(dailyContributions[currentDate] >= dailyContributionsLimit){
+                            // User has reach the limit, throwing an error
+                            throw new Meteor.Error('dailyContributionsLimitReached', "Vous avez atteint votre limite de "+ dailyContributionsLimit +" contributions quotidiennes.");
+                        }
+                    }
+                }
 
                 // Checking if the product isn't already under moderation
                 Meteor.call('checkIfProductInModeration', {productId: productId}, function(error, result){
@@ -574,18 +729,46 @@ Meteor.methods({
                                         Moderation.remove(addedModerationId);  // Removing the moderation from the db
                                         throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                     } else{
-                                        // Everything executed successfully, checking if the user is an admin to instant validate the report
+                                        // Adding this contribution to the count of daily contributions
+                                        const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
+                                        var dailyContributions = UsersInformations.findOne({userId: Meteor.userId()}).dailyContributions;
 
-                                        const userEmail = Meteor.user().emails[0].address;
-                                        if(Meteor.settings.admin.list.includes(userEmail)){
-                                            // User is admin, calling the method to accept the report
-                                            Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
-                                                if(error){
-                                                    // There was an error while accepting the moderation
-                                                    throw new Meteor.Error('adminModerationAcceptedError', "Une erreur a eu lieu lors de la validation automatique du signalement.");
-                                                }
-                                            });
+                                        // Catching the current date
+                                        var year = new Date().getFullYear();  // Catching the year
+                                        var month = new Date().getMonth()+1;  // Catching the month (getMonth is 0 indexed so adding 1)
+                                        var date = new Date().getDate();  // Catching the date
+                                        if(date < 10){ date = '0' + date; }  // Formatting the date and the month properly (adding a 0 before if needed)
+                                        if(month < 10){ month = '0' + month; }
+                                        const currentDate = date+ '/' +month+ '/' +year;
+
+                                        if(dailyContributions[currentDate] !== undefined){
+                                            // User has already contributed today, we will only update the number
+                                            var todayContributions = dailyContributions[currentDate];
+                                            todayContributions++;
+                                            dailyContributions[currentDate] = todayContributions;
+                                        } else{
+                                            // User hasn't contribute today, we create a new daily contribution of 1
+                                            dailyContributions[currentDate] = 1;
                                         }
+                                        // Updating daily contributions value in the database
+                                        UsersInformations.update(userInformationsId, { $set: { dailyContributions: dailyContributions } },
+                                            function(error, result){
+                                                if(error){
+                                                    // TODO: error + delete contributions moderation etc
+                                                } else{
+                                                    // Everything executed successfully, checking if the user is an admin to instant validate the report
+                                                    const userEmail = Meteor.user().emails[0].address;
+                                                    if(Meteor.settings.admin.list.includes(userEmail)){
+                                                        // User is admin, calling the method to accept the report
+                                                        Meteor.call('moderationAccepted', {moderationId: addedModerationId}, function(error, result){
+                                                            if(error){
+                                                                // There was an error while accepting the moderation
+                                                                throw new Meteor.Error('adminModerationAcceptedError', "Une erreur a eu lieu lors de la validation automatique du signalement.");
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                        });
                                     }
                                 });
                             }
