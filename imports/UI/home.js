@@ -10,7 +10,8 @@ Template.home.helpers({
     productsCounter: function(){
         Meteor.call('productsCounter', function(error, result){
             if(error){
-                // TODO: error display
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
                 // Number of product was successfully returned, saving it a Session variable
                 Session.set('productsCounter', result);

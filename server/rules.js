@@ -8,7 +8,8 @@ export const Rules = {
         profilePicture: {
             minLength: 1,
             maxLength: 1,
-            maxMbSize: 5
+            maxMbSize: 5,
+            defaultUrl: 'user.svg'
         }
     },
     product: {

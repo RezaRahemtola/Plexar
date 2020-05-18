@@ -15,6 +15,9 @@ import { CollectiveModeration } from '../../imports/databases/collectiveModerati
 
 
 Meteor.methods({
+    'getDefaultProfilePictureUrl'(){
+        return Rules.user.profilePicture.defaultUrl;
+    },
     'userIsAdmin'(){
         // Checking if user is admin :
         if(!Meteor.userId()){
@@ -117,7 +120,7 @@ Meteor.methods({
         for(var contributor of bestContributors){
             if(contributor.profilePicture === null){
                 // User doesn't have a profile picture, returning the default one
-                var profilePicture = 'user.svg';
+                var profilePicture = Rules.user.profilePicture.defaultUrl;
             } else{
                 // User has a profile picture, finding the url in the Images database
                 var profilePicture = Images.findOne({_id: contributor.profilePicture}).url();
@@ -131,6 +134,27 @@ Meteor.methods({
             rank++;  // Incrementing the rank for the next contributor
         }
         return contributorsToReturn;
+    },
+    'getUserRank'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // User is logged in, catching the contributors sorted by points in descending order
+            const contributors = UsersInformations.find({}, {sort: { points: -1 }});
+            var userRank = 1;
+            for(var contributor of contributors){
+                // Checking if this contributor is the user
+                if(contributor.userId !== Meteor.userId()){
+                    // This contributor isn't the current user, incrementing the rank
+                    userRank++;
+                } else{
+                    // This contributor is the current user, returning the rank
+                    return userRank;
+                }
+            }
+        }
     },
     'changeUsername'({newUsername}){
         // Type check to prevent malicious calls

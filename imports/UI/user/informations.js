@@ -13,9 +13,10 @@ import './informations.html';
 import '../css/form.css';
 
 // Initializing Session variables
-Session.set('currentProfilePicture', 'user.svg');
+Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
 
-Template.informations.onRendered(function(){  // When the template is rendered on the screen
+
+Template.informations.onRendered(function(){
 
     Meteor.call('getUserInformations', function(error, result){
         if(error){
@@ -55,7 +56,7 @@ Template.informations.onRendered(function(){  // When the template is rendered o
                     Session.set('currentProfilePicture', profilePictureId);
                 } else{
                     // Current user doesn't have a profile picture, set it to the default one
-                    Session.set('currentProfilePicture', 'user.svg');
+                    Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
                 }
             });
 
@@ -82,11 +83,11 @@ Template.informations.onRendered(function(){  // When the template is rendered o
                                 } else{
                                     // Catching profile picture
                                     const profilePicture = result.profilePicture;
-                                    if(Session.get('currentProfilePicture') !== 'user.svg' && Session.get('currentProfilePicture') !== profilePicture){
+                                    if(Session.get('currentProfilePicture') !== Session.get('defaultProfilePicture') && Session.get('currentProfilePicture') !== profilePicture){
                                         // Current picture was not the default and not the real profile picture, we can delete it
                                         const imageToRemove = Session.get('currentProfilePicture');
                                         // Reset temporarily the image, else the helper will search for the url of a removed image
-                                        Session.set('currentProfilePicture', 'user.svg');
+                                        Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
                                         Meteor.call('removeImage', {imageId: imageToRemove}, function(error, result){
                                             if(error){
                                                 // There was an error
@@ -112,12 +113,13 @@ Template.informations.onRendered(function(){  // When the template is rendered o
 
 Template.informations.helpers({
     displayProfilePicture: function(){
-        if(Session.get('currentProfilePicture') !== 'user.svg'){
+        if(Session.get('currentProfilePicture') !== Session.get('defaultProfilePicture')){
             // Selected image isn't the default one, we can catch and return it's url
             const imageUrl = Images.findOne({_id: Session.get('currentProfilePicture')}).url();
             return imageUrl;
         } else{
-            return 'user.svg';
+            // Selected image is the default one, returning it
+            return Session.get('currentProfilePicture');
         }
     }
 });
@@ -186,7 +188,7 @@ Template.informations.events({
                     } else{
                         // Catching profile picture
                         const profilePicture = result.profilePicture;
-                        if(selectedProfilePicture !== 'user.svg' && selectedProfilePicture !== profilePicture){
+                        if(selectedProfilePicture !== Session.get('defaultProfilePicture') && selectedProfilePicture !== profilePicture){
                             // Selected picture isn't the default and isn't the current profile picture, we change the value
                             callbacksPending++;  // Starting a call with a callback function
                             Meteor.call('changeProfilePictureInUserInformations', {imageId: selectedProfilePicture}, function(error, result){

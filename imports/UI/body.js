@@ -41,24 +41,35 @@ import { Images } from '../databases/images.js';
 // Alone Template
 import './about.html';
 
-// Initializing Session variables
-Session.set('page', 'home');  // Site loads with home page
-Session.set('navigation', []);  // Used to store page navigation history to use return button
-Session.set("searchedProducts", [] );  // No search for the moment
-Session.set('message', null);  // No message to display for the moment
-Session.set('modal', null);  // No modal to display for the moment
-Session.set('search', {query: "", categories: [], sort: 'popularity'});
-Session.set('coverImageId', null);
-Session.set('otherImagesId', []);
-Session.set('productsCounter', 0);
-Session.set('userContributions', []);
-Session.set('profilePicture', 'user.svg');
-Session.set('productCategories', []);
-Session.set('userIsAdmin', false);  // By default the current user isn't admin
-Session.set('userLevel', null);  // We don't need the user level for the moment
 
+Template.body.onCreated(function(){
 
-Template.body.onRendered(function(){
+    // Initializing Session variables
+    Session.set('page', 'home');  // Site loads with home page
+    Session.set('navigation', []);  // Used to store page navigation history to use return button
+    Session.set("searchedProducts", [] );  // No search for the moment
+    Session.set('message', null);  // No message to display for the moment
+    Session.set('modal', null);  // No modal to display for the moment
+    Session.set('search', {query: "", categories: [], sort: 'popularity'});
+    Session.set('coverImageId', null);
+    Session.set('otherImagesId', []);
+    Session.set('productsCounter', 0);
+    Session.set('userContributions', []);
+    Session.set('productCategories', []);
+    Session.set('userIsAdmin', false);  // By default the current user isn't admin
+    Session.set('userLevel', null);  // We don't need the user level for the moment
+
+    // Catching url of the default profile picture
+    Meteor.call('getDefaultProfilePictureUrl', function(error, result){
+        if(error){
+            // TODO: error
+        } else if(result){
+            // Default profile picture url was returned, saving it in a Session variable
+            Session.set('defaultProfilePicture', result);
+            Session.set('profilePicture', result);  // Set user's profile picture url to default one
+        }
+    });
+
     // Subscribing to allow operations on the Images database
     Meteor.subscribe('images');
 });
@@ -102,7 +113,7 @@ Template.body.helpers({
                 Session.set('profilePicture', image);
             } else{
                 // Current user doesn't have a profile picture, set it to the default one
-                Session.set('profilePicture', 'user.svg');
+                Session.set('profilePicture', Session.get('defaultProfilePicture'));
             }
         });
 
