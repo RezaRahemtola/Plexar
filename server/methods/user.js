@@ -80,6 +80,65 @@ Meteor.methods({
             return userPoints;
         }
     },
+    'getPointsLeftUntilNextLevel'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // User is logged in, catching his points and his level to find the next level
+            const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
+            const userPoints = UsersInformations.findOne({userId: Meteor.userId()}).points;
+
+            // Catching the possibles levels
+            const levels = Rules.levels;
+
+            var nextLevelIndex = 0;  // For the moment we don't know the index of the next level
+            for(const [index, level] of levels.entries()){
+                // For each level checking if it's the user's one
+                if(level.name === userLevelName){
+                    // This level is the user's one
+                    nextLevelIndex = index + 1;  // The indext of the next level is this one + 1
+                    break;
+                }
+            }
+            // The points left until next level correspond to the points needed for next level less current points
+            return levels[nextLevelIndex].pointsNeeded - userPoints;
+        }
+    },
+    'getLevelProgressInformations'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // User is logged in, catching his level and his points
+            const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
+            const userPoints = UsersInformations.findOne({userId: Meteor.userId()}).points;
+
+            // Catching the possibles levels
+            const levels = Rules.levels;
+
+            var nextLevelIndex = 0;  // For the moment we don't know the index of the next level
+            var userLevel = {};  // For the moment we don't know the propoerties of the current level
+            for(const [index, level] of levels.entries()){
+                // For each level checking if it's the user's one
+                if(level.name === userLevelName){
+                    // This level is the user's one
+                    userLevel = level;  // Saving this level as the user's one
+                    nextLevelIndex = index + 1;  // The indext of the next level is this one + 1
+                    break;
+                }
+            }
+            // The maximum of the progress corresponds to the points needed of the next level less the same property of the current level
+            const progressMaximum = levels[nextLevelIndex].pointsNeeded - userLevel.pointsNeeded;
+            // The value of the progress is the user's points less the points needed of the current level
+            const progressValue = userPoints - userLevel.pointsNeeded;
+
+            // Returning it in an object
+            return {progressMaximum: progressMaximum, progressValue: progressValue};
+        }
+    },
     'getUserLevel'(){
 
         if(!Meteor.userId()){
