@@ -12,11 +12,11 @@ import './informations.html';
 // CSS import
 import '../css/form.css';
 
-// Initializing Session variables
-Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
-
 
 Template.informations.onRendered(function(){
+
+    // Initializing Session variables
+    Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
 
     Meteor.call('getUserInformations', function(error, result){
         if(error){
