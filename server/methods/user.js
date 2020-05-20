@@ -18,6 +18,30 @@ Meteor.methods({
     'getDefaultProfilePictureUrl'(){
         return Rules.user.profilePicture.defaultUrl;
     },
+    'deleteUnverifiedUsers'(){
+        // Catching all the users with unverified email address
+        const unverifiedUsers = Meteor.users.find({"emails.verified": false});
+        var deletedUsers = 0;  // We haven't delete any user for the moment
+        // Catching the current time
+        const currentTime = new Date;
+        for(var user of unverifiedUsers){
+            // For each user, checking if the account was created more than 30 days ago
+            const timeElapsed = currentTime - user.createdAt;
+            // The result is in milliseconds, converting it in days
+            const daysElapsed = timeElapsed / 1000 / 60 / 60 / 24;
+            if(daysElapsed >= 30){
+                // Account was created more than a month ago without email verification, deleting the account
+                UsersInformations.remove({userId: user._id});
+                Favorites.remove({userId: user._id});
+                CollectiveModeration.remove({userId: user._id});
+                Meteor.users.remove({userId: user._id});
+
+                deletedUsers++;
+            }
+        }
+        // Returning the number of deleted users
+        return deletedUsers;
+    },
     'userIsAdmin'(){
         // Checking if user is admin :
         if(!Meteor.userId()){
@@ -44,7 +68,7 @@ Meteor.methods({
             return false;
         }
     },
-    'getUserPoints'(){
+    'updateAndGetUserPoints'(){
 
         if(!Meteor.userId()){
             // User isn't logged in
@@ -197,8 +221,8 @@ Meteor.methods({
     'getUserRank'(){
 
         if(!Meteor.userId()){
-            // User isn't logged in
-            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+            // User isn't logged in, so he doesn't have a rank
+            return 0;
         } else{
             // User is logged in, catching the contributors sorted by points in descending order
             const contributors = UsersInformations.find({}, {sort: { points: -1 }});

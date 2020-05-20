@@ -3,7 +3,7 @@
     <div class="box width-fit-content" style="margin: 1.5rem auto;">
         <div class="field has-addons">
             <div class="control">
-                <h5 class="title is-5 has-text-centered">Niveau {{displayUserLevel}}</h5>
+                <h4 class="title is-4 has-text-centered">Niveau {{displayUserLevel}}</h4>
             </div>
             <div class="control" id="infoPointsAndLevels" style="height: 100%; margin: auto 0 auto 0.5rem">
                 <a class="icon has-text-primary" title="En savoir plus" id="infoCollectiveModeration">
@@ -15,11 +15,16 @@
 
     {{#each displayLevelProgress}}
         <div class="container">
-            <p class="has-text-centered" style="font-family: 'Changa One'; font-size: 1.3rem;">{{calculateProgressPercentage}}%</p>
+            <p class="has-text-centered" style="font-family: 'Changa One'; font-size: 1.5rem;">
+                <span>{{calculateProgressPercentage}}</span>
+                <span>%</span>
+            </p>
+
             <progress class="progress is-primary" value="{{this.progressValue}}" max="{{this.progressMaximum}}" style="width: 75%; margin: 0 auto;"></progress>
+
             <p class="has-text-centered">
-                <span style="font-family: 'Changa One';">{{displayPointsLeftUntilNextLevel}}</span>
-                <span> points nécessaires pour atteindre le prochain niveau</span>
+                <span style="font-family: 'Changa One'; font-size: 1.3rem;">{{displayPointsLeftUntilNextLevel}}</span>
+                <span style="font-size: 1.1rem;"> points nécessaires pour atteindre le prochain niveau</span>
             </p>
         </div>
     {{/each}}

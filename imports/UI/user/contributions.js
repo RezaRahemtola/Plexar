@@ -6,9 +6,17 @@ import { Template } from 'meteor/templating';
 import './contributions.html';
 
 // Initializing Session variable
-Session.set('userPoints', 0);
 Session.set('levelProgressInformations', {});
 Session.set('pointsLeftUntilNextLevel', 0);
+
+
+Template.contributions.onRendered(function(){
+    if(Meteor.user()){
+        // User is logged in, updating his points
+        Meteor.call('updateAndGetUserPoints');
+    }
+});
+
 
 Template.contributions.helpers({
     displayContributions: function(){
@@ -21,17 +29,6 @@ Template.contributions.helpers({
             }
         });
         return Session.get('userContributions');
-    },
-    displayPoints: function(){
-        Meteor.call('getUserPoints', function(error, result){
-            if(error){
-                // There was an error
-                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-            } else if(result){
-                Session.set('userPoints', result);
-            }
-        });
-        return Session.get('userPoints');
     },
     displayUserLevel: function(){
         Meteor.call('getUserLevel', function(error, result){
