@@ -113,8 +113,8 @@ Template.informations.onRendered(function(){
 
 Template.informations.helpers({
     displayProfilePicture: function(){
-        if(Session.get('currentProfilePicture') !== Session.get('defaultProfilePicture')){
-            // Selected image isn't the default one, we can catch and return it's url
+        if(Session.get('currentProfilePicture') !== undefined && Session.get('currentProfilePicture') !== Session.get('defaultProfilePicture')){
+            // Selected image is set and isn't the default one, we can catch and return it's url
             const imageUrl = Images.findOne({_id: Session.get('currentProfilePicture')}).url();
             return imageUrl;
         } else{
