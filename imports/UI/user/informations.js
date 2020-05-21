@@ -15,7 +15,7 @@ import '../css/form.css';
 
 Template.informations.onRendered(function(){
 
-    // Initializing Session variables
+    // Initializing Session variable
     Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
 
     Meteor.call('getUserInformations', function(error, result){
@@ -72,13 +72,13 @@ Template.informations.onRendered(function(){
 
                     Meteor.call('checkProfilePictureInput', {files: serverFiles}, function(error, result){
                         if(error){
-                            // There is an error
+                            // There was an error
                             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                         } else{
                             // File input is correct
                             Meteor.call('getUserInformations', function(error, result){
                                 if(error){
-                                    // There is an error
+                                    // There was an error
                                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                                 } else{
                                     // Catching profile picture
@@ -103,8 +103,10 @@ Template.informations.onRendered(function(){
                                     });
                                     upload.on('end', function(error, fileObj){
                                         if(error){
-                                            alert('Error during upload: ' + error);
+                                            // There was an error while inserting the image
+                                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                                         } else if(fileObj){
+                                            // Image was successfully inserted
                                             Session.set('currentProfilePicture', fileObj._id);
                                         }
                                     });

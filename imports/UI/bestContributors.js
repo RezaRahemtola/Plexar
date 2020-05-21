@@ -16,6 +16,7 @@ Template.bestContributors.helpers({
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
+                // User rank was successfully retrieved, saving it in a Session variable
                 Session.set('userRank', result);
             }
         });
@@ -34,6 +35,7 @@ Template.bestContributors.helpers({
         return Session.get('bestContributors');
     },
     contributorInPodium: function(rank){
+        // Checking if the given rank is in the podium
         if(rank === 1 || rank === 2 || rank === 3){
             // This contributor is in the podium
             return true;

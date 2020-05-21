@@ -15,7 +15,7 @@
 
     {{#each displayLevelProgress}}
         <div class="container">
-            <p class="has-text-centered" style="font-family: 'Changa One'; font-size: 1.5rem;">
+            <p class="has-text-centered is-family-code" style="font-size: 1.5rem;">
                 <span>{{calculateProgressPercentage}}</span>
                 <span>%</span>
             </p>
@@ -23,7 +23,7 @@
             <progress class="progress is-primary" value="{{this.progressValue}}" max="{{this.progressMaximum}}" style="width: 75%; margin: 0 auto;"></progress>
 
             <p class="has-text-centered">
-                <span style="font-family: 'Changa One'; font-size: 1.3rem;">{{displayPointsLeftUntilNextLevel}}</span>
+                <span class="is-family-code" style="font-size: 1.3rem;">{{displayPointsLeftUntilNextLevel}}</span>
                 <span style="font-size: 1.1rem;"> points nécessaires pour atteindre le prochain niveau</span>
             </p>
         </div>

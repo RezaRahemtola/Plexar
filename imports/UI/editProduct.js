@@ -169,8 +169,10 @@ Template.editProduct.onRendered(function(){
                                 });
                                 upload.on('end', function(error, fileObj){
                                     if(error){
-                                        // TODO: error
+                                        // There is an error
+                                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                                     } else if(fileObj){
+                                        // Image was successfully inserted
                                         var otherImagesId = Session.get('editedOtherImagesId');  // Catching the array of images
                                         otherImagesId.push(fileObj._id)  // Adding it the new image
                                         Session.set('editedOtherImagesId', otherImagesId);  // Updating the value

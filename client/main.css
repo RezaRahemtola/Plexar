@@ -266,7 +266,7 @@ code,
 pre {
   -moz-osx-font-smoothing: auto;
   -webkit-font-smoothing: auto;
-  font-family: monospace; }
+  font-family: "Changa One"; }
 
 body {
   color: #4a4a4a;
@@ -815,7 +815,7 @@ a.has-text-danger:hover, a.has-text-danger:focus {
   font-family: monospace !important; }
 
 .is-family-code {
-  font-family: monospace !important; }
+  font-family: "Changa One" !important; }
 
 .is-block {
   display: block !important; }

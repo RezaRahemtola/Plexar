@@ -62,7 +62,8 @@ Template.body.onCreated(function(){
     // Catching url of the default profile picture
     Meteor.call('getDefaultProfilePictureUrl', function(error, result){
         if(error){
-            // TODO: error
+            // There was an error
+            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
         } else if(result){
             // Default profile picture url was returned, saving it in a Session variable
             Session.set('defaultProfilePicture', result);

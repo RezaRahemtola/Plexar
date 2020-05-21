@@ -25,9 +25,7 @@ npm install bulma-switch
 
 npm install @creativebulma/bulma-collapsible
 
-meteor add cfs:standard-packages
-
-meteor add cfs:filesystem
+meteor add ostrio:files
 
 meteor update
 

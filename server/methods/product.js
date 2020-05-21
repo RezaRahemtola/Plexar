@@ -289,9 +289,9 @@ Meteor.methods({
                                                         }, function(error, addedContributionId){
                                                             if(error){
                                                                 // There was an error while adding the contribution
-                                                                throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                 Products.remove(addedProductId);  // Removing the product from the db
                                                                 Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                                                throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                             } else{
                                                                 // Adding this contribution to the count of daily contributions
                                                                 const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
@@ -318,7 +318,11 @@ Meteor.methods({
                                                                 UsersInformations.update(userInformationsId, { $set: { dailyContributions: dailyContributions } },
                                                                     function(error, result){
                                                                         if(error){
-                                                                            // TODO: error et delete les contributions moderztion etc..
+                                                                            // There was an error while updating daily contributions
+                                                                            Products.remove(addedProductId);  // Removing the product from the database
+                                                                            Moderation.remove(addedModerationId);  // Removing the moderation from the database
+                                                                            Contributions.remove(addedContributionId);  // Removing the contribution from the database
+                                                                            throw new Meteor.Error('dailyContributionsUpdateError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                         } else{
                                                                             // Everything was successfully executed, now we check if the user is admin to instant validate his proposition
                                                                             const userEmail = Meteor.user().emails[0].address;
@@ -529,8 +533,8 @@ Meteor.methods({
                                                                         }, function(error, addedContributionId){
                                                                             if(error){
                                                                                 // There was an error while adding the contribution
-                                                                                EditedProducts.remove(addedProductId);  // Removing the product from the db
-                                                                                Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                                                                EditedProducts.remove(addedProductId);  // Removing the product from the database
+                                                                                Moderation.remove(addedModerationId);  // Removing the moderation from the database
                                                                                 throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                             } else{
                                                                                 // Adding this contribution to the count of daily contributions
@@ -558,7 +562,11 @@ Meteor.methods({
                                                                                 UsersInformations.update(userInformationsId, { $set: { dailyContributions: dailyContributions } },
                                                                                     function(error, result){
                                                                                         if(error){
-                                                                                            // TODO: error + delete contributions moderation etc
+                                                                                            // There was an error while updating daily contributions
+                                                                                            EditedProducts.remove(addedProductId);  // Removing the product from the db
+                                                                                            Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                                                                            Contributions.remove(addedContributionId);  // Removing the contribution from the database
+                                                                                            throw new Meteor.Error('dailyContributionsUpdateError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                                         } else{
                                                                                             // Everything was executed successfully, checking if user is admin to instant validate the proposition
                                                                                             const userEmail = Meteor.user().emails[0].address;
@@ -708,7 +716,7 @@ Meteor.methods({
                             score: 0
                         }, function(error, addedModerationId){
                             if(error){
-                                // There was an error
+                                // There was an error while inserting the moderation
                                 throw new Meteor.Error('moderationInsertionError', "Une erreur est survenue lors de la création de la modération, veuillez réessayer.");
                             } else{
                                 // Moderation was successfully inserted, now let's create the contribution
@@ -753,7 +761,10 @@ Meteor.methods({
                                         UsersInformations.update(userInformationsId, { $set: { dailyContributions: dailyContributions } },
                                             function(error, result){
                                                 if(error){
-                                                    // TODO: error + delete contributions moderation etc
+                                                    // There was an error while updating daily contributions
+                                                    Moderation.remove(addedModerationId);  // Removing the moderation from the database
+                                                    Contributions.remove(addedContributionId);  // Removing the contribution from the database
+                                                    throw new Meteor.Error('dailyContributionsUpdateError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                 } else{
                                                     // Everything executed successfully, checking if the user is an admin to instant validate the report
                                                     const userEmail = Meteor.user().emails[0].address;
