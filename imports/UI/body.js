@@ -109,7 +109,7 @@ Template.body.helpers({
             } else if(result){
                 // The current user has a profile picture, imageId was returned
                 const profilePictureId = result  // Saving the result
-                const image = Images.findOne({_id: profilePictureId}).url();  // Find the url of this image
+                const image = Images.findOne({_id: profilePictureId}).link();  // Find the url of this image
                 Session.set('profilePicture', image);
             } else{
                 // Current user doesn't have a profile picture, set it to the default one

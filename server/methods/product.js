@@ -16,12 +16,11 @@ import { Rules } from '../rules.js';
 // Allow all client-side updates on the Images collection
 Images.allow({
   insert() { return true; },
-  update() { return true; },
-  download() { return true; }
+  update() { return true; }
 });
 
 Meteor.publish('images', function(){
-  return Images.find();
+    return Images.find().cursor;
 });
 
 

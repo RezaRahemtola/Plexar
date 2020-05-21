@@ -95,8 +95,16 @@ Template.informations.onRendered(function(){
                                             }
                                         });
                                     }
-                                    Images.insert(fileInput.files[0], function(error, fileObj){
-                                        if(fileObj){
+
+                                    const upload = Images.insert({
+                                        file: fileInput.files[0],
+                                        streams: 'dynamic',
+                                        chunkSize: 'dynamic'
+                                    });
+                                    upload.on('end', function (error, fileObj){
+                                        if(error){
+                                            alert('Error during upload: ' + error);
+                                        } else if(fileObj){
                                             Session.set('currentProfilePicture', fileObj._id);
                                         }
                                     });
@@ -115,8 +123,7 @@ Template.informations.helpers({
     displayProfilePicture: function(){
         if(Session.get('currentProfilePicture') !== undefined && Session.get('currentProfilePicture') !== Session.get('defaultProfilePicture')){
             // Selected image is set and isn't the default one, we can catch and return it's url
-            const imageUrl = Images.findOne({_id: Session.get('currentProfilePicture')}).url();
-            return imageUrl;
+            return Images.findOne({_id: Session.get('currentProfilePicture')}).link();
         } else{
             // Selected image is the default one, returning it
             return Session.get('currentProfilePicture');

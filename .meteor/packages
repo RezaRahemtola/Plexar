@@ -21,7 +21,6 @@ accounts-ui@1.3.1
 accounts-password@1.6.0
 session@1.2.0
 jquery
-cfs:standard-packages
-cfs:filesystem
 email@1.2.3
 check
+ostrio:files
