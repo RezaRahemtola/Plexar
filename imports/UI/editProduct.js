@@ -113,12 +113,17 @@ Template.editProduct.onRendered(function(){
                                 }
                                 Session.set('editedCoverImageId', null);  // Reseting the value of the cover image
                             }
-                            Images.insert(coverImageInput.files[0], function(error, fileObj){
+
+                            const upload = Images.insert({
+                                file: coverImageInput.files[0],
+                                streams: 'dynamic',
+                                chunkSize: 'dynamic'
+                            });
+                            upload.on('end', function(error, fileObj){
                                 if(error){
                                     // There was an error while inserting the image
                                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                                } else{
-                                    // Image was successfully inserted
+                                } else if(fileObj){
                                     Session.set('editedCoverImageId', fileObj._id);
                                 }
                             });
@@ -156,8 +161,16 @@ Template.editProduct.onRendered(function(){
                         } else{
                             // Files are correct, adding them to the db
                             for(var image of imagesInput.files){
-                                Images.insert(image, function(error, fileObj){
-                                    if(!error){
+
+                                const upload = Images.insert({
+                                    file: image,
+                                    streams: 'dynamic',
+                                    chunkSize: 'dynamic'
+                                });
+                                upload.on('end', function(error, fileObj){
+                                    if(error){
+                                        // TODO: error
+                                    } else if(fileObj){
                                         var otherImagesId = Session.get('editedOtherImagesId');  // Catching the array of images
                                         otherImagesId.push(fileObj._id)  // Adding it the new image
                                         Session.set('editedOtherImagesId', otherImagesId);  // Updating the value

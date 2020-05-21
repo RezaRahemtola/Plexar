@@ -15,6 +15,6 @@ import { Images } from '../databases/images.js';
 
 Template.productBanner.helpers({
     displayProductFirstImage: function(images){
-        return Images.findOne({_id: images[0]}).url();  // Return the url of the image
+        return Images.findOne({_id: images[0]}).link();  // Return the url of the image
     }
 });

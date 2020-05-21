@@ -69,9 +69,7 @@
                         {{#if coverImageDifference}}
                             <p>Image de couverture (modifiée)</p>
                             <div class="cover-image width-fit-content" style="position: relative; display: inline-block;">
-                                {{#each displayEditedCoverImage}}
-                                    <img src="{{this}}" class="image is-128x128">
-                                {{/each}}
+                                <img src="{{displayEditedCoverImage}}" class="image is-128x128">
                             </div>
                         {{else}}
                             <p>Pas de modification de l'image de couverture</p>

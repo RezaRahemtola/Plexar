@@ -101,7 +101,7 @@ Template.informations.onRendered(function(){
                                         streams: 'dynamic',
                                         chunkSize: 'dynamic'
                                     });
-                                    upload.on('end', function (error, fileObj){
+                                    upload.on('end', function(error, fileObj){
                                         if(error){
                                             alert('Error during upload: ' + error);
                                         } else if(fileObj){

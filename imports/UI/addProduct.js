@@ -91,8 +91,18 @@ Template.addProduct.onRendered(function(){
                                         }
                                     });
                                 }
-                                Images.insert(coverImageInput.files[0], function(error, fileObj){
-                                    if(!error){
+
+
+                                const upload = Images.insert({
+                                    file: coverImageInput.files[0],
+                                    streams: 'dynamic',
+                                    chunkSize: 'dynamic'
+                                });
+                                upload.on('end', function(error, fileObj){
+                                    if(error){
+                                        // There was an error
+                                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                                    } else if(fileObj){
                                         // The image was succesfully inserted, we can set the cover image Id with the new one
                                         Session.set('coverImageId', fileObj._id);
                                     }
@@ -121,8 +131,16 @@ Template.addProduct.onRendered(function(){
                             } else{
                                 // Files are correct, adding them to the db
                                 for(var image of imagesInput.files){
-                                    Images.insert(image, function(error, fileObj){
-                                        if(!error){
+
+                                    const upload = Images.insert({
+                                        file: image,
+                                        streams: 'dynamic',
+                                        chunkSize: 'dynamic'
+                                    });
+                                    upload.on('end', function(error, fileObj){
+                                        if(error){
+                                            // TODO: error
+                                        } else if(fileObj){
                                             // Image was succesfully inserted
                                             var otherImagesId = Session.get('otherImagesId');  // Catching the array of images
                                             otherImagesId.push(fileObj._id)  // Adding it the new image
@@ -190,7 +208,10 @@ Template.addProduct.onRendered(function(){
 
 Template.addProduct.helpers({
     displayCoverImage: function(){
-        return Images.find({_id: Session.get('coverImageId')})  // Find and return the corresponding image in the db
+        if(Images.findOne({_id: Session.get('coverImageId')}) !== undefined){
+            // There is an uploaded cover image, returning it (in an array to use each)
+            return [ Images.findOne({_id: Session.get('coverImageId')}) ];
+        }
     },
     displayOtherImages: function(){
         // Display the other images

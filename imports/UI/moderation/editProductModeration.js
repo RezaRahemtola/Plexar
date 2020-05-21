@@ -68,8 +68,8 @@ Template.editProductModeration.onRendered(function(){
     // Cover image
     const originalCoverImageDisplay = document.querySelector('img#originalCoverImage');
     const originalCoverImageId = originalProduct.images[0];
-    const originalCoverImageUrl = Images.findOne({_id: originalCoverImageId}).url();
-    originalCoverImageDisplay.src = originalCoverImageUrl;
+    const originalCoverImageLink = Images.findOne({_id: originalCoverImageId}).link();
+    originalCoverImageDisplay.src = originalCoverImageLink;
 });
 
 Template.editProductModeration.helpers({
@@ -147,8 +147,7 @@ Template.editProductModeration.helpers({
     },
     displayEditedCoverImage: function(){
         const editedCoverImage = Session.get('editProductModeration').editedProduct.images[0];
-        const editedCoverImageUrl = Images.findOne({_id: editedCoverImage}).url();
-        return [editedCoverImageUrl];
+        return Images.findOne({_id: editedCoverImage}).link();
     },
     displayOtherImages: function(){
         // Catching the original product's images
@@ -158,7 +157,7 @@ Template.editProductModeration.helpers({
         var originalImagesUrl = [];
         for(var imageId of originalImages){
             // For each image id, we add it to the images array
-            originalImagesUrl.push(Images.findOne({_id: imageId}).url());
+            originalImagesUrl.push(Images.findOne({_id: imageId}).link());
         }
         return originalImagesUrl;
     },
@@ -181,7 +180,7 @@ Template.editProductModeration.helpers({
         var editedImagesUrl = [];
         for(var imageId of editedImages){
             // For each image id, we add it to the images array
-            editedImagesUrl.push(Images.findOne({_id: imageId}).url());
+            editedImagesUrl.push(Images.findOne({_id: imageId}).link());
         }
         return editedImagesUrl;
     },

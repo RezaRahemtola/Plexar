@@ -206,7 +206,7 @@ Meteor.methods({
                 var profilePicture = Rules.user.profilePicture.defaultUrl;
             } else{
                 // User has a profile picture, finding the url in the Images database
-                var profilePicture = Images.findOne({_id: contributor.profilePicture}).url();
+                var profilePicture = Images.findOne({_id: contributor.profilePicture}).link();
             }
             contributorsToReturn.push({
                 username: contributor.username,

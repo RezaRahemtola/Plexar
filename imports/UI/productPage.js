@@ -182,11 +182,12 @@ Template.productPage.helpers({
     },
     displayProductImages: function(){
         if(Session.get('currentProduct')){
+            // There is a product to display
             var productImagesId = Session.get('currentProduct').images;  // Return an array with IDs of the product images
             var productImages = [];  // Creating an empty array for the images
             for(var imageId of productImagesId){
-                // Filling the array with product's images
-                productImages.push(Images.findOne({_id: imageId}));
+                // Filling the array with product's images links
+                productImages.push(Images.findOne({_id: imageId}).link());
             }
             return productImages;
         }
