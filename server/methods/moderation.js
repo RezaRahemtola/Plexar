@@ -12,6 +12,7 @@ import { CollectiveModeration } from '../../imports/databases/collectiveModerati
 import { UsersInformations } from '../../imports/databases/usersInformations.js';
 import { Rules } from '../rules.js';
 
+
 Meteor.methods({
     'checkIfProductInModeration'({productId}){
         // Type check to prevent malicious calls

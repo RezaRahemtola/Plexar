@@ -33,10 +33,22 @@ Template.bestContributors.helpers({
         });
         return Session.get('bestContributors');
     },
+    contributorInPodium: function(rank){
+        if(rank === 1 || rank === 2 || rank === 3){
+            // This contributor is in the podium
+            return true;
+        }
+        return false;
+    },
     firstPlace: function(rank){
         if(rank === 1){
             return true;
         }
         return false;
+    },
+    getMedalUrl: function(rank){
+        if(rank === 1){ return 'goldMedal.png'; }
+        else if(rank === 2){ return 'silverMedal.png'; }
+        else if(rank === 3){ return 'bronzeMedal.png'; }
     }
 });

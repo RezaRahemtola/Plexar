@@ -7,6 +7,7 @@ import { Email } from 'meteor/email';
 import { Products } from '../../imports/databases/products.js';
 import { Rules } from '../rules.js';
 
+
 Meteor.methods({
     'getRuleValue'({rulePath}){
         // Type check to prevent malicious calls

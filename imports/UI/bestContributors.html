@@ -16,14 +16,26 @@
     {{#each displayBestContributors}}
         <div class="card has-text-centered">
             <div class="card-content">
-                <p class="title has-text-primary" style="font-family: 'Changa One';">
-                    <span style="font-size: 2.5rem;">{{this.rank}}</span>
-                    {{#if firstPlace this.rank}}
-                        <span style="font-size: 1.5rem">er</span>
-                    {{else}}
-                        <span style="font-size: 1.5rem">ème</span>
+                <div class="title has-text-primary" style="font-family: 'Changa One';">
+
+                    {{#if contributorInPodium this.rank}}
+                        <div class="field has-addons width-fit-content" style="margin: 0 auto;">
+                            <div class="control" style="height: 100%;margin: auto 0;">
+                                <span style="font-size: 2.5rem;">{{this.rank}}</span>
+                                {{#if firstPlace this.rank}}
+                                    <span style="font-size: 1.5rem">er</span>
+                                {{else}}
+                                    <span style="font-size: 1.5rem">ème</span>
+                                {{/if}}
+                            </div>
+
+                            <div class="control">
+                                <img class="image" style="margin: 0 auto; height: 8rem; width: 6rem;" src="{{getMedalUrl this.rank}}">
+                            </div>
+                        </div>
                     {{/if}}
-                </p>
+
+                </div>
 
                 <img class="image is-96x96" style="margin: 0 auto;" src="{{this.profilePicture}}">
 
