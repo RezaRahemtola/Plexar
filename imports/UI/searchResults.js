@@ -56,6 +56,7 @@ Template.searchResults.onRendered(function(){
 
 Template.searchResults.helpers({
     getSearchQuery: function(){
+        // Return the text search query
         return Session.get('search').query;
     },
     displayProductsResults: function(){
@@ -81,15 +82,18 @@ Template.searchResults.helpers({
                 // There was an error
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
             } else{
+                // Available categories were successfully retrieved, saving them in a Session variable
                 Session.set('productCategories', result);
             }
         });
         return Session.get('productCategories');
     },
     displaySelectedCategories: function(){
+        // Returning the categories used to filter the search
         return Session.get('search').categories;
     },
     noResults: function(){
+        // Catching results and checking if there's one or more result
         const results = Session.get('searchedProducts');
         if(results.length > 0){
             // There is at least one result
@@ -105,13 +109,14 @@ Template.searchResults.helpers({
 Template.searchResults.events({
     'submit form#searchForm'(event){
         event.preventDefault();
+        // Search form was submitted, catching the current search and updating it's query value
         var search = Session.get('search');
         search.query = document.getElementById("searchBox").value;
-        Session.set('search', search);  // Storing search input value in a variable
+        Session.set('search', search);  // Updating the value of the Session variable with the modified search object
     },
     'click a.tag.is-delete'(event){
-        // Link to delete a category tag is cliked
         event.preventDefault();
+        // Link to delete a category tag was cliked
         var search = Session.get('search');  // Catching the array of categories that are already selected
         // Catching the grand parent element of the delete link (delete link is inside tags div which is inside a control div) :
         var tagToRemove = event.currentTarget.parentElement.parentElement;

@@ -5,9 +5,12 @@
         <span>Votre classement :</span>
         <span class="title has-text-primary is-family-code">
             <span style="font-size: 2.5rem;">{{displayUserRank}}</span>
+
             {{#if firstPlace displayUserRank}}
+                <!-- User has the first place, changing the rank extension -->
                 <span style="font-size: 1.5rem">er</span>
             {{else}}
+                <!-- User doesn't have the first place, we can display the normal rank entension -->
                 <span style="font-size: 1.5rem">ème</span>
             {{/if}}
         </span>
