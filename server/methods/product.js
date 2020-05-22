@@ -13,14 +13,9 @@ import { UsersInformations } from '../../imports/databases/usersInformations.js'
 import { Rules } from '../rules.js';
 
 
-// Allow all client-side updates on the Images collection
+// Allow all client-side insertions on the Images collection
 Images.allow({
-  insert() { return true; },
-  update() { return true; }
-});
-
-Meteor.publish('images', function(){
-    return Images.find().cursor;
+  insert() { return true; }
 });
 
 
@@ -28,6 +23,12 @@ Meteor.publish('images', function(){
 Images.deny({
     remove() { return true; }
 });
+
+
+Meteor.publish('images', function(){
+    return Images.find().cursor;
+});
+
 
 Meteor.methods({
     'removeImage'({imageId}){

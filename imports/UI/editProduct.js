@@ -12,8 +12,8 @@ import './editProduct.html';
 import './css/form.css';
 
 // Initializing Session variables
-Session.set('editedCoverImageId', null);
-Session.set('editedOtherImagesId', []);
+Session.set('editedCoverImageId', null);  // For the moment the user didn't proposed any modification to the cover image
+Session.set('editedOtherImagesId', []);  // For the moment the user didn't proposed any modification to the product's images
 
 Template.editProduct.onRendered(function(){
 
@@ -114,6 +114,7 @@ Template.editProduct.onRendered(function(){
                                 Session.set('editedCoverImageId', null);  // Reseting the value of the cover image
                             }
 
+                            // Uploading the cover image
                             const upload = Images.insert({
                                 file: coverImageInput.files[0],
                                 streams: 'dynamic',
@@ -124,6 +125,7 @@ Template.editProduct.onRendered(function(){
                                     // There was an error while inserting the image
                                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                                 } else if(fileObj){
+                                    // New cover image was successfully uploaded, saving it's id in a Session variable
                                     Session.set('editedCoverImageId', fileObj._id);
                                 }
                             });
@@ -161,7 +163,7 @@ Template.editProduct.onRendered(function(){
                         } else{
                             // Files are correct, adding them to the db
                             for(var image of imagesInput.files){
-
+                                // For each image we upload it
                                 const upload = Images.insert({
                                     file: image,
                                     streams: 'dynamic',
@@ -169,7 +171,7 @@ Template.editProduct.onRendered(function(){
                                 });
                                 upload.on('end', function(error, fileObj){
                                     if(error){
-                                        // There is an error
+                                        // There was an error while uploading the image
                                         Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                                     } else if(fileObj){
                                         // Image was successfully inserted
@@ -204,6 +206,7 @@ Template.editProduct.onRendered(function(){
                     $('input#website').removeClass("is-danger");
                     document.querySelector('#websiteField p.help.is-danger').textContent = "";
                 } else{
+                    // Website input has a value, checking if it's a valid url
                     Meteor.call('checkUrlInput', {url: websiteInput.value}, function(error, result){
                         if(error){
                             // There was an error

@@ -35,7 +35,7 @@ Meteor.methods({
                 Favorites.remove({userId: user._id});
                 CollectiveModeration.remove({userId: user._id});
                 Meteor.users.remove({userId: user._id});
-
+                // Incrementing the number of deleted users
                 deletedUsers++;
             }
         }
@@ -64,7 +64,7 @@ Meteor.methods({
             // User is logged in and has a profile picture, return the profile picture id
             return UsersInformations.findOne({userId: Meteor.userId()}).profilePicture;
         } else{
-            // No profile picture
+            // User isn't logged in or doesn't have a profile picture
             return false;
         }
     },
@@ -385,6 +385,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
+            // User is logged in, catching favorites informations
             var favoriteProductsId = Favorites.findOne({userId: Meteor.userId()}).products;  // Return an array with IDs of the products database
             const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
             var favoriteProducts = [];  // Creating an empty array of the products
@@ -409,6 +410,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
+            // User is logged in, returning his informations
             return UsersInformations.findOne({userId: Meteor.userId()});
         }
     },
@@ -423,7 +425,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // Catching current user's informations
+            // User is logged in, catching his informations
             const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
 
             // Updating non-sensitive informations in our database
@@ -461,7 +463,8 @@ Meteor.methods({
             // Catching current user's informations
             const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
             const currentProfilePicture = userInformations.profilePicture;
-            UsersInformations.update(userInformations._id, { $set: { profilePicture: imageId }}, function(error, result){
+            UsersInformations.update(userInformations._id, { $set: { profilePicture: imageId }},
+                function(error, result){
                     if(error){
                         // There was an error while linking the image with user's informations
                         Images.remove(imageId);  // Removing the new picture
@@ -470,7 +473,8 @@ Meteor.methods({
                         // Image was successfully linked, we can now remove the old profile picture
                         Images.remove(currentProfilePicture);
                     }
-                });
+                }
+            );
         }
     }
 });

@@ -49,8 +49,12 @@ Template.addProduct.onRendered(function(){
                     // Sending mandatory informations only to preserve server resources
                     fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
                     Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
-                        if(!error && result){
-                            productDescriptionInput.style.height = result;  // Result is the height to apply to the field
+                        if(error){
+                            // There was an error
+                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Display an error message
+                        } else if(result){
+                            // Result is the height to apply to the field
+                            productDescriptionInput.style.height = result;
                         }
                     });
                 }
@@ -75,7 +79,7 @@ Template.addProduct.onRendered(function(){
                         }
                         Meteor.call('checkProductCoverImageInput', {files: serverFiles}, function(error, result){
                             if(error){
-                                // There is an error
+                                // There was an error
                                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                             } else{
                                 // File input is correct

@@ -6,7 +6,7 @@ import { Template } from 'meteor/templating';
 import './bestContributors.html';
 
 // Initializing Session variables
-Session.set('userRank', 0);
+Session.set('userRank', 0);  // We don't know the user rank for the moment
 Session.set('bestContributors', []);
 
 Template.bestContributors.helpers({

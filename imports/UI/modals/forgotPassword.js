@@ -36,9 +36,11 @@ Template.forgotPassword.events({
         var email = form.get('email');  // Catching email input
         Accounts.forgotPassword({email: email}, function(error){
             if(error){
+                // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});
                 $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
             } else{
+                // Forgot password email was sent successfully
                 Session.set('message', {type: "header", headerContent: "Un email pour réinitialiser votre mot de passe vous a été envoyé", style: "is-success"});  // Success message
                 Session.set('modal', null);  // Remove the modal
             }

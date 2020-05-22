@@ -20,7 +20,7 @@ Template.informations.onRendered(function(){
 
     Meteor.call('getUserInformations', function(error, result){
         if(error){
-            // There was an error
+            // There was an error while catching user's informations
             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
         } else{
             // Catching the result to auto fill fields
@@ -124,8 +124,11 @@ Template.informations.onRendered(function(){
 Template.informations.helpers({
     displayProfilePicture: function(){
         if(Session.get('currentProfilePicture') !== undefined && Session.get('currentProfilePicture') !== Session.get('defaultProfilePicture')){
-            // Selected image is set and isn't the default one, we can catch and return it's url
-            return Images.findOne({_id: Session.get('currentProfilePicture')}).link();
+            // Selected image is set and isn't the default one, checking if it's still in the database
+            if(Images.findOne({_id: Session.get('currentProfilePicture')})){
+                // Image is still in the database, we can catch and return it's url
+                return Images.findOne({_id: Session.get('currentProfilePicture')}).link();
+            }
         } else{
             // Selected image is the default one, returning it
             return Session.get('currentProfilePicture');
