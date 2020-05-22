@@ -34,6 +34,7 @@ import './modals/register.js';
 import './modals/login.js';
 import './modals/forgotPassword.js';
 import './modals/report.js';
+import './modals/resetPassword.js';
 
 // Databases imports
 import { Images } from '../databases/images.js';
@@ -49,7 +50,6 @@ Template.body.onCreated(function(){
     Session.set('navigation', []);  // Used to store page navigation history to use return button
     Session.set("searchedProducts", [] );  // No search for the moment
     Session.set('message', null);  // No message to display for the moment
-    Session.set('modal', null);  // No modal to display for the moment
     Session.set('search', {query: "", categories: [], sort: 'popularity'});
     Session.set('coverImageId', null);
     Session.set('otherImagesId', []);
@@ -58,6 +58,11 @@ Template.body.onCreated(function(){
     Session.set('productCategories', []);
     Session.set('userIsAdmin', false);  // By default the current user isn't admin
     Session.set('userLevel', null);  // We don't need the user level for the moment
+
+    if(Session.get('modal') === undefined){
+        // No modal set (one could have been set by a function executed before the body creation, like Accounts.onResetPasswordLink)
+        Session.set('modal', null);  // No modal to display for the moment
+    }
 
     // Catching url of the default profile picture
     Meteor.call('getDefaultProfilePictureUrl', function(error, result){

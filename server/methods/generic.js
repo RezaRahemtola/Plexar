@@ -58,18 +58,6 @@ Meteor.methods({
             loginExpirationInDays: null  // Disable login expiration
         });
 
-        // When an email verification link is clicked, verifyEmail with the given token
-        Accounts.onEmailVerificationLink = function(token, done){
-            Accounts.verifyEmail(token, function(error){
-                if(error){
-                    throw new Meteor.Error(error.error, error.reason);
-                } else{
-                    // Everything was successfully executed
-                    done();
-                }
-            });
-        };
-
         // Customizing templates :
         Accounts.emailTemplates.verifyEmail = {
             subject(){
