@@ -16,6 +16,9 @@ Session.set('editProductModeration', null);
 
 
 Template.editProductModeration.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+
     // Filling fields
     const originalProduct = Session.get('editProductModeration').originalProduct;
 

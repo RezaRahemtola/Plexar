@@ -16,6 +16,8 @@ Session.set('editedCoverImageId', null);  // For the moment the user didn't prop
 Session.set('editedOtherImagesId', []);  // For the moment the user didn't proposed any modification to the product's images
 
 Template.editProduct.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
 
     // Filling the fields with product's informations :
 

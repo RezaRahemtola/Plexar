@@ -16,8 +16,10 @@ Session.set('productInFavorites', null);
 
 
 Template.productPage.onRendered(function(){
-    if(Meteor.user() && Session.get('currentProduct')){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
 
+    if(Meteor.user() && Session.get('currentProduct')){
         // Catching current productId for the call
         const productId = Session.get('currentProduct')._id;
 

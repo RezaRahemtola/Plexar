@@ -9,6 +9,13 @@ import './bestContributors.html';
 Session.set('userRank', 0);  // We don't know the user rank for the moment
 Session.set('bestContributors', []);
 
+
+Template.bestContributors.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+});
+
+
 Template.bestContributors.helpers({
     displayUserRank: function(){
         Meteor.call('getUserRank', function(error, result){

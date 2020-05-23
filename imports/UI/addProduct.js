@@ -13,6 +13,9 @@ import './css/form.css';
 
 
 Template.addProduct.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+
     if(Meteor.user()){
         // User is logged in, creating all dynamic functions
 

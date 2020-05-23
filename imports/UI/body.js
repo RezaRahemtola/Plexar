@@ -12,6 +12,7 @@ import './css/footer.css';
 import './css/generic.css';
 
 // JS imports
+import './about.js';
 import './home.js';
 import './addProduct.js';
 import './productPage.js';
@@ -38,9 +39,6 @@ import './modals/resetPassword.js';
 
 // Databases imports
 import { Images } from '../databases/images.js';
-
-// Alone Template
-import './about.html';
 
 
 Template.body.onCreated(function(){

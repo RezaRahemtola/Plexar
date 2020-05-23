@@ -6,6 +6,12 @@ import { Template } from 'meteor/templating';
 import './home.html';
 
 
+Template.home.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+});
+
+
 Template.home.helpers({
     productsCounter: function(){
         Meteor.call('productsCounter', function(error, result){

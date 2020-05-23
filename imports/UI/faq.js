@@ -12,6 +12,9 @@ import bulmaCollapsible from '@creativebulma/bulma-collapsible';
 Session.set('displayedFaqQuestion', null);
 
 Template.faq.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+
     // Return an array of bulmaCollapsible instances (empty if no DOM node found)
     const bulmaCollapsibleInstances = bulmaCollapsible.attach('.is-collapsible');
 

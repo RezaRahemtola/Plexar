@@ -10,6 +10,9 @@ import './functions/sortResults.js';
 
 
 Template.searchResults.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+
     Session.set("searchedProducts", []);
     // Catch sorting select changes to filter results
     const sortResults = document.querySelector("select#sortResults");
