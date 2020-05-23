@@ -24,5 +24,7 @@
 /* Styling links */
 .link{
     cursor: pointer;  /* Default links cursor */
-    text-decoration: underline #e47312;
+    -webkit-text-decoration: underline #e47312;  /* Safari */
+            text-decoration: underline #e47312;
+
 }

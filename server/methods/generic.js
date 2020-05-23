@@ -18,13 +18,15 @@ Meteor.methods({
             return eval(rulePath);
         } else{
             // Path is invalid, throwing an error
-            throw new Meteor.Error("invalid-rule", "The rule ''"+rulePath+"' doesn't exist.");
+            throw new Meteor.Error("invalid-rule", "La règle ''"+rulePath+"' n'existe pas.");
         }
     },
     'productsCounter'(){
+        // Return the number of available products
         return Products.find().count().toLocaleString();  // toLocaleString() make a space where needed (1000 will be 1 000)
     },
     'getCategories'(){
+        // Return all the available categories
         return Rules.product.categories;
     },
     'sendContactMessage'({email, subject, message}){
@@ -34,6 +36,7 @@ Meteor.methods({
         check(message, String);
 
         // TODO: length verifications
+        // TODO: email verification
         const to = Rules.email.receptionAddress;
         const from = Rules.email.sendingAddress;
         const emailSubject = "Formulaire de contact";

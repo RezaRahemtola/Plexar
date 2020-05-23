@@ -100,12 +100,14 @@ Template.body.helpers({
         }
     },
     currentModal: function(){
+        // Return the modal to display if there's one
         if(Session.get('modal') !== null){
             // There is an active modal
             return Session.get('modal');  // Return the modal to display
         }
     },
     displayProfilePicture: function(){
+        // Checking if there's a profile picture to display
         Meteor.call('hasProfilePicture', function(error, result){
             if(error){
                 // There was an error
@@ -127,7 +129,7 @@ Template.body.helpers({
         // Display available categories
         Meteor.call('getCategories', function(error, result){
             if(error){
-                // There was an error
+                // There was an error while retrieving the categories
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
             } else{
                 // Available categories were successfully returned, saving them in a Session variable
