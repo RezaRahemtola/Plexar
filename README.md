@@ -1,35 +1,8 @@
-# TechForGood
+# Plexar
 
 
-Si la Web App ne se lance pas, exécuter les commandes suivantes et réessayer :
-
-meteor add session
-
-meteor add email
-
-meteor add accounts-ui accounts-password
-
-meteor npm install jquery
-
-meteor add reactive-var
-
-npm install node-sass --save-dev
-
-npm install bulma --save-dev
-
-npm install bulma-checkradio
-
-npm install bulma-steps
-
-npm install bulma-switch
-
-npm install @creativebulma/bulma-collapsible
-
-meteor add ostrio:files
-
-meteor update
-
-npm update
+Before using the app, you need to run the following command to install the required modules :
+```npm install bulma bulma-checkradio bulma-steps bulma-switch jquery node-sass @creativebulma/bulma-collapsible```
 
 
 Pour lancer l'app avec les settings (adresse email & liste d'admins) :
