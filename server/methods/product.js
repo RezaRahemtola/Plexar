@@ -62,6 +62,17 @@ Meteor.methods({
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         }
     },
+    'getBestProducts'(){
+        // Find the top 3 products with the best score
+        const bestProducts = Products.find({}, {sort: { score: -1 }, limit: 3});
+        var arrayOfBestProducts = [];  // Creating an array to fill with the products
+        for(var product of bestProducts){
+            // For each products, we add the product in the array to return
+            arrayOfBestProducts.push(product);
+        }
+        // Returning the array with the products
+        return arrayOfBestProducts;
+    },
     'updateProductScore'({productId, vote}){
         // Type check to prevent malicious calls
         check(productId, String);

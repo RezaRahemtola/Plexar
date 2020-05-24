@@ -46,22 +46,22 @@ export const Rules = {
             name: "1",
             pointsNeeded: 0,
             dailyVotingLimit: 10,
-            dailyContributionsLimit: 15,
+            dailyContributionsLimit: 10,
             voteMultiplicator: 1
         },
         {
             name: "2",
             pointsNeeded: 100,
-            dailyVotingLimit: 10,
-            dailyContributionsLimit: 15,
+            dailyVotingLimit: 15,
+            dailyContributionsLimit: 20,
             voteMultiplicator: 1
         },
         {
             name: "3",
             pointsNeeded: 300,
-            dailyVotingLimit: 10,
+            dailyVotingLimit: 30,
             dailyContributionsLimit: 15,
-            voteMultiplicator: 1
+            voteMultiplicator: 2
         }
     ],
     points: {
