@@ -72,7 +72,9 @@ Template.searchResults.helpers({
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
-                // Result is an array of products , saving it in a Session variable
+                // Result is an array of products, sorting the results
+                const orderToSort = Session.get('search').sort;
+                sortResults(result, order=orderToSort);
                 Session.set("searchedProducts", result);
             }
         });
