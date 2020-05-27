@@ -1,7 +1,6 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
-import { Email } from 'meteor/email';
 
 // Importing databases
 import { Products } from '../../imports/databases/products.js';
@@ -37,8 +36,8 @@ Meteor.methods({
 
         // TODO: length verifications
         // TODO: email verification
-        const to = Rules.email.receptionAddress;
-        const from = Rules.email.sendingAddress;
+        const from = Rules.email.contactForm.sender;
+        const to = Rules.email.contactForm.receiver;
         const emailSubject = "Formulaire de contact";
 
         // Creating the body content of the email
@@ -46,15 +45,16 @@ Meteor.methods({
                       <h4>Adresse email : `+ email +`</h4>
                       <p>Message : `+ message +`</p>`;
 
-        // Sending email :
-        Email.send({to: to, from: from, subject: emailSubject, html: html});
+        // Sending email using SendGrid (https://app.sendgrid.com/guide/integrate/langs/nodejs):
+
+        // Using Twilio SendGrid's v3 Node.js Library (https://github.com/sendgrid/sendgrid-nodejs)
+        const sendGrid = require('@sendgrid/mail');
+        sendGrid.setApiKey(process.env.SENDGRID_CONTACT_API_KEY);
+        sendGrid.send({to: to, from: from, subject: emailSubject, html: html});
 
         return true;
     },
     'setAccountsSettings'(){
-
-        // Defining default sending address
-        Accounts.emailTemplates.from = Rules.email.sendingAddress;
 
         Accounts.config({
             sendVerificationEmail: true, // Enable verification email
@@ -63,6 +63,10 @@ Meteor.methods({
 
         // Customizing templates :
         Accounts.emailTemplates.verifyEmail = {
+            from(){
+                // Defining sending address
+                return Rules.email.verifyEmail.sender;
+            },
             subject(){
                 return "Activez votre compte";
             },
@@ -78,6 +82,10 @@ Meteor.methods({
             }
         };
         Accounts.emailTemplates.resetPassword = {
+            from(){
+                // Defining sending address
+                return Rules.email.resetPassword.sender;
+            },
             subject(){
                 return "Réinitialiser votre mot passe";
             },

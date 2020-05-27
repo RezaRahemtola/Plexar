@@ -75,7 +75,15 @@ export const Rules = {
         votesToReject: -5
     },
     email: {
-        sendingAddress: "Plexar <evan.houssette@gmail.com>",
-        receptionAddress: "Reza Rahemtola <rahemtola.reza@gmail.com>"
+        verifyEmail: {
+            sender: "Plexar <accounts@plexar.fr>"
+        },
+        resetPassword: {
+            sender: "Plexar <accounts@plexar.fr>"
+        },
+        contactForm: {
+            sender: "Plexar <contact@plexar.fr>",
+            receiver: "Plexar <plexar.app@gmail.com>"
+        }
     }
 };

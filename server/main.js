@@ -19,6 +19,8 @@ Meteor.startup(function(){
         const { username, password, host, port, isSecure } = Meteor.settings.smtp;
         const scheme = isSecure ? 'smtps' : 'smtp';
         process.env.MAIL_URL = `${scheme}://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}:${port}`;
+
+        process.env.SENDGRID_CONTACT_API_KEY = Meteor.settings.sendgridContactApiKey;
     }
     // Creating text index to enable search in those fields of the database :
     Products.rawCollection().createIndex({ name: "text", description: "text" });
