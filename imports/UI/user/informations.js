@@ -224,9 +224,8 @@ Template.informations.events({
         });
 
 
-
         // Waiting for all callbacks to complete (to see if an error is raised)
-        var intervalId = setInterval(function(){
+        const intervalId = setInterval(function(){
             if(callbacksPending === 0 && formErrors === 0){
                 // All callbacks were completed without any error, displaying a success message
                 Session.set('message', {type: "header", headerContent: "Votre profil a été modifié avec succès !", style:"is-success"} );
@@ -238,4 +237,43 @@ Template.informations.events({
             }
         }, 200);
     }
+});
+
+
+Template.informations.onDestroyed(function(){
+    // Checking if there's unused images to remove them
+
+    Meteor.call('hasProfilePicture', function(error, result){
+        if(error){
+            // There was an error
+            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+        } else if(result){
+            // The current user has a profile picture, imageId was returned
+            const profilePictureId = result  // Saving the result
+            const displayedProfilePictureId = Session.get('currentProfilePicture');  // Catching the displayed profile picture
+
+            if(displayedProfilePictureId !== profilePictureId){
+                // The profile picture displayed in the form isn't the one in the database, we can safely delete it
+                Meteor.call('removeImage', {imageId: displayedProfilePictureId}, function(error, result){
+                    if(error){
+                        // There was an error
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    }
+                });
+            }
+        } else{
+            // Current user doesn't have a profile picture
+            const displayedProfilePictureId = Session.get('currentProfilePicture');  // Catching the displayed profile picture
+
+            if(displayedProfilePictureId !== Session.get('defaultProfilePicture')){
+                // Their is a picture uploaded in the form, we can delete it
+                Meteor.call('removeImage', {imageId: displayedProfilePictureId}, function(error, result){
+                    if(error){
+                        // There was an error
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    }
+                });
+            }
+        }
+    });
 });
