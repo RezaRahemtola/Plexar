@@ -15,7 +15,7 @@ import { Rules } from '../rules.js';
 
 // Allow all client-side insertions on the Images collection
 Images.allow({
-  insert() { return true; }
+    insert() { return true; }
 });
 
 
@@ -25,6 +25,7 @@ Images.deny({
 });
 
 
+// Publish images collection to allow reading on client
 Meteor.publish('images', function(){
     return Images.find().cursor;
 });
@@ -35,6 +36,7 @@ Meteor.methods({
         // Type check to prevent malicious calls
         check(imageId, String);
 
+        // TODO: check if file in dropbox before removing
         Images.remove(imageId);
     },
     'findOneProductById'({productId}){
@@ -88,7 +90,7 @@ Meteor.methods({
                 // Email isn't verified
                 throw new Meteor.Error('emailNotVerified', 'Vous devez vérifier votre adresse email pour effectuer cette action.');
             } else{
-                // Email is verified
+                // Email is verified, catching useful informations for the update
 
                 const product = Products.findOne({_id: productId});
                 const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
@@ -134,14 +136,11 @@ Meteor.methods({
                     throw new Meteor.Error('unknownVoteType', "Une erreur est survenue lors de l'ajout du vote, veuillez réessayer.");
                 }
 
-                Products.update(productId, { $set: {
-                    // Updating the database with the new score
-                    score: newScore
-                }});
-                UsersInformations.update(userInformationsId, { $set: {
-                    // Updating the database with the new votes object
-                    votes: userVotes
-                }});
+                // Updating the database with the new score
+                Products.update(productId, { $set: { score: newScore } } );
+
+                // Updating the database with the new votes object
+                UsersInformations.update(userInformationsId, { $set: { votes: userVotes } } );
 
                 return returnValue;
             }
@@ -210,8 +209,10 @@ Meteor.methods({
                         }
 
                         if(productName.length < Rules.product.name.minLength){
+                            // Product name is too short, throwing an error message to the client
                             throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rules.product.name.minLength+' charactères.');
                         } else if(productDescription.length < Rules.product.description.minLength){
+                            // Product description is too short, throwing an error message to the client
                             throw new Meteor.Error('descriptionTooShort', 'La dexcription doit avoir une longueur minimale de '+Rules.product.description.minLength+' charactères.');
                         } else{
                             // Name and description minLength is ok, removing extra characters (if there are any)
@@ -225,13 +226,13 @@ Meteor.methods({
                                 // Cover image is in the db, checking other images
                                 var correctImages = 0;
                                 for(var imageId of otherImages){
-                                    // For each image id, checking if it's in the db
+                                    // For each image id, checking if it's in the database
                                     if(Images.findOne({_id: imageId})){
                                         correctImages++;
                                     }
                                 }
                                 if(correctImages !== otherImages.length){
-                                    // All images aren't in the db
+                                    // All images aren't in the database
                                     throw new Meteor.Error('otherImagesUnavailable', "Erreur lors de l'ajout des images, veuillez réessayer.");
                                 } else{
                                     // All images are correct, adding the cover image to the first index of images array
@@ -348,7 +349,8 @@ Meteor.methods({
                                                                                 });
                                                                             }
                                                                         }
-                                                                });
+                                                                    }
+                                                                );
                                                             }
                                                         });
                                                     }
@@ -428,8 +430,10 @@ Meteor.methods({
                         }
 
                         if(productName.length < Rules.product.name.minLength){
+                            // Product name is too short, throwing an error message to the client
                             throw new Meteor.Error('nameTooShort', 'Le nom doit avoir une longueur minimale de '+Rules.product.name.minLength+' charactères.');
                         } else if(productDescription.length < Rules.product.description.minLength){
+                            // Product description is too short, throwing an error message to the client
                             throw new Meteor.Error('descriptionTooShort', 'La dexcription doit avoir une longueur minimale de '+Rules.product.description.minLength+' charactères.');
                         } else{
                             // Name and description minLength is ok, removing extra characters (if there are any)
@@ -438,13 +442,13 @@ Meteor.methods({
 
                             // Description is correct, checking the images
                             if(!Images.findOne({_id: coverImage})){
-                                // Cover image isn't in the db
+                                // Cover image isn't in the database
                                 throw new Meteor.Error('coverImageUnavailable', "Erreur lors de l'ajout de l'image de couverture, veuillez réessayer.");
                             } else{
                                 // Cover image is in the db, checking the images
                                 var correctImages = 0;
                                 for(var imageId of otherImages){
-                                    // For each image id, checking if it's in the db
+                                    // For each image id, checking if it's in the database
                                     if(Images.findOne({_id: imageId})){
                                         correctImages++;
                                     }
@@ -485,6 +489,7 @@ Meteor.methods({
                                         const categoriesDifference = (originalProduct.toString() !== categories.toString());
                                         const websiteDifference = (originalProduct.website !== website);
 
+                                        // Creating a boolean to check if there is modifications
                                         const isDifferent = nameDifference || descriptionDifference || imagesDifference || categoriesDifference || websiteDifference;
 
                                         if(!isDifferent){
@@ -619,14 +624,13 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // Getting favorite products of the current user in the db
+            // User is logged in, retrieving his favorite products in the database
             var userFavorite = Favorites.findOne({userId: Meteor.userId()}).products;
             const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Catching lineId (needed to modify data)
             userFavorite.push(productId);  // Adding the product to the array
-            Favorites.update(favoriteId, { $set: {
-                // Updating the database with the modified array
-                products: userFavorite
-            }});
+
+            // Updating the database with the modified array
+            Favorites.update(favoriteId, { $set: { products: userFavorite } } );
         }
     },
     'removeProductFromFavorite'({productId}){
@@ -637,13 +641,13 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
+            // User is logged in, retrieving his favorite products to remove the asked product
             var userFavorite = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
             const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
             userFavorite.pop(productId);  // Removing the product from the array
-            Favorites.update(favoriteId, { $set: {
-                // Updating the database with the modified array
-                products: userFavorite
-            }});
+
+            // Updating the database with the modified array
+            Favorites.update(favoriteId, { $set: { products: userFavorite } } );
         }
     },
     'productInFavorites'({productId}){
@@ -654,7 +658,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // Check if the given product ID is in the favorite products of the user
+            // User is logged in, check if the given product Id is in the favorite products of the user
             var userFavorite = Favorites.findOne({userId: Meteor.userId()}).products;  // Return the favorites of the current user
             return userFavorite.includes(productId);
         }

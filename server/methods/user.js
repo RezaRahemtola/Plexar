@@ -23,7 +23,7 @@ Meteor.methods({
         const unverifiedUsers = Meteor.users.find({"emails.verified": false});
         var deletedUsers = 0;  // We haven't delete any user for the moment
         // Catching the current time
-        const currentTime = new Date;
+        const currentTime = new Date();
         for(var user of unverifiedUsers){
             // For each user, checking if the account was created more than 30 days ago
             const timeElapsed = currentTime - user.createdAt;

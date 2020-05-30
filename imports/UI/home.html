@@ -3,10 +3,15 @@
         <section class="hero is-medium" style="background: url('homeBanner.png') no-repeat center;">
             <div class="hero-body">
                 <div class="container has-text-centered">
-                    <p class="title">PLEXAR</p>
-                    <p class="subtitle">La plateforme participative de référencement de produits à impact social</p>
-                    <form id="searchForm">
 
+                    <!-- Bigger title on desktop screens -->
+                    <p class="title is-3 is-hidden-desktop">PLEXAR</p>
+                    <!-- Smaller title on mobile & tablet -->
+                    <p class="title is-2 is-hidden-touch">PLEXAR</p>
+
+                    <p class="subtitle">La plateforme participative de référencement de produits à impact social</p>
+                    
+                    <form id="searchForm">
                         <div class="field has-addons" style="justify-content: center;">
                             <div class="control" style="width: 25em; max-width: 100%;">
                                 <input type="search" class="input is-rounded" id="searchBox" placeholder="Rechercher"/>

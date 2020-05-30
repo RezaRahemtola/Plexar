@@ -61,7 +61,9 @@ Template.contributions.helpers({
             // Progress bar informations are set, calculating the percentage
             const value = Session.get('levelProgressInformations').progressValue;
             const max = Session.get('levelProgressInformations').progressMaximum;
-            return value / max * 100;
+            const result = (value / max * 100);
+            // The result may have many decimals, so we will round it (https://stackoverflow.com/a/12830454/12171474)
+            return +result.toFixed(2);
         }
     },
     displayPointsLeftUntilNextLevel: function(){
