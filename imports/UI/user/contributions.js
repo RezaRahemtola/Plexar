@@ -61,7 +61,7 @@ Template.contributions.helpers({
             // Progress bar informations are set, calculating the percentage
             const value = Session.get('levelProgressInformations').progressValue;
             const max = Session.get('levelProgressInformations').progressMaximum;
-            const result = (value / max * 100);
+            const result = value / max * 100;
             // The result may have many decimals, so we will round it (https://stackoverflow.com/a/12830454/12171474)
             return +result.toFixed(2);
         }
@@ -84,7 +84,7 @@ Template.contributions.helpers({
 Template.contributions.events({
     'click #infoPointsAndLevels'(event){
         event.preventDefault();
-        // More informations icon is clicked
+        // The "more informations" icon is clicked
         Session.set('displayedFaqQuestion', 'pointsAndLevels');  // Updating the value of the question to display
         Session.set('page', 'faq');  // Sending the user to faq page
     }

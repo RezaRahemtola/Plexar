@@ -8,17 +8,14 @@ import { Rules } from '../rules.js';
 
 
 Meteor.methods({
-    'getRuleValue'({rulePath}){
-        // Type check to prevent malicious calls
-        check(rulePath, String);
-
-        if(eval(rulePath) !== undefined && rulePath.includes("Rules.")){
-            // Path is valid, return the corresponding getRuleValue
-            return eval(rulePath);
-        } else{
-            // Path is invalid, throwing an error
-            throw new Meteor.Error("invalid-rule", "La règle ''"+rulePath+"' n'existe pas.");
-        }
+    'getProductRules'(){
+        return Rules.product;
+    },
+    'getProductNameRules'(){
+        return Rules.product.name;
+    },
+    'getProductDescriptionRules'(){
+        return Rules.product.description;
     },
     'productsCounter'(){
         // Return the number of available products

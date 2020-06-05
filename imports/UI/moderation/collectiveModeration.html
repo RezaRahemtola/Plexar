@@ -11,10 +11,12 @@
         </p>
 
         {{#if userIsAdmin}}
+            <!-- User is admin, displaying moderation statistics -->
             {{#each moderationCounter}}
                 <p class="has-text-centered">{{total}} produits sont actuellement en modération dont {{newProducts}} nouveaux ajouts, {{editedProducts}} modifications et {{reports}} signalements.</p>
             {{/each}}
         {{else}}
+            <!-- User isn't admin, displaying daily participations -->
             <p class="has-text-centered">Participations quotidiennes : {{displayCurrentDailyVotes}} / {{displayCurrentDailyVotesLimit}}</p>
         {{/if}}
 
@@ -27,6 +29,7 @@
 
 
     {{else}}
+        <!-- User isn't logged in, displaying message to register or login -->
         <p class="subtitle">
             <span class="register link has-text-weight-semibold">Inscrivez-vous</span>
             <span>ou</span>

@@ -14,15 +14,10 @@ import { Rules } from '../rules.js';
 
 
 // Allow all client-side insertions on the Images collection
-Images.allow({
-    insert() { return true; }
-});
-
+Images.allow({ insert() { return true; } } );
 
 // Deny client-side remove on the Images collection
-Images.deny({
-    remove() { return true; }
-});
+Images.deny({ remove() { return true; } } );
 
 
 // Publish images collection to allow reading on client

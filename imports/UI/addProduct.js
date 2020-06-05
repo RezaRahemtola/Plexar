@@ -19,9 +19,9 @@ Template.addProduct.onRendered(function(){
     if(Meteor.user()){
         // User is logged in, creating all dynamic functions
 
-        Meteor.call('getRuleValue', {rulePath: 'Rules.product'}, function(error, result){
+        Meteor.call('getProductRules', function(error, result){
             if(result){
-                // The rule was returned succesfully, we apply it
+                // The rules were returned succesfully, we apply it
                 const productRules = result;  // Carching product rules
 
                 // Defining product name constants

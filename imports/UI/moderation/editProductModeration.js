@@ -26,7 +26,7 @@ Template.editProductModeration.onRendered(function(){
     const originalName = document.querySelector('input#originalName');
     const originalNameCharDisplay = document.querySelector('span#originalNameCharCounter');
     originalName.value = originalProduct.name;
-    Meteor.call('getRuleValue', {rulePath: 'Rules.product.name'}, function(error, result){
+    Meteor.call('getProductNameRules', function(error, result){
         if(error){
             // There is an error
             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -44,7 +44,7 @@ Template.editProductModeration.onRendered(function(){
     const originalDescriptionCharDisplay = document.querySelector('span#originalDescriptionCharCounter');
     originalDescription.value = originalProduct.description;
 
-    Meteor.call('getRuleValue', {rulePath: 'Rules.product.description'}, function(error, result){
+    Meteor.call('getProductDescriptionRules', function(error, result){
         if(error){
             // There is an error
             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -87,7 +87,7 @@ Template.editProductModeration.helpers({
     displayEditedName: function(){
         const editedProduct = Session.get('editProductModeration').editedProduct;
 
-        Meteor.call('getRuleValue', {rulePath: 'Rules.product.name'}, function(error, result){
+        Meteor.call('getProductNameRules', function(error, result){
             if(error){
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -114,7 +114,7 @@ Template.editProductModeration.helpers({
     },
     displayEditedDescription: function(){
         const editedProduct = Session.get('editProductModeration').editedProduct;
-        Meteor.call('getRuleValue', {rulePath: 'Rules.product.description'}, function(error, result){
+        Meteor.call('getProductDescriptionRules', function(error, result){
             if(error){
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
