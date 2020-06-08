@@ -2,13 +2,11 @@
 
     <div class="box width-fit-content" style="margin: 1.5rem auto;">
         <div class="field has-addons">
-            <div class="control">
+            <div class="control" style="margin: auto;">
                 <h4 class="title is-4 has-text-centered">Niveau {{displayUserLevel}}</h4>
             </div>
             <div class="control" id="infoPointsAndLevels" style="height: 100%; margin: auto 0 auto 0.5rem">
-                <a class="icon has-text-primary" title="En savoir plus" id="infoCollectiveModeration">
-                    <i class="far fa-question-circle"></i>
-                </a>
+                <img src='{{displayLevelIcon}}' class="image is-80x80" alt="Icône de niveau"/>
             </div>
         </div>
     </div>
@@ -25,6 +23,9 @@
             <p class="has-text-centered">
                 <span class="is-family-code" style="font-size: 1.3rem;">{{displayPointsLeftUntilNextLevel}}</span>
                 <span style="font-size: 1.1rem;"> points nécessaires pour atteindre le prochain niveau</span>
+                <a class="icon has-text-primary" title="En savoir plus" id="infoPointsAndLevels">
+                    <i class="far fa-question-circle"></i>
+                </a>
             </p>
         </div>
     {{/each}}
@@ -35,7 +36,7 @@
                 <th>Date</th>
                 <th>Type</th>
                 <th>Élément concerné</th>
-                <th>Status</th>
+                <th>Statut</th>
                 <th>Points</th>
             </tr>
         </thead>

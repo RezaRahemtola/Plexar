@@ -5,9 +5,10 @@ import { Template } from 'meteor/templating';
 // HTML import
 import './contributions.html';
 
-// Initializing Session variable
+// Initializing Session variables
 Session.set('levelProgressInformations', {});
 Session.set('pointsLeftUntilNextLevel', 0);
+Session.set('levelIcon', '');
 
 
 Template.contributions.onRendered(function(){
@@ -41,6 +42,18 @@ Template.contributions.helpers({
             }
         });
         return Session.get('userLevel');
+    },
+    displayLevelIcon: function(){
+        // Let's catch the icon that corresponds to the user's level
+        Meteor.call('getLevelIcon', function(error, result){
+            if(error){
+                // TODO: error
+            } else if(result){
+                // Level icon was successfully retrieved, saving it in a Session variable
+                Session.set('levelIcon', result);
+            }
+        });
+        return Session.get('levelIcon');
     },
     displayLevelProgress: function(){
         Meteor.call('getLevelProgressInformations', function(error, result){

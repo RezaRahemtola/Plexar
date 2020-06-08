@@ -5857,6 +5857,9 @@ a.box:active {
   .image.is-64x64 {
     height: 64px;
     width: 64px; }
+  .image.is-80x80 {
+    height: 80px;
+    width: 80px; }
   .image.is-90x90 {
     height: 90px;
     width: 90px; }

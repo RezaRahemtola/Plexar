@@ -194,6 +194,25 @@ Meteor.methods({
             return currentLevel;
         }
     },
+    'getLevelIcon'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // Catching user's level to find the corresponding image in the rules
+            const userLevel = UsersInformations.findOne({userId: Meteor.userId()}).level;
+            // Catching the possibles levels
+            const levels = Rules.levels;
+            for(var level of levels){
+                // For each existing level, checking if it's the user's one
+                if(userLevel === level.name){
+                    // This is the current level of the user, returning the corresponding icon
+                    return level.icon;
+                }
+            }
+        }
+    },
     'getBestContributors'(){
 
         // Returning 5 users sorted by points in descending order
