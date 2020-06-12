@@ -231,10 +231,10 @@ Meteor.methods({
                 if(!Meteor.settings.admin.list.includes(userEmail)){
                     // User isn't in the admin list, he will only update the vote
                     // Updating user points to then catch the corresponding level and it's vote multiplicator
-                    Meteor.call('getUserPoints', function(error, result){
+                    Meteor.call('updateAndGetUserPoints', function(error, result){
                         if(error){
                             // There was an error while retrieving user's points
-                            throw new Meteor.Error('getUserPointsError', "Une erreur a eu lieu lors de la mise à jour de vos points, veuillez réessayer.");
+                            throw new Meteor.Error('updateAndGetUserPointsError', "Une erreur a eu lieu lors de la mise à jour de vos points, veuillez réessayer.");
                         } else if(typeof(result) === "number"){
                             // User's points were successfully retrieved and updated, now let's find the corresponding level
                             Meteor.call('getUserLevel', function(error, result){
@@ -352,10 +352,10 @@ Meteor.methods({
                 if(!Meteor.settings.admin.list.includes(userEmail)){
                     // User isn't in the admin list, he will only update the vote
                     // Updating user points to then catch the corresponding level and it's vote multiplicator
-                    Meteor.call('getUserPoints', function(error, result){
+                    Meteor.call('updateAndGetUserPoints', function(error, result){
                         if(error){
                             // There was an error while retrieving user's points
-                            throw new Meteor.Error('getUserPointsError', "Une erreur a eu lieu lors de la mise à jour de vos points, veuillez réessayer.");
+                            throw new Meteor.Error('updateAndGetUserPointsError', "Une erreur a eu lieu lors de la mise à jour de vos points, veuillez réessayer.");
                         } else if(typeof(result) === "number"){
                             // User's points were successfully retrieved and updated, now let's find the corresponding level
                             Meteor.call('getUserLevel', function(error, result){

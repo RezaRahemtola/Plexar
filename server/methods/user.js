@@ -341,7 +341,9 @@ Meteor.methods({
                 alreadyVoted: [],
                 dailyVotes: {}
             });
-            // User was successfully created
+            // User was successfully created, calling the method to delete old & unverified users
+            Meteor.call('deleteUnverifiedUsers');
+
             return true;
         }
     },

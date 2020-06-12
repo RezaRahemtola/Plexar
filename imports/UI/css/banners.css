@@ -1,4 +1,4 @@
-.productBanner p#description{
+.productBanner p#description, .moderationBanner p#description{
     max-height: 150px;
     overflow: hidden;
     margin-left: 1rem;
