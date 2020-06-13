@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Changa+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap");
 @keyframes spinAround {
   from {
     transform: rotate(0deg); }
@@ -812,7 +813,7 @@ a.has-text-danger:hover, a.has-text-danger:focus {
   font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important; }
 
 .is-family-monospace {
-  font-family: monospace !important; }
+  font-family: "Dancing Script" !important; }
 
 .is-family-code {
   font-family: "Changa One" !important; }
