@@ -1,18 +1,34 @@
 <template name="contributions">
 
-    <div class="box width-fit-content" style="margin: 0 auto">
+    <div class="box width-fit-content" style="margin: 1.5rem auto;">
         <div class="field has-addons">
-            <div class="control">
-                <h5 class="title is-5 has-text-centered" style="margin-bottom: 1rem;">Mes points : {{displayPoints}}</h5>
-                <h5 class="title is-5 has-text-centered">Mon niveau : {{displayUserLevel}}</h5>
+            <div class="control" style="margin: auto;">
+                <h4 class="title is-4 has-text-centered">Niveau {{displayUserLevel}}</h4>
             </div>
             <div class="control" id="infoPointsAndLevels" style="height: 100%; margin: auto 0 auto 0.5rem">
-                <a class="icon has-text-primary" title="En savoir plus" id="infoCollectiveModeration">
-                    <i class="far fa-question-circle"></i>
-                </a>
+                <img src='{{displayLevelIcon}}' class="image is-80x80" alt="Icône de niveau"/>
             </div>
         </div>
     </div>
+
+    {{#each displayLevelProgress}}
+        <div class="container">
+            <p class="has-text-centered is-family-code" style="font-size: 1.5rem;">
+                <span>{{calculateProgressPercentage}}</span>
+                <span>%</span>
+            </p>
+
+            <progress class="progress is-primary" value="{{this.progressValue}}" max="{{this.progressMaximum}}" style="width: 75%; margin: 0 auto;"></progress>
+
+            <p class="has-text-centered">
+                <span class="is-family-code" style="font-size: 1.3rem;">{{displayPointsLeftUntilNextLevel}}</span>
+                <span style="font-size: 1.1rem;"> points nécessaires pour atteindre le prochain niveau</span>
+                <a class="icon has-text-primary" title="En savoir plus" id="infoPointsAndLevels">
+                    <i class="far fa-question-circle"></i>
+                </a>
+            </p>
+        </div>
+    {{/each}}
 
     <table class="table is-bordered is-striped is-hoverable" style="margin: 3rem auto;">
         <thead>
@@ -20,7 +36,7 @@
                 <th>Date</th>
                 <th>Type</th>
                 <th>Élément concerné</th>
-                <th>Status</th>
+                <th>Statut</th>
                 <th>Points</th>
             </tr>
         </thead>

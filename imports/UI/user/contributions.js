@@ -5,8 +5,19 @@ import { Template } from 'meteor/templating';
 // HTML import
 import './contributions.html';
 
-// Initializing Session variable
-Session.set('userPoints', 0);
+// Initializing Session variables
+Session.set('levelProgressInformations', {});
+Session.set('pointsLeftUntilNextLevel', 0);
+Session.set('levelIcon', '');
+
+
+Template.contributions.onRendered(function(){
+    if(Meteor.user()){
+        // User is logged in, updating his points
+        Meteor.call('updateAndGetUserPoints');
+    }
+});
+
 
 Template.contributions.helpers({
     displayContributions: function(){
@@ -20,17 +31,6 @@ Template.contributions.helpers({
         });
         return Session.get('userContributions');
     },
-    displayPoints: function(){
-        Meteor.call('getUserPoints', function(error, result){
-            if(error){
-                // There was an error
-                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-            } else if(result){
-                Session.set('userPoints', result)
-            }
-        });
-        return Session.get('userPoints');
-    },
     displayUserLevel: function(){
         Meteor.call('getUserLevel', function(error, result){
             if(error){
@@ -42,6 +42,54 @@ Template.contributions.helpers({
             }
         });
         return Session.get('userLevel');
+    },
+    displayLevelIcon: function(){
+        // Let's catch the icon that corresponds to the user's level
+        Meteor.call('getLevelIcon', function(error, result){
+            if(error){
+                // TODO: error
+            } else if(result){
+                // Level icon was successfully retrieved, saving it in a Session variable
+                Session.set('levelIcon', result);
+            }
+        });
+        return Session.get('levelIcon');
+    },
+    displayLevelProgress: function(){
+        Meteor.call('getLevelProgressInformations', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // Value and maximum of the progress bar were returned, saving them in a Session variable
+                Session.set('levelProgressInformations', result);
+            }
+        });
+        // Returning it in an array to use {{#each}}
+        return [Session.get('levelProgressInformations')];
+    },
+    calculateProgressPercentage: function(){
+        // Checking if progress bar informations were retrieved
+        if(Session.get('levelProgressInformations') !== {}){
+            // Progress bar informations are set, calculating the percentage
+            const value = Session.get('levelProgressInformations').progressValue;
+            const max = Session.get('levelProgressInformations').progressMaximum;
+            const result = value / max * 100;
+            // The result may have many decimals, so we will round it (https://stackoverflow.com/a/12830454/12171474)
+            return +result.toFixed(2);
+        }
+    },
+    displayPointsLeftUntilNextLevel: function(){
+        Meteor.call('getPointsLeftUntilNextLevel', function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // Number of points left before reaching the next level retrieved successfully, saving it in a Session variable
+                Session.set('pointsLeftUntilNextLevel', result);
+            }
+        });
+        return Session.get('pointsLeftUntilNextLevel');
     }
 });
 
@@ -49,7 +97,7 @@ Template.contributions.helpers({
 Template.contributions.events({
     'click #infoPointsAndLevels'(event){
         event.preventDefault();
-        // More informations icon is clicked
+        // The "more informations" icon is clicked
         Session.set('displayedFaqQuestion', 'pointsAndLevels');  // Updating the value of the question to display
         Session.set('page', 'faq');  // Sending the user to faq page
     }

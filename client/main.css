@@ -28,7 +28,7 @@
   transform-origin: center;
   width: 0.625em; }
 
-.message:not(:last-child), .tabs:not(:last-child), .box:not(:last-child), .notification:not(:last-child), .block:not(:last-child), .highlight:not(:last-child), .table:not(:last-child), .table-container:not(:last-child), .title:not(:last-child),
+.message:not(:last-child), .tabs:not(:last-child), .box:not(:last-child), .notification:not(:last-child), .block:not(:last-child), .highlight:not(:last-child), .progress:not(:last-child), .table:not(:last-child), .table-container:not(:last-child), .title:not(:last-child),
 .subtitle:not(:last-child) {
   margin-bottom: 1.5rem; }
 
@@ -266,7 +266,7 @@ code,
 pre {
   -moz-osx-font-smoothing: auto;
   -webkit-font-smoothing: auto;
-  font-family: monospace; }
+  font-family: "Changa One"; }
 
 body {
   color: #4a4a4a;
@@ -815,7 +815,7 @@ a.has-text-danger:hover, a.has-text-danger:focus {
   font-family: monospace !important; }
 
 .is-family-code {
-  font-family: monospace !important; }
+  font-family: "Changa One" !important; }
 
 .is-block {
   display: block !important; }
@@ -5857,6 +5857,12 @@ a.box:active {
   .image.is-64x64 {
     height: 64px;
     width: 64px; }
+  .image.is-80x80 {
+    height: 80px;
+    width: 80px; }
+  .image.is-90x90 {
+    height: 90px;
+    width: 90px; }
   .image.is-96x96 {
     height: 96px;
     width: 96px; }
@@ -5968,6 +5974,132 @@ a.box:active {
   padding: 0.25rem 0.5rem;
   text-align: center;
   vertical-align: top; }
+
+.progress {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 290486px;
+  display: block;
+  height: 1rem;
+  overflow: hidden;
+  padding: 0;
+  width: 100%; }
+  .progress::-webkit-progress-bar {
+    background-color: #ededed; }
+  .progress::-webkit-progress-value {
+    background-color: #4a4a4a; }
+  .progress::-moz-progress-bar {
+    background-color: #4a4a4a; }
+  .progress::-ms-fill {
+    background-color: #4a4a4a;
+    border: none; }
+  .progress.is-white::-webkit-progress-value {
+    background-color: white; }
+  .progress.is-white::-moz-progress-bar {
+    background-color: white; }
+  .progress.is-white::-ms-fill {
+    background-color: white; }
+  .progress.is-white:indeterminate {
+    background-image: linear-gradient(to right, white 30%, #ededed 30%); }
+  .progress.is-black::-webkit-progress-value {
+    background-color: #0a0a0a; }
+  .progress.is-black::-moz-progress-bar {
+    background-color: #0a0a0a; }
+  .progress.is-black::-ms-fill {
+    background-color: #0a0a0a; }
+  .progress.is-black:indeterminate {
+    background-image: linear-gradient(to right, #0a0a0a 30%, #ededed 30%); }
+  .progress.is-light::-webkit-progress-value {
+    background-color: whitesmoke; }
+  .progress.is-light::-moz-progress-bar {
+    background-color: whitesmoke; }
+  .progress.is-light::-ms-fill {
+    background-color: whitesmoke; }
+  .progress.is-light:indeterminate {
+    background-image: linear-gradient(to right, whitesmoke 30%, #ededed 30%); }
+  .progress.is-dark::-webkit-progress-value {
+    background-color: #363636; }
+  .progress.is-dark::-moz-progress-bar {
+    background-color: #363636; }
+  .progress.is-dark::-ms-fill {
+    background-color: #363636; }
+  .progress.is-dark:indeterminate {
+    background-image: linear-gradient(to right, #363636 30%, #ededed 30%); }
+  .progress.is-primary::-webkit-progress-value {
+    background-color: #e47312; }
+  .progress.is-primary::-moz-progress-bar {
+    background-color: #e47312; }
+  .progress.is-primary::-ms-fill {
+    background-color: #e47312; }
+  .progress.is-primary:indeterminate {
+    background-image: linear-gradient(to right, #e47312 30%, #ededed 30%); }
+  .progress.is-link::-webkit-progress-value {
+    background-color: #8cba51; }
+  .progress.is-link::-moz-progress-bar {
+    background-color: #8cba51; }
+  .progress.is-link::-ms-fill {
+    background-color: #8cba51; }
+  .progress.is-link:indeterminate {
+    background-image: linear-gradient(to right, #8cba51 30%, #ededed 30%); }
+  .progress.is-info::-webkit-progress-value {
+    background-color: #1283e4; }
+  .progress.is-info::-moz-progress-bar {
+    background-color: #1283e4; }
+  .progress.is-info::-ms-fill {
+    background-color: #1283e4; }
+  .progress.is-info:indeterminate {
+    background-image: linear-gradient(to right, #1283e4 30%, #ededed 30%); }
+  .progress.is-success::-webkit-progress-value {
+    background-color: #8cba51; }
+  .progress.is-success::-moz-progress-bar {
+    background-color: #8cba51; }
+  .progress.is-success::-ms-fill {
+    background-color: #8cba51; }
+  .progress.is-success:indeterminate {
+    background-image: linear-gradient(to right, #8cba51 30%, #ededed 30%); }
+  .progress.is-warning::-webkit-progress-value {
+    background-color: #ffdd57; }
+  .progress.is-warning::-moz-progress-bar {
+    background-color: #ffdd57; }
+  .progress.is-warning::-ms-fill {
+    background-color: #ffdd57; }
+  .progress.is-warning:indeterminate {
+    background-image: linear-gradient(to right, #ffdd57 30%, #ededed 30%); }
+  .progress.is-danger::-webkit-progress-value {
+    background-color: #DC310B; }
+  .progress.is-danger::-moz-progress-bar {
+    background-color: #DC310B; }
+  .progress.is-danger::-ms-fill {
+    background-color: #DC310B; }
+  .progress.is-danger:indeterminate {
+    background-image: linear-gradient(to right, #DC310B 30%, #ededed 30%); }
+  .progress:indeterminate {
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-name: moveIndeterminate;
+    animation-timing-function: linear;
+    background-color: #ededed;
+    background-image: linear-gradient(to right, #4a4a4a 30%, #ededed 30%);
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: 150% 150%; }
+    .progress:indeterminate::-webkit-progress-bar {
+      background-color: transparent; }
+    .progress:indeterminate::-moz-progress-bar {
+      background-color: transparent; }
+  .progress.is-small {
+    height: 0.75rem; }
+  .progress.is-medium {
+    height: 1.25rem; }
+  .progress.is-large {
+    height: 1.5rem; }
+
+@keyframes moveIndeterminate {
+  from {
+    background-position: 200% 0; }
+  to {
+    background-position: -200% 0; } }
 
 .table {
   background-color: white;

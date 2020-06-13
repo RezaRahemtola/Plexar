@@ -1,12 +1,17 @@
 <template name="home">
     <div style="background: #f0f0f0">
-        <section class="hero is-medium" style="background: url('test.png') no-repeat center;">
+        <section class="hero is-medium" style="background: url('homeBanner.png') no-repeat center;">
             <div class="hero-body">
                 <div class="container has-text-centered">
-                    <p class="title">PLEXAR</p>
-                    <p class="subtitle">La plateforme participative de référencement de produits à impact social</p>
-                    <form id="searchForm">
 
+                    <!-- Bigger title on desktop screens -->
+                    <p class="title is-3 is-hidden-desktop">PLEXAR</p>
+                    <!-- Smaller title on mobile & tablet -->
+                    <p class="title is-2 is-hidden-touch">PLEXAR</p>
+
+                    <p class="subtitle">La plateforme participative de référencement de produits à impact social</p>
+
+                    <form id="searchForm">
                         <div class="field has-addons" style="justify-content: center;">
                             <div class="control" style="width: 25em; max-width: 100%;">
                                 <input type="search" class="input is-rounded" id="searchBox" placeholder="Rechercher"/>
@@ -27,7 +32,7 @@
     <hr style="margin: 0;">
 
     <section>
-
+        <!-- How it works section with steps hidden on mobile -->
         <div class="hero is-hidden-mobile">
             <div class="hero-body">
                 <div class="container has-text-centered">
@@ -68,32 +73,44 @@
             </div>
         </div>
 
+        <!-- How it works section displayed on mobile with different icons and without steps -->
         <div class="is-hidden-tablet">
-
             <h3 class="title is-3 has-text-centered">Comment ça fonctionne ?</h3>
 
             <div class="columns">
                 <hr style="margin: 0;">
 
                 <div class="column has-text-centered">
-                    <h4 class="title is-4">Ajouter</h4>
-                    <span><i class="fas fa-plus-circle image is-64x64" style="display: inline;"></i></span>
+                    <h4 class="title is-4" style="margin-bottom: 1rem;">Ajouter</h4>
+
+                    <figure class="image is-90x90" style="margin: 0 auto;">
+                        <img src="ajouter.png" alt="Ajouter">
+                    </figure>
+
                     <p>Chacun est libre de contribuer en ajoutant des produits et ainsi partager ses bons plans avec la communauté</p>
                 </div>
 
                 <hr style="margin: 0;">
 
                 <div class="column has-text-centered">
-                    <h4 class="title is-4">Voter</h4>
-                    <span><i class="fas fa-poll image is-64x64" style="display: inline;"></i></span>
+                    <h4 class="title is-4" style="margin-bottom: 0;">Voter</h4>
+
+                    <figure class="image is-90x90" style="margin: 0 auto;">
+                        <img src="voter.png" alt="Voter">
+                    </figure>
+
                     <p>Participez à la modération collective et votez pour vos produits favoris pour leur donner de la visibilité</p>
                 </div>
 
                 <hr style="margin: 0;">
 
-                <div class="column has-text-centered" style="margin-bottom: 3rem;">
-                    <h4 class="title is-4">Rechercher</h4>
-                    <span><i class="fas fa-search image is-64x64" style="display: inline;"></i></span>
+                <div class="column has-text-centered" style="margin-bottom: 2.5rem;">
+                    <h4 class="title is-4" style="margin-bottom: 0.5rem;">Rechercher</h4>
+
+                    <figure class="image is-90x90" style="margin: 0 auto;">
+                        <img src="rechercher.png" alt="Rechercher">
+                    </figure>
+
                     <p>Trouvez des alternatives pour consommer en ayant un impact positif sur la société</p>
                 </div>
 
@@ -113,10 +130,9 @@
                         Cette participation de la part des utilisateurs permet d’alimenter notre base de données et ainsi de permettre d’agrandir la liste de produits disponibles sur le site.
                     </p>
                     <br>
-                    <p>Découvrez nos <span class="has-text-primary" style="font: 2.5rem 'Changa One';">{{productsCounter}}</span> produits à impact social !</p>
+                    <p>Découvrez nos <span class="has-text-primary is-family-code" style="font-size: 2.5rem;">{{productsCounter}}</span> produits à impact social !</p>
                 </div>
             </div>
-
         </div>
 
     </section>
@@ -124,45 +140,13 @@
     <hr style="margin: 0;">
 
     <section>
-        <div class="columns">
-            <div class="column">
-                <div class="tile is-ancestor">
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Produit en vogue</p>
-                            <p class="subtitle">With an image</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="tile is-ancestor">
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Produit en vogue</p>
-                            <p class="subtitle">With an image</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="tile is-ancestor">
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Produit en vogue</p>
-                            <p class="subtitle">With an image</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                </div>
+        <div class="hero">
+            <div class="hero-body">
+                <h3 class="title is-3 has-text-centered">Les plus populaires</h3>
+
+                {{#each displayBestProducts}}
+                    {{> productBanner}}
+                {{/each}}
             </div>
         </div>
     </section>

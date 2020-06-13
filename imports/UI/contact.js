@@ -7,6 +7,9 @@ import './contact.html';
 
 
 Template.contact.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+
     if(Meteor.userId()){
         // User is logged in, we can fill the email field with their email
         const emailInput = document.querySelector('input#email');

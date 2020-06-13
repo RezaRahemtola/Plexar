@@ -12,6 +12,12 @@ import '../css/slideshow.css';
 import { Images } from '../../databases/images.js';
 
 
+Template.moderationProductPage.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);    
+});
+
+
 Template.moderationProductPage.helpers({
     displayProduct: function(){
         // Return the product that corresponds to the one to display

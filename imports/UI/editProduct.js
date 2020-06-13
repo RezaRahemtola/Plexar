@@ -12,27 +12,30 @@ import './editProduct.html';
 import './css/form.css';
 
 // Initializing Session variables
-Session.set('editedCoverImageId', null);
-Session.set('editedOtherImagesId', []);
+Session.set('editedCoverImageId', null);  // For the moment the user didn't proposed any modification to the cover image
+Session.set('editedOtherImagesId', []);  // For the moment the user didn't proposed any modification to the product's images
+
 
 Template.editProduct.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
 
     // Filling the fields with product's informations :
 
     // Catching product's informations
     const product = Session.get('currentProduct');
 
-    Meteor.call('getRuleValue', {rulePath: 'Rules.product'}, function(error, result){
+    Meteor.call('getProductRules', function(error, result){
         if(result){
-            // The rule was returned succesfully, we apply it
-
+            // The rules were returned succesfully, we apply it
+            const productRules = result;  // Saving the rules in a variable
             // Defining product name constants
             const productNameInput = document.querySelector('input#name');
             const nameCharDisplay = document.querySelector('span#nameCharCounter');
             productNameInput.value = product.name;  // Setting the input value with the current product name
             // Setting input min and max length
-            productNameInput.minLength = result.name.minLength;
-            productNameInput.maxLength = result.name.maxLength;
+            productNameInput.minLength = productRules.name.minLength;
+            productNameInput.maxLength = productRules.name.maxLength;
             // Displaying char counter and creating an event listener
             nameCharDisplay.innerText = productNameInput.value.length+" / "+productNameInput.maxLength;
             productNameInput.oninput = function(){
@@ -48,13 +51,17 @@ Template.editProduct.onRendered(function(){
             // Sending mandatory informations only to preserve server resources
             fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
             Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
-                if(!error && result){
-                    productDescriptionInput.style.height = result;  // Result is the height to apply to the field
+                if(error){
+                    // There was an erro while retrieving the height to apply to the field
+                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                } else if(result){
+                    // Result is the height to apply to the field
+                    productDescriptionInput.style.height = result;
                 }
             });
             // Setting input min and max length
-            productDescriptionInput.minLength = result.description.minLength;
-            productDescriptionInput.maxLength = result.description.maxLength;
+            productDescriptionInput.minLength = productRules.description.minLength;
+            productDescriptionInput.maxLength = productRules.description.maxLength;
             // Displaying char counter and creating an event listener
             descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
             productDescriptionInput.oninput = function(){
@@ -64,8 +71,12 @@ Template.editProduct.onRendered(function(){
                 // Sending mandatory informations only to preserve server resources
                 fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
                 Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
-                    if(!error && result){
-                        productDescriptionInput.style.height = result;  // Result is the height to apply to the field
+                    if(error){
+                        // There was an erro while retrieving the height to apply to the field
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    } else if(result){
+                        // Result is the height to apply to the field
+                        productDescriptionInput.style.height = result;
                     }
                 });
             }
@@ -79,9 +90,11 @@ Template.editProduct.onRendered(function(){
             Session.set('editedCoverImageId', coverImageId);  // For the moment, the cover image of the edited product is the same than the actual product
             // Displaying file counter and creating an event listener
             if(Session.get('editedCoverImageId') === null){
-                coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+                // No image selected, updating displayed value
+                coverImageNumberDisplay.textContent = "Aucun fichier sélectionné";
             } else if(Session.get('editedCoverImageId')){
-                coverImageNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+                // An image is selected, updating displayed value
+                coverImageNumberDisplay.textContent = "1 fichier sélectionné";
             }
             coverImageInput.onchange = function(){
                 if(coverImageInput.files.length === 0 && Session.get('editedCoverImageId') === null){
@@ -113,12 +126,19 @@ Template.editProduct.onRendered(function(){
                                 }
                                 Session.set('editedCoverImageId', null);  // Reseting the value of the cover image
                             }
-                            Images.insert(coverImageInput.files[0], function(error, fileObj){
+
+                            // Uploading the cover image
+                            const upload = Images.insert({
+                                file: coverImageInput.files[0],
+                                streams: 'dynamic',
+                                chunkSize: 'dynamic'
+                            });
+                            upload.on('end', function(error, fileObj){
                                 if(error){
                                     // There was an error while inserting the image
                                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                                } else{
-                                    // Image was successfully inserted
+                                } else if(fileObj){
+                                    // New cover image was successfully uploaded, saving it's id in a Session variable
                                     Session.set('editedCoverImageId', fileObj._id);
                                 }
                             });
@@ -134,12 +154,14 @@ Template.editProduct.onRendered(function(){
             Session.set('editedOtherImagesId', product.images);  // For the moment, the images of the edited product are the same than the actual product
             // Displaying file counter and creating an event listener
             if(product.images.length === 0){
-                imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+                // No image selected, updating displayed value
+                imagesNumberDisplay.textContent = "Aucun fichier sélectionné";
             } else if(product.images.length === 1){
-                imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+                // An image is selected, updating displayed value
+                imagesNumberDisplay.textContent = "1 fichier sélectionné";
             } else{
-                // At least 2 files
-                imagesNumberDisplay.textContent = product.images.length + " fichiers sélectionnés";  // Updating displayed value
+                // At least 2 files are selected, updating displayed value
+                imagesNumberDisplay.textContent = product.images.length + " fichiers sélectionnés";
             }
             // Event listener
             imagesInput.onchange = function(){
@@ -151,21 +173,34 @@ Template.editProduct.onRendered(function(){
                     }
                     Meteor.call('checkProductOtherImagesInput', {files: serverFiles, numberOfUploadedImages: Session.get('editedOtherImagesId').length}, function(error, result){
                         if(error){
-                            // There is an error
+                            // There was an error
                             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                         } else{
                             // Files are correct, adding them to the db
                             for(var image of imagesInput.files){
-                                Images.insert(image, function(error, fileObj){
-                                    if(!error){
+                                // For each image we upload it
+                                const upload = Images.insert({
+                                    file: image,
+                                    streams: 'dynamic',
+                                    chunkSize: 'dynamic'
+                                });
+                                upload.on('end', function(error, fileObj){
+                                    if(error){
+                                        // There was an error while uploading the image
+                                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                                    } else if(fileObj){
+                                        // Image was successfully inserted
                                         var otherImagesId = Session.get('editedOtherImagesId');  // Catching the array of images
                                         otherImagesId.push(fileObj._id)  // Adding it the new image
-                                        Session.set('editedOtherImagesId', otherImagesId);  // Updating the value
+
+                                        // Updating the value in the Session variable and the displayed value
+                                        Session.set('editedOtherImagesId', otherImagesId);
                                         if(otherImagesId.length === 1){
-                                            imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+                                            // An image is selected, updating displayed value
+                                            imagesNumberDisplay.textContent = "1 fichier sélectionné";
                                         } else{
-                                            // At least 2 files
-                                            imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";  // Updating displayed value
+                                            // At least 2 files are selected, updating displayed value
+                                            imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";
                                         }
                                     }
                                 });
@@ -173,8 +208,8 @@ Template.editProduct.onRendered(function(){
                         }
                     });
                 } else{
-                    // No file in the input
-                    imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+                    // No file in the input, updating displayed value
+                    imagesNumberDisplay.textContent = "Aucun fichier sélectionné";
                 }
             }
 
@@ -189,6 +224,7 @@ Template.editProduct.onRendered(function(){
                     $('input#website').removeClass("is-danger");
                     document.querySelector('#websiteField p.help.is-danger').textContent = "";
                 } else{
+                    // Website input has a value, checking if it's a valid url
                     Meteor.call('checkUrlInput', {url: websiteInput.value}, function(error, result){
                         if(error){
                             // There was an error
@@ -229,7 +265,10 @@ Template.editProduct.onRendered(function(){
 
 Template.editProduct.helpers({
     displayCoverImage: function(){
-        return Images.find({_id: Session.get('editedCoverImageId')})  // Find and return the corresponding image in the db
+        if(Images.findOne({_id: Session.get('editedCoverImageId')}) !== undefined){
+            // Find and return the corresponding image in the database (in an array in order to use each)
+            return [ Images.findOne({_id: Session.get('editedCoverImageId')}) ];
+        }
     },
     displayOtherImages: function(){
         // Display the other images
@@ -299,7 +338,7 @@ Template.editProduct.events({
             // This image wasn't one of the real product, we can delete it
             Meteor.call('removeImage', {imageId: imageId}, function(error, result){
                 if(error){
-                    // There was an error
+                    // There was an error while removing the image
                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                 }
             });
@@ -309,15 +348,21 @@ Template.editProduct.events({
         if(index !== -1){
             otherImagesId.splice(index, 1);  // Removing the image id
         }
-        Session.set('editedOtherImagesId', otherImagesId);  // Updating the value
-        const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display to update the value
+
+        // Updating the value in the Session variable
+        Session.set('editedOtherImagesId', otherImagesId);
+
+        // Updating the displayed value
+        const imagesNumberDisplay = document.querySelector('span.images.file-name');  // Catching the file number display
         if(otherImagesId.length === 0){
-            imagesNumberDisplay.textContent = "Aucun fichier sélectionné";  // Updating displayed value
+            // No image selected, updating displayed value
+            imagesNumberDisplay.textContent = "Aucun fichier sélectionné";
         } else if(otherImagesId.length === 1){
-            imagesNumberDisplay.textContent = "1 fichier sélectionné";  // Updating displayed value
+            // An image is selected, updating displayed value
+            imagesNumberDisplay.textContent = "1 fichier sélectionné";
         } else{
-            // At least 2 files
-            imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";  // Updating displayed value
+            // At least 2 files are selected, updating displayed value
+            imagesNumberDisplay.textContent = otherImagesId.length + " fichiers sélectionnés";
         }
     },
     'click #submitModifications'(event){

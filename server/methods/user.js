@@ -18,6 +18,30 @@ Meteor.methods({
     'getDefaultProfilePictureUrl'(){
         return Rules.user.profilePicture.defaultUrl;
     },
+    'deleteUnverifiedUsers'(){
+        // Catching all the users with unverified email address
+        const unverifiedUsers = Meteor.users.find({"emails.verified": false});
+        var deletedUsers = 0;  // We haven't delete any user for the moment
+        // Catching the current time
+        const currentTime = new Date();
+        for(var user of unverifiedUsers){
+            // For each user, checking if the account was created more than 30 days ago
+            const timeElapsed = currentTime - user.createdAt;
+            // The result is in milliseconds, converting it in days
+            const daysElapsed = timeElapsed / 1000 / 60 / 60 / 24;
+            if(daysElapsed >= 30){
+                // Account was created more than a month ago without email verification, deleting the account
+                UsersInformations.remove({userId: user._id});
+                Favorites.remove({userId: user._id});
+                CollectiveModeration.remove({userId: user._id});
+                Meteor.users.remove({userId: user._id});
+                // Incrementing the number of deleted users
+                deletedUsers++;
+            }
+        }
+        // Returning the number of deleted users
+        return deletedUsers;
+    },
     'userIsAdmin'(){
         // Checking if user is admin :
         if(!Meteor.userId()){
@@ -40,11 +64,11 @@ Meteor.methods({
             // User is logged in and has a profile picture, return the profile picture id
             return UsersInformations.findOne({userId: Meteor.userId()}).profilePicture;
         } else{
-            // No profile picture
+            // User isn't logged in or doesn't have a profile picture
             return false;
         }
     },
-    'getUserPoints'(){
+    'updateAndGetUserPoints'(){
 
         if(!Meteor.userId()){
             // User isn't logged in
@@ -80,6 +104,65 @@ Meteor.methods({
             return userPoints;
         }
     },
+    'getPointsLeftUntilNextLevel'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // User is logged in, catching his points and his level to find the next level
+            const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
+            const userPoints = UsersInformations.findOne({userId: Meteor.userId()}).points;
+
+            // Catching the possibles levels
+            const levels = Rules.levels;
+
+            var nextLevelIndex = 0;  // For the moment we don't know the index of the next level
+            for(const [index, level] of levels.entries()){
+                // For each level checking if it's the user's one
+                if(level.name === userLevelName){
+                    // This level is the user's one
+                    nextLevelIndex = index + 1;  // The indext of the next level is this one + 1
+                    break;
+                }
+            }
+            // The points left until next level correspond to the points needed for next level less current points
+            return levels[nextLevelIndex].pointsNeeded - userPoints;
+        }
+    },
+    'getLevelProgressInformations'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // User is logged in, catching his level and his points
+            const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
+            const userPoints = UsersInformations.findOne({userId: Meteor.userId()}).points;
+
+            // Catching the possibles levels
+            const levels = Rules.levels;
+
+            var nextLevelIndex = 0;  // For the moment we don't know the index of the next level
+            var userLevel = {};  // For the moment we don't know the propoerties of the current level
+            for(const [index, level] of levels.entries()){
+                // For each level checking if it's the user's one
+                if(level.name === userLevelName){
+                    // This level is the user's one
+                    userLevel = level;  // Saving this level as the user's one
+                    nextLevelIndex = index + 1;  // The indext of the next level is this one + 1
+                    break;
+                }
+            }
+            // The maximum of the progress corresponds to the points needed of the next level less the same property of the current level
+            const progressMaximum = levels[nextLevelIndex].pointsNeeded - userLevel.pointsNeeded;
+            // The value of the progress is the user's points less the points needed of the current level
+            const progressValue = userPoints - userLevel.pointsNeeded;
+
+            // Returning it in an object
+            return {progressMaximum: progressMaximum, progressValue: progressValue};
+        }
+    },
     'getUserLevel'(){
 
         if(!Meteor.userId()){
@@ -111,6 +194,25 @@ Meteor.methods({
             return currentLevel;
         }
     },
+    'getLevelIcon'(){
+
+        if(!Meteor.userId()){
+            // User isn't logged in
+            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+        } else{
+            // Catching user's level to find the corresponding image in the rules
+            const userLevel = UsersInformations.findOne({userId: Meteor.userId()}).level;
+            // Catching the possibles levels
+            const levels = Rules.levels;
+            for(var level of levels){
+                // For each existing level, checking if it's the user's one
+                if(userLevel === level.name){
+                    // This is the current level of the user, returning the corresponding icon
+                    return level.icon;
+                }
+            }
+        }
+    },
     'getBestContributors'(){
 
         // Returning 5 users sorted by points in descending order
@@ -123,7 +225,7 @@ Meteor.methods({
                 var profilePicture = Rules.user.profilePicture.defaultUrl;
             } else{
                 // User has a profile picture, finding the url in the Images database
-                var profilePicture = Images.findOne({_id: contributor.profilePicture}).url();
+                var profilePicture = Images.findOne({_id: contributor.profilePicture}).link();
             }
             contributorsToReturn.push({
                 username: contributor.username,
@@ -138,8 +240,8 @@ Meteor.methods({
     'getUserRank'(){
 
         if(!Meteor.userId()){
-            // User isn't logged in
-            throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
+            // User isn't logged in, so he doesn't have a rank
+            return 0;
         } else{
             // User is logged in, catching the contributors sorted by points in descending order
             const contributors = UsersInformations.find({}, {sort: { points: -1 }});
@@ -239,7 +341,9 @@ Meteor.methods({
                 alreadyVoted: [],
                 dailyVotes: {}
             });
-            // User was successfully created
+            // User was successfully created, calling the method to delete old & unverified users
+            Meteor.call('deleteUnverifiedUsers');
+
             return true;
         }
     },
@@ -302,6 +406,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
+            // User is logged in, catching favorites informations
             var favoriteProductsId = Favorites.findOne({userId: Meteor.userId()}).products;  // Return an array with IDs of the products database
             const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
             var favoriteProducts = [];  // Creating an empty array of the products
@@ -326,6 +431,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
+            // User is logged in, returning his informations
             return UsersInformations.findOne({userId: Meteor.userId()});
         }
     },
@@ -340,7 +446,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // Catching current user's informations
+            // User is logged in, catching his informations
             const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
 
             // Updating non-sensitive informations in our database
@@ -378,7 +484,8 @@ Meteor.methods({
             // Catching current user's informations
             const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
             const currentProfilePicture = userInformations.profilePicture;
-            UsersInformations.update(userInformations._id, { $set: { profilePicture: imageId }}, function(error, result){
+            UsersInformations.update(userInformations._id, { $set: { profilePicture: imageId }},
+                function(error, result){
                     if(error){
                         // There was an error while linking the image with user's informations
                         Images.remove(imageId);  // Removing the new picture
@@ -387,7 +494,8 @@ Meteor.methods({
                         // Image was successfully linked, we can now remove the old profile picture
                         Images.remove(currentProfilePicture);
                     }
-                });
+                }
+            );
         }
     }
 });

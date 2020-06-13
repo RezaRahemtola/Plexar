@@ -3,11 +3,14 @@
 
     <h4 class="title is-4 has-text-centered">
         <span>Votre classement :</span>
-        <span class="title has-text-primary" style="font-family: 'Changa One';">
+        <span class="title has-text-primary is-family-code">
             <span style="font-size: 2.5rem;">{{displayUserRank}}</span>
+
             {{#if firstPlace displayUserRank}}
+                <!-- User has the first place, changing the rank extension -->
                 <span style="font-size: 1.5rem">er</span>
             {{else}}
+                <!-- User doesn't have the first place, we can display the normal rank entension -->
                 <span style="font-size: 1.5rem">ème</span>
             {{/if}}
         </span>
@@ -16,22 +19,38 @@
     {{#each displayBestContributors}}
         <div class="card has-text-centered">
             <div class="card-content">
-                <p class="title has-text-primary" style="font-family: 'Changa One';">
-                    <span style="font-size: 2.5rem;">{{this.rank}}</span>
-                    {{#if firstPlace this.rank}}
-                        <span style="font-size: 1.5rem">er</span>
+                <div class="title has-text-primary is-family-code">
+
+                    {{#if contributorInPodium this.rank}}
+                        <!-- Contributor is in the podium, displaying medals -->
+                        <div class="field has-addons width-fit-content" style="margin: 0 auto;">
+                            <div class="control" style="height: 100%;margin: auto 0;">
+                                <span style="font-size: 2.5rem;">{{this.rank}}</span>
+                                {{#if firstPlace this.rank}}
+                                    <!-- Contributor has the first place, changing the rank extension -->
+                                    <span style="font-size: 1.5rem">er</span>
+                                {{else}}
+                                    <!-- Contributor doesn't have the first place, we can display the normal rank entension -->
+                                    <span style="font-size: 1.5rem">ème</span>
+                                {{/if}}
+                            </div>
+
+                            <div class="control">
+                                <img class="image" style="margin: 0 auto; height: 8rem; width: 6rem;" src="{{getMedalUrl this.rank}}">
+                            </div>
+                        </div>
                     {{else}}
+                        <!-- Contributor isn't in the podium, only display the rank -->
+                        <span style="font-size: 2.5rem;">{{this.rank}}</span>
                         <span style="font-size: 1.5rem">ème</span>
                     {{/if}}
-                </p>
 
-                <figure class="image is-96x96" style="margin: 0 auto;">
-                    <img class="is-rounded" src="{{this.profilePicture}}">
-                </figure>
+                </div>
 
-                <p class="title has-text-primary" style="font-family: 'Changa One';">
-                    <span class="has-text-success">{{this.username}}</span>
-                 </p>
+                <img src="{{this.profilePicture}}" class="image is-96x96" style="margin: 0 auto;" >
+
+                <p class="title has-text-success is-family-code">{{this.username}}</p>
+
                 <p class="subtitle">{{this.points}} points</p>
             </div>
         </div>

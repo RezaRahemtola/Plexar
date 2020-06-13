@@ -13,12 +13,15 @@ import './css/form.css';
 
 
 Template.addProduct.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+
     if(Meteor.user()){
         // User is logged in, creating all dynamic functions
 
-        Meteor.call('getRuleValue', {rulePath: 'Rules.product'}, function(error, result){
+        Meteor.call('getProductRules', function(error, result){
             if(result){
-                // The rule was returned succesfully, we apply it
+                // The rules were returned succesfully, we apply it
                 const productRules = result;  // Carching product rules
 
                 // Defining product name constants
@@ -49,8 +52,12 @@ Template.addProduct.onRendered(function(){
                     // Sending mandatory informations only to preserve server resources
                     fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
                     Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
-                        if(!error && result){
-                            productDescriptionInput.style.height = result;  // Result is the height to apply to the field
+                        if(error){
+                            // There was an error
+                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Display an error message
+                        } else if(result){
+                            // Result is the height to apply to the field
+                            productDescriptionInput.style.height = result;
                         }
                     });
                 }
@@ -75,7 +82,7 @@ Template.addProduct.onRendered(function(){
                         }
                         Meteor.call('checkProductCoverImageInput', {files: serverFiles}, function(error, result){
                             if(error){
-                                // There is an error
+                                // There was an error
                                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                             } else{
                                 // File input is correct
@@ -91,8 +98,18 @@ Template.addProduct.onRendered(function(){
                                         }
                                     });
                                 }
-                                Images.insert(coverImageInput.files[0], function(error, fileObj){
-                                    if(!error){
+
+
+                                const upload = Images.insert({
+                                    file: coverImageInput.files[0],
+                                    streams: 'dynamic',
+                                    chunkSize: 'dynamic'
+                                });
+                                upload.on('end', function(error, fileObj){
+                                    if(error){
+                                        // There was an error
+                                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                                    } else if(fileObj){
                                         // The image was succesfully inserted, we can set the cover image Id with the new one
                                         Session.set('coverImageId', fileObj._id);
                                     }
@@ -121,8 +138,17 @@ Template.addProduct.onRendered(function(){
                             } else{
                                 // Files are correct, adding them to the db
                                 for(var image of imagesInput.files){
-                                    Images.insert(image, function(error, fileObj){
-                                        if(!error){
+
+                                    const upload = Images.insert({
+                                        file: image,
+                                        streams: 'dynamic',
+                                        chunkSize: 'dynamic'
+                                    });
+                                    upload.on('end', function(error, fileObj){
+                                        if(error){
+                                            // There is an error
+                                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                                        } else if(fileObj){
                                             // Image was succesfully inserted
                                             var otherImagesId = Session.get('otherImagesId');  // Catching the array of images
                                             otherImagesId.push(fileObj._id)  // Adding it the new image
@@ -190,7 +216,10 @@ Template.addProduct.onRendered(function(){
 
 Template.addProduct.helpers({
     displayCoverImage: function(){
-        return Images.find({_id: Session.get('coverImageId')})  // Find and return the corresponding image in the db
+        if(Images.findOne({_id: Session.get('coverImageId')}) !== undefined){
+            // There is an uploaded cover image, returning it (in an array to use each)
+            return [ Images.findOne({_id: Session.get('coverImageId')}) ];
+        }
     },
     displayOtherImages: function(){
         // Display the other images

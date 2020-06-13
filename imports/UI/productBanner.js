@@ -15,6 +15,7 @@ import { Images } from '../databases/images.js';
 
 Template.productBanner.helpers({
     displayProductFirstImage: function(images){
-        return Images.findOne({_id: images[0]}).url();  // Return the url of the image
+        // With a given array of imagesId, return the link of the first image to display it in the banner
+        return Images.findOne({_id: images[0]}).link();
     }
 });

@@ -15,6 +15,12 @@ Session.set('currentDailyVotes', 0);
 Session.set('currentDailyVotesLimit', 0);
 
 
+Template.collectiveModeration.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+});
+
+
 Template.collectiveModeration.helpers({
     displayModeration: function(){
         Meteor.call('displayModeration', function(error, result){

@@ -12,14 +12,18 @@ import { Products } from '../imports/databases/products.js';
 
 
 Meteor.startup(function(){
-    // code to run on server at startup
-    Products.rawCollection().createIndex({ name: "text", description: "text" });  // Creating text index to enable search in those fields of the db
-    if(Meteor.settings && Meteor.settings.smtp){
+    // Code to run on server at startup
+
+    if(Meteor.isDevelopment && Meteor.settings){
+        // We are in development mode and settings were given, creating environment variables
         const { username, password, host, port, isSecure } = Meteor.settings.smtp;
         const scheme = isSecure ? 'smtps' : 'smtp';
         process.env.MAIL_URL = `${scheme}://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}:${port}`;
 
-        // Calling the method to define email settings and templates
-        Meteor.call('setAccountsSettings');
+        process.env.SENDGRID_CONTACT_API_KEY = Meteor.settings.sendgridContactApiKey;
     }
+    // Creating text index to enable search in those fields of the database :
+    Products.rawCollection().createIndex({ name: "text", description: "text" });
+    // Calling the method to define email settings and templates :
+    Meteor.call('setAccountsSettings');
 });

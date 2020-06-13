@@ -15,7 +15,7 @@ import { Images } from '../../databases/images.js';
 
 Template.moderationBanner.helpers({
     displayProductFirstImage: function(images){
-        return Images.findOne({_id: images[0]}).url();  // Return the url of the image
+        return Images.findOne({_id: images[0]}).link();  // Return the url of the image
     },
     editModeration: function(moderationReason){
         if(moderationReason === 'editProduct'){

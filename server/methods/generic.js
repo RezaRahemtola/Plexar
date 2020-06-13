@@ -1,29 +1,28 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
-import { Email } from 'meteor/email';
 
 // Importing databases
 import { Products } from '../../imports/databases/products.js';
 import { Rules } from '../rules.js';
 
-Meteor.methods({
-    'getRuleValue'({rulePath}){
-        // Type check to prevent malicious calls
-        check(rulePath, String);
 
-        if(eval(rulePath) !== undefined && rulePath.includes("Rules.")){
-            // Path is valid, return the corresponding getRuleValue
-            return eval(rulePath);
-        } else{
-            // Path is invalid, throwing an error
-            throw new Meteor.Error("invalid-rule", "The rule ''"+rulePath+"' doesn't exist.");
-        }
+Meteor.methods({
+    'getProductRules'(){
+        return Rules.product;
+    },
+    'getProductNameRules'(){
+        return Rules.product.name;
+    },
+    'getProductDescriptionRules'(){
+        return Rules.product.description;
     },
     'productsCounter'(){
+        // Return the number of available products
         return Products.find().count().toLocaleString();  // toLocaleString() make a space where needed (1000 will be 1 000)
     },
     'getCategories'(){
+        // Return all the available categories
         return Rules.product.categories;
     },
     'sendContactMessage'({email, subject, message}){
@@ -33,8 +32,9 @@ Meteor.methods({
         check(message, String);
 
         // TODO: length verifications
-        const to = Rules.email.receptionAddress;
-        const from = Rules.email.sendingAddress;
+        // TODO: email verification
+        const from = Rules.email.contactForm.sender;
+        const to = Rules.email.contactForm.receiver;
         const emailSubject = "Formulaire de contact";
 
         // Creating the body content of the email
@@ -42,35 +42,28 @@ Meteor.methods({
                       <h4>Adresse email : `+ email +`</h4>
                       <p>Message : `+ message +`</p>`;
 
-        // Sending email :
-        Email.send({to: to, from: from, subject: emailSubject, html: html});
+        // Sending email using SendGrid (https://app.sendgrid.com/guide/integrate/langs/nodejs):
+
+        // Using Twilio SendGrid's v3 Node.js Library (https://github.com/sendgrid/sendgrid-nodejs)
+        const sendGrid = require('@sendgrid/mail');
+        sendGrid.setApiKey(process.env.SENDGRID_CONTACT_API_KEY);
+        sendGrid.send({to: to, from: from, subject: emailSubject, html: html});
 
         return true;
     },
     'setAccountsSettings'(){
-
-        // Defining default sending address
-        Accounts.emailTemplates.from = Rules.email.sendingAddress;
 
         Accounts.config({
             sendVerificationEmail: true, // Enable verification email
             loginExpirationInDays: null  // Disable login expiration
         });
 
-        // When an email verification link is clicked, verifyEmail with the given token
-        Accounts.onEmailVerificationLink = function(token, done){
-            Accounts.verifyEmail(token, function(error){
-                if(error){
-                    throw new Meteor.Error(error.error, error.reason);
-                } else{
-                    // Everything was successfully executed
-                    done();
-                }
-            });
-        };
-
         // Customizing templates :
         Accounts.emailTemplates.verifyEmail = {
+            from(){
+                // Defining sending address
+                return Rules.email.verifyEmail.sender;
+            },
             subject(){
                 return "Activez votre compte";
             },
@@ -86,6 +79,10 @@ Meteor.methods({
             }
         };
         Accounts.emailTemplates.resetPassword = {
+            from(){
+                // Defining sending address
+                return Rules.email.resetPassword.sender;
+            },
             subject(){
                 return "Réinitialiser votre mot passe";
             },

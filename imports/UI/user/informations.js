@@ -12,15 +12,15 @@ import './informations.html';
 // CSS import
 import '../css/form.css';
 
-// Initializing Session variables
-Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
-
 
 Template.informations.onRendered(function(){
 
+    // Initializing Session variable
+    Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
+
     Meteor.call('getUserInformations', function(error, result){
         if(error){
-            // There was an error
+            // There was an error while catching user's informations
             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
         } else{
             // Catching the result to auto fill fields
@@ -72,13 +72,13 @@ Template.informations.onRendered(function(){
 
                     Meteor.call('checkProfilePictureInput', {files: serverFiles}, function(error, result){
                         if(error){
-                            // There is an error
+                            // There was an error
                             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                         } else{
                             // File input is correct
                             Meteor.call('getUserInformations', function(error, result){
                                 if(error){
-                                    // There is an error
+                                    // There was an error
                                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                                 } else{
                                     // Catching profile picture
@@ -95,8 +95,18 @@ Template.informations.onRendered(function(){
                                             }
                                         });
                                     }
-                                    Images.insert(fileInput.files[0], function(error, fileObj){
-                                        if(fileObj){
+
+                                    const upload = Images.insert({
+                                        file: fileInput.files[0],
+                                        streams: 'dynamic',
+                                        chunkSize: 'dynamic'
+                                    });
+                                    upload.on('end', function(error, fileObj){
+                                        if(error){
+                                            // There was an error while inserting the image
+                                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                                        } else if(fileObj){
+                                            // Image was successfully inserted
                                             Session.set('currentProfilePicture', fileObj._id);
                                         }
                                     });
@@ -113,10 +123,12 @@ Template.informations.onRendered(function(){
 
 Template.informations.helpers({
     displayProfilePicture: function(){
-        if(Session.get('currentProfilePicture') !== Session.get('defaultProfilePicture')){
-            // Selected image isn't the default one, we can catch and return it's url
-            const imageUrl = Images.findOne({_id: Session.get('currentProfilePicture')}).url();
-            return imageUrl;
+        if(Session.get('currentProfilePicture') !== undefined && Session.get('currentProfilePicture') !== Session.get('defaultProfilePicture')){
+            // Selected image is set and isn't the default one, checking if it's still in the database
+            if(Images.findOne({_id: Session.get('currentProfilePicture')})){
+                // Image is still in the database, we can catch and return it's url
+                return Images.findOne({_id: Session.get('currentProfilePicture')}).link();
+            }
         } else{
             // Selected image is the default one, returning it
             return Session.get('currentProfilePicture');
@@ -212,9 +224,8 @@ Template.informations.events({
         });
 
 
-
         // Waiting for all callbacks to complete (to see if an error is raised)
-        var intervalId = setInterval(function(){
+        const intervalId = setInterval(function(){
             if(callbacksPending === 0 && formErrors === 0){
                 // All callbacks were completed without any error, displaying a success message
                 Session.set('message', {type: "header", headerContent: "Votre profil a été modifié avec succès !", style:"is-success"} );
@@ -226,4 +237,43 @@ Template.informations.events({
             }
         }, 200);
     }
+});
+
+
+Template.informations.onDestroyed(function(){
+    // Checking if there's unused images to remove them
+
+    Meteor.call('hasProfilePicture', function(error, result){
+        if(error){
+            // There was an error
+            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+        } else if(result){
+            // The current user has a profile picture, imageId was returned
+            const profilePictureId = result  // Saving the result
+            const displayedProfilePictureId = Session.get('currentProfilePicture');  // Catching the displayed profile picture
+
+            if(displayedProfilePictureId !== profilePictureId){
+                // The profile picture displayed in the form isn't the one in the database, we can safely delete it
+                Meteor.call('removeImage', {imageId: displayedProfilePictureId}, function(error, result){
+                    if(error){
+                        // There was an error
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    }
+                });
+            }
+        } else{
+            // Current user doesn't have a profile picture
+            const displayedProfilePictureId = Session.get('currentProfilePicture');  // Catching the displayed profile picture
+
+            if(displayedProfilePictureId !== Session.get('defaultProfilePicture')){
+                // Their is a picture uploaded in the form, we can delete it
+                Meteor.call('removeImage', {imageId: displayedProfilePictureId}, function(error, result){
+                    if(error){
+                        // There was an error
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                    }
+                });
+            }
+        }
+    });
 });

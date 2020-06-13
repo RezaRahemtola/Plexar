@@ -12,6 +12,7 @@ import './css/footer.css';
 import './css/generic.css';
 
 // JS imports
+import './about.js';
 import './home.js';
 import './addProduct.js';
 import './productPage.js';
@@ -34,12 +35,10 @@ import './modals/register.js';
 import './modals/login.js';
 import './modals/forgotPassword.js';
 import './modals/report.js';
+import './modals/resetPassword.js';
 
 // Databases imports
 import { Images } from '../databases/images.js';
-
-// Alone Template
-import './about.html';
 
 
 Template.body.onCreated(function(){
@@ -49,7 +48,6 @@ Template.body.onCreated(function(){
     Session.set('navigation', []);  // Used to store page navigation history to use return button
     Session.set("searchedProducts", [] );  // No search for the moment
     Session.set('message', null);  // No message to display for the moment
-    Session.set('modal', null);  // No modal to display for the moment
     Session.set('search', {query: "", categories: [], sort: 'popularity'});
     Session.set('coverImageId', null);
     Session.set('otherImagesId', []);
@@ -59,10 +57,16 @@ Template.body.onCreated(function(){
     Session.set('userIsAdmin', false);  // By default the current user isn't admin
     Session.set('userLevel', null);  // We don't need the user level for the moment
 
+    if(Session.get('modal') === undefined){
+        // No modal set (one could have been set by a function executed before the body creation, like Accounts.onResetPasswordLink)
+        Session.set('modal', null);  // No modal to display for the moment
+    }
+
     // Catching url of the default profile picture
     Meteor.call('getDefaultProfilePictureUrl', function(error, result){
         if(error){
-            // TODO: error
+            // There was an error
+            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
         } else if(result){
             // Default profile picture url was returned, saving it in a Session variable
             Session.set('defaultProfilePicture', result);
@@ -96,12 +100,14 @@ Template.body.helpers({
         }
     },
     currentModal: function(){
+        // Return the modal to display if there's one
         if(Session.get('modal') !== null){
             // There is an active modal
             return Session.get('modal');  // Return the modal to display
         }
     },
     displayProfilePicture: function(){
+        // Checking if there's a profile picture to display
         Meteor.call('hasProfilePicture', function(error, result){
             if(error){
                 // There was an error
@@ -109,7 +115,7 @@ Template.body.helpers({
             } else if(result){
                 // The current user has a profile picture, imageId was returned
                 const profilePictureId = result  // Saving the result
-                const image = Images.findOne({_id: profilePictureId}).url();  // Find the url of this image
+                const image = Images.findOne({_id: profilePictureId}).link();  // Find the url of this image
                 Session.set('profilePicture', image);
             } else{
                 // Current user doesn't have a profile picture, set it to the default one
@@ -123,7 +129,7 @@ Template.body.helpers({
         // Display available categories
         Meteor.call('getCategories', function(error, result){
             if(error){
-                // There was an error
+                // There was an error while retrieving the categories
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
             } else{
                 // Available categories were successfully returned, saving them in a Session variable

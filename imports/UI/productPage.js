@@ -16,8 +16,10 @@ Session.set('productInFavorites', null);
 
 
 Template.productPage.onRendered(function(){
-    if(Meteor.user() && Session.get('currentProduct')){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
 
+    if(Meteor.user() && Session.get('currentProduct')){
         // Catching current productId for the call
         const productId = Session.get('currentProduct')._id;
 
@@ -182,11 +184,12 @@ Template.productPage.helpers({
     },
     displayProductImages: function(){
         if(Session.get('currentProduct')){
+            // There is a product to display
             var productImagesId = Session.get('currentProduct').images;  // Return an array with IDs of the product images
             var productImages = [];  // Creating an empty array for the images
             for(var imageId of productImagesId){
-                // Filling the array with product's images
-                productImages.push(Images.findOne({_id: imageId}));
+                // Filling the array with product's images links
+                productImages.push(Images.findOne({_id: imageId}).link());
             }
             return productImages;
         }

@@ -16,6 +16,9 @@ Session.set('editProductModeration', null);
 
 
 Template.editProductModeration.onRendered(function(){
+    // Scrolling the window back to the top
+    window.scrollTo(0, 0);
+
     // Filling fields
     const originalProduct = Session.get('editProductModeration').originalProduct;
 
@@ -23,7 +26,7 @@ Template.editProductModeration.onRendered(function(){
     const originalName = document.querySelector('input#originalName');
     const originalNameCharDisplay = document.querySelector('span#originalNameCharCounter');
     originalName.value = originalProduct.name;
-    Meteor.call('getRuleValue', {rulePath: 'Rules.product.name'}, function(error, result){
+    Meteor.call('getProductNameRules', function(error, result){
         if(error){
             // There is an error
             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -41,7 +44,7 @@ Template.editProductModeration.onRendered(function(){
     const originalDescriptionCharDisplay = document.querySelector('span#originalDescriptionCharCounter');
     originalDescription.value = originalProduct.description;
 
-    Meteor.call('getRuleValue', {rulePath: 'Rules.product.description'}, function(error, result){
+    Meteor.call('getProductDescriptionRules', function(error, result){
         if(error){
             // There is an error
             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -68,8 +71,8 @@ Template.editProductModeration.onRendered(function(){
     // Cover image
     const originalCoverImageDisplay = document.querySelector('img#originalCoverImage');
     const originalCoverImageId = originalProduct.images[0];
-    const originalCoverImageUrl = Images.findOne({_id: originalCoverImageId}).url();
-    originalCoverImageDisplay.src = originalCoverImageUrl;
+    const originalCoverImageLink = Images.findOne({_id: originalCoverImageId}).link();
+    originalCoverImageDisplay.src = originalCoverImageLink;
 });
 
 Template.editProductModeration.helpers({
@@ -84,7 +87,7 @@ Template.editProductModeration.helpers({
     displayEditedName: function(){
         const editedProduct = Session.get('editProductModeration').editedProduct;
 
-        Meteor.call('getRuleValue', {rulePath: 'Rules.product.name'}, function(error, result){
+        Meteor.call('getProductNameRules', function(error, result){
             if(error){
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -111,7 +114,7 @@ Template.editProductModeration.helpers({
     },
     displayEditedDescription: function(){
         const editedProduct = Session.get('editProductModeration').editedProduct;
-        Meteor.call('getRuleValue', {rulePath: 'Rules.product.description'}, function(error, result){
+        Meteor.call('getProductDescriptionRules', function(error, result){
             if(error){
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
@@ -147,8 +150,7 @@ Template.editProductModeration.helpers({
     },
     displayEditedCoverImage: function(){
         const editedCoverImage = Session.get('editProductModeration').editedProduct.images[0];
-        const editedCoverImageUrl = Images.findOne({_id: editedCoverImage}).url();
-        return [editedCoverImageUrl];
+        return Images.findOne({_id: editedCoverImage}).link();
     },
     displayOtherImages: function(){
         // Catching the original product's images
@@ -158,7 +160,7 @@ Template.editProductModeration.helpers({
         var originalImagesUrl = [];
         for(var imageId of originalImages){
             // For each image id, we add it to the images array
-            originalImagesUrl.push(Images.findOne({_id: imageId}).url());
+            originalImagesUrl.push(Images.findOne({_id: imageId}).link());
         }
         return originalImagesUrl;
     },
@@ -181,7 +183,7 @@ Template.editProductModeration.helpers({
         var editedImagesUrl = [];
         for(var imageId of editedImages){
             // For each image id, we add it to the images array
-            editedImagesUrl.push(Images.findOne({_id: imageId}).url());
+            editedImagesUrl.push(Images.findOne({_id: imageId}).link());
         }
         return editedImagesUrl;
     },

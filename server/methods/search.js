@@ -16,6 +16,7 @@ Meteor.methods({
             // Categories isn't an array
             throw new Meteor.Error('categoriesNotArray', 'Une erreur est survenue lors du filtrage par catégories, veuillez réessayer.');
         } else{
+            // All parameters are of the correct type
             if(categories.length > 0 && text === ""){
                 // User wants to search by categories, returning the products that contains all the asked categories
                 var matchingProducts = Products.find({categories: { $all: categories } }).fetch();
