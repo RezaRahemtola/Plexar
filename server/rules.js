@@ -35,6 +35,7 @@ export const Rules = {
             'Alimentation',
             'Informatique & High-Tech',
             'Recondionné & Recyclage',
+            'Santé & Hygiène',
             'Sites web & Applications',
             'Vêtements & Accessoires',
         ]
@@ -74,9 +75,9 @@ export const Rules = {
         }
     ],
     points: {
-        productAddition: 10,
-        productModification: 5,
-        productReport : 2,
+        productAddition: 20,
+        productModification: 10,
+        productReport : 5,
         collectiveModerationVote: 1
     },
     moderation: {
