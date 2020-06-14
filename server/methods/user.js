@@ -74,7 +74,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // Catching user's accepted contributions
+            // User is logged in, catching user's accepted contributions
             const acceptedUserContributions = Contributions.find({userId: Meteor.userId(), status: 'accepted'});
             // Initializing points
             var userPoints = 0;
@@ -97,10 +97,12 @@ Meteor.methods({
             const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()});
             UsersInformations.update(userInformationsId, { $set: { points: userPoints } }, function(error, result){
                 if(error){
-                    // There was an error
+                    // There was an error while updating the points
                     throw new Meteor.Error('pointsUpdateError', "Une erreur est survenue lors de la mise à jour de vos points, veuillez réessayer.")
                 }
             });
+
+            // Sending the result to the client
             return userPoints;
         }
     },
@@ -159,7 +161,7 @@ Meteor.methods({
             // The value of the progress is the user's points less the points needed of the current level
             const progressValue = userPoints - userLevel.pointsNeeded;
 
-            // Returning it in an object
+            // Returning it to the client in an object
             return {progressMaximum: progressMaximum, progressValue: progressValue};
         }
     },
