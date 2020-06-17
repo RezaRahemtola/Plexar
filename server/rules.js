@@ -34,7 +34,7 @@ export const Rules = {
         categories: [
             'Alimentation',
             'Informatique & High-Tech',
-            'Recondionné & Recyclage',
+            'Reconditionné & Recyclage',
             'Santé & Hygiène',
             'Sites web & Applications',
             'Vêtements & Accessoires',
