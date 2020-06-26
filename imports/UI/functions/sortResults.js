@@ -12,19 +12,19 @@ sortResults = function(arrayToSort, order){
         if(order === 'A-Z'){
             //Sort in ascending order
             if (nameA < nameB){
-                return -1
+                return -1;
             } else if(nameA > nameB){
-                return 1
+                return 1;
             }
             return 0  //default return value (no sorting)
         } else if(order === 'Z-A'){
             //Sort in descending order
             if (nameA < nameB){
-                return 1
+                return 1;
             } else if(nameA > nameB){
-                return -1
+                return -1;
             }
-            return 0  //default return value (no sorting)
+            return 0;  //default return value (no sorting)
         } else if(order === 'random'){
             // Code from https://javascript.info/task/shuffle
             return Math.random() - 0.5;  // Return randomly a positive or negative number
