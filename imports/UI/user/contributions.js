@@ -47,7 +47,8 @@ Template.contributions.helpers({
         // Let's catch the icon that corresponds to the user's level
         Meteor.call('getLevelIcon', function(error, result){
             if(error){
-                // TODO: error
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
                 // Level icon was successfully retrieved, saving it in a Session variable
                 Session.set('levelIcon', result);
