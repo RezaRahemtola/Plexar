@@ -1,5 +1,5 @@
 {
-    "name": "TFC",
+    "name": "Plexar",
     "private": true,
     "main": "sass/mystyles.scss",
     "scripts": {
@@ -11,7 +11,7 @@
         "css-watch": "npm run css-build -- --watch"
     },
     "dependencies": {
-        "@babel/runtime": "^7.9.6",
+        "@babel/runtime": "^7.10.5",
         "@creativebulma/bulma-collapsible": "^1.0.4",
         "@sendgrid/mail": "^7.2.1",
         "bcrypt": "^4.0.1",

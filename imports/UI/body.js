@@ -286,6 +286,7 @@ Template.body.events({
     }
 });
 
+
 // jQuery code to display nav menu when burger-menu is clicked (code from https://bulma.io/documentation/components/navbar/)
 $(document).ready(function(){
     // Check for click events on the navbar burger icon
