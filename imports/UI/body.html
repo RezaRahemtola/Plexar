@@ -1,140 +1,139 @@
 <body>
     <div id="content-wrap">
-    <header>
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item" id="home">
-                    <img src="logo.png" style="width: 144px; height: 36px">
-                </a>
-
-                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-            </div>
-
-            <div id="mainNavbar" class="navbar-menu">
-                <div class="navbar-start">
-
-                    <a class="navbar-item" id="search">
-                        <span class="icon"><i class="fas fa-search"></i></span>
-                        <span>Rechercher</span>
+        <header>
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item" id="home">
+                        <img src="logo.png" style="width: 144px; height: 36px">
                     </a>
 
-                    <a class="navbar-item" id="addProduct">
-                        <span class="icon"><i class="fas fa-shopping-basket"></i></span>
-                        <span>Ajouter un produit</span>
+                    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
                     </a>
-
-                    <div class="navbar-item has-dropdown is-hoverable" id="categoriesDropdown">
-                        <a class="navbar-link">
-                            <span class="icon"><i class="fas fa-grip-vertical"></i></span>
-                            <span>Catégories</span>
-                        </a>
-                        <div class="navbar-dropdown is-hidden-touch">
-                            {{#each displayCategories}}
-                                <a class="navbar-item">{{this}}</a>
-                            {{/each}}
-                        </div>
-                    </div>
-
-                    <a class="navbar-item" id="collectiveModeration">
-                        <span class="icon"><i class="fas fa-tools"></i></span>
-                        <span>Modération collective</span>
-                    </a>
-
-                    <div class="navbar-item has-dropdown is-hoverable" id="moreDropdown">
-                        <a class="navbar-link">
-                            <span class="icon"><i class="fas fa-ellipsis-v"></i></span>
-                            <span>Plus</span>
-                        </a>
-                        <div class="navbar-dropdown is-hidden-touch">
-
-                            <a class="navbar-item" id="about">
-                                <span class="icon"><i class="fas fa-apple-alt"></i></span>
-                                <span>A propos de Plexar</span>
-                            </a>
-
-                            <a class="navbar-item" id="faq">
-                                <span class="icon"><i class="fas fa-question-circle"></i></span>
-                                <span>FAQ</span>
-                            </a>
-
-                            <a class="navbar-item" id="contact">
-                                <span class="icon"><i class="fas fa-edit"></i></span>
-                                <span>Contact</span>
-                            </a>
-                        </div>
-                    </div>
-
                 </div>
 
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                            {{#if currentUser}}
-                                <!-- Displayed only when the user is logged in (display a profile dropdown)-->
-                                <div class="navbar-item has-dropdown is-hoverable" id="profileDropdown">
-                                    <!-- Dropdown link with user's profile picture -->
-                                    <a class="navbar-link">
-                                        <img src={{displayProfilePicture}} alt="Photo de profil" class="image is-48x48"/>
-                                    </a>
-                                    <!-- Dropdown menu -->
-                                    <div class="navbar-dropdown is-right is-hidden-touch">
-                                        <a class="navbar-item" id="favorite">
-                                            <span class="icon"><i class="fas fa-bookmark"></i></span>
-                                            <span>Mes favoris</span>
-                                        </a>
+                <div id="mainNavbar" class="navbar-menu">
+                    <div class="navbar-start">
 
-                                        <a class="navbar-item" id="contributions">
-                                            <span class="icon"><i class="fas fa-list"></i></span>
-                                            <span>Mes contributions</span>
-                                        </a>
+                        <a class="navbar-item" id="search">
+                            <span class="icon"><i class="fas fa-search"></i></span>
+                            <span>Rechercher</span>
+                        </a>
 
-                                        <a class="navbar-item" id="informations">
-                                            <span class="icon"><i class="fas fa-user"></i></span>
-                                            <span>Mes informations</span>
-                                        </a>
+                        <a class="navbar-item" id="addProduct">
+                            <span class="icon"><i class="fas fa-shopping-basket"></i></span>
+                            <span>Ajouter un produit</span>
+                        </a>
 
-                                        <hr class="navbar-divider">
+                        <div class="navbar-item has-dropdown is-hoverable" id="categoriesDropdown">
+                            <a class="navbar-link">
+                                <span class="icon"><i class="fas fa-grip-vertical"></i></span>
+                                <span>Catégories</span>
+                            </a>
+                            <div class="navbar-dropdown is-hidden-touch">
+                                {{#each displayCategories}}
+                                    <a class="navbar-item">{{this}}</a>
+                                {{/each}}
+                            </div>
+                        </div>
 
-                                        <a class="navbar-item logout">
-                                            <span class="icon"><i class="fas fa-power-off"></i></span>
-                                            <span>Se déconnecter</span>
+                        <a class="navbar-item" id="collectiveModeration">
+                            <span class="icon"><i class="fas fa-tools"></i></span>
+                            <span>Modération collective</span>
+                        </a>
+
+                        <div class="navbar-item has-dropdown is-hoverable" id="moreDropdown">
+                            <a class="navbar-link">
+                                <span class="icon"><i class="fas fa-ellipsis-v"></i></span>
+                                <span>Plus</span>
+                            </a>
+                            <div class="navbar-dropdown is-hidden-touch">
+
+                                <a class="navbar-item" id="about">
+                                    <span class="icon"><i class="fas fa-apple-alt"></i></span>
+                                    <span>A propos de Plexar</span>
+                                </a>
+
+                                <a class="navbar-item" id="faq">
+                                    <span class="icon"><i class="fas fa-question-circle"></i></span>
+                                    <span>FAQ</span>
+                                </a>
+
+                                <a class="navbar-item" id="contact">
+                                    <span class="icon"><i class="fas fa-edit"></i></span>
+                                    <span>Contact</span>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                                {{#if currentUser}}
+                                    <!-- Displayed only when the user is logged in (display a profile dropdown)-->
+                                    <div class="navbar-item has-dropdown is-hoverable" id="profileDropdown">
+                                        <!-- Dropdown link with user's profile picture -->
+                                        <a class="navbar-link">
+                                            <img src={{displayProfilePicture}} alt="Photo de profil" class="image is-48x48"/>
                                         </a>
+                                        <!-- Dropdown menu -->
+                                        <div class="navbar-dropdown is-right is-hidden-touch">
+                                            <a class="navbar-item" id="favorite">
+                                                <span class="icon"><i class="fas fa-bookmark"></i></span>
+                                                <span>Mes favoris</span>
+                                            </a>
+
+                                            <a class="navbar-item" id="contributions">
+                                                <span class="icon"><i class="fas fa-list"></i></span>
+                                                <span>Mes contributions</span>
+                                            </a>
+
+                                            <a class="navbar-item" id="informations">
+                                                <span class="icon"><i class="fas fa-user"></i></span>
+                                                <span>Mes informations</span>
+                                            </a>
+
+                                            <hr class="navbar-divider">
+
+                                            <a class="navbar-item logout">
+                                                <span class="icon"><i class="fas fa-power-off"></i></span>
+                                                <span>Se déconnecter</span>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                                <script>
-                                    // Script to hide profile dropdown when in mobile mode
-                                    $("#profileDropdown .navbar-link").click(function(){
-                                        // If navbar is in mobile mode
-                                        if($(".navbar-burger").hasClass("is-active")){
-                                            // Toggle dropdown options display
-                                            $('#profileDropdown .navbar-dropdown').toggleClass("is-hidden-touch");
-                                        }
-                                    });
-                                </script>
-                            {{else}}
-                                <!-- Displayed when the user is NOT logged in-->
-                                <div class="buttons">
-                                    <a class="button is-primary register">
-                                        <strong>S'inscrire</strong>
-                                    </a>
-                                    <a class="button is-light login">Se connecter</a>
-                                </div>
-                            {{/if}}
+                                    <script>
+                                        // Script to hide profile dropdown when in mobile mode
+                                        $("#profileDropdown .navbar-link").click(function(){
+                                            // If navbar is in mobile mode
+                                            if($(".navbar-burger").hasClass("is-active")){
+                                                // Toggle dropdown options display
+                                                $('#profileDropdown .navbar-dropdown').toggleClass("is-hidden-touch");
+                                            }
+                                        });
+                                    </script>
+                                {{else}}
+                                    <!-- Displayed when the user is NOT logged in-->
+                                    <div class="buttons">
+                                        <a class="button is-primary register">
+                                            <strong>S'inscrire</strong>
+                                        </a>
+                                        <a class="button is-light login">Se connecter</a>
+                                    </div>
+                                {{/if}}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </nav>
-        <hr style="margin: 0;">
-    </header>
+            </nav>
+            <hr style="margin: 0;">
+        </header>
 
 
-    {{> Template.dynamic template=currentMessage}}  <!-- Display the current message (if there's one) -->
-    {{> Template.dynamic template=currentModal}}  <!-- Display the current modal (if there's one) -->
-    {{> Template.dynamic template=currentPage}}  <!-- Dynamic Template to display the current page -->
-
+        {{> Template.dynamic template=currentMessage}}  <!-- Display the current message (if there's one) -->
+        {{> Template.dynamic template=currentModal}}  <!-- Display the current modal (if there's one) -->
+        {{> Template.dynamic template=currentPage}}  <!-- Dynamic Template to display the current page -->
 
     </div>
 
