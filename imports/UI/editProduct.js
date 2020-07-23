@@ -431,7 +431,7 @@ Template.editProduct.events({
                         } else{
                             // Product was inserted without any error, displaying a success message
                             Session.set('message', {type: "header", headerContent: "Proposition de modification effectuée", style:"is-success"} );
-                            FlowRouter.go('/product/'+productId);
+                            FlowRouter.go('/product/'+productId);  // Sending the user to the product page
                         }
                     });
                 }

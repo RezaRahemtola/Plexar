@@ -26,6 +26,7 @@ import './editProduct.js';
 import './contact.js';
 import './faq.js';
 import './bestContributors.js';
+import './loginRequired';
 
 // Messages imports
 import './messages/header.js';
@@ -69,11 +70,6 @@ Template.main.onCreated(function(){
     Session.set('userIsAdmin', false);  // By default the current user isn't admin
     Session.set('userLevel', null);  // We don't need the user level for the moment
 
-    if(Session.get('modal') === undefined){
-        // No modal set (one could have been set by a function executed before the body creation, like Accounts.onResetPasswordLink)
-        Session.set('modal', null);  // No modal to display for the moment
-    }
-
     // Catching url of the default profile picture
     Meteor.call('getDefaultProfilePictureUrl', function(error, result){
         if(error){
@@ -93,11 +89,10 @@ Template.main.onCreated(function(){
 
 Template.main.helpers({
     currentMessage: function(){
-        // Catching current message & modal
+        // Catching current message
         const message = Session.get('message');
-        const modal = Session.get('modal');
-        if(message !== null && modal === null){
-            // There is a message to display and no modal is active
+        if(message !== null){
+            // There is a message to display
             return message.type;  // Return the message to display
         } else if(Meteor.user()){
             // User is logged in, checking if user's email is verified
@@ -106,13 +101,6 @@ Template.main.helpers({
                 // User email isn't verified, display a warning message
                 Session.set('message', {type:"verifyEmail"} );  // Set the message
             }
-        }
-    },
-    currentModal: function(){
-        // Return the modal to display if there's one
-        if(Session.get('modal') !== null){
-            // There is an active modal
-            return Session.get('modal');  // Return the modal to display
         }
     },
     displayProfilePicture: function(){
@@ -151,14 +139,6 @@ Template.main.helpers({
 
 Template.main.events({
     // Global events :
-    'click .register'(event){
-        event.preventDefault();
-        Session.set('modal', 'register');  // Display the register modal
-    },
-    'click .login'(event){
-        event.preventDefault();
-        Session.set('modal', 'login');  // Display the login modal
-    },
     'click .logout'(event){
         event.preventDefault();
         FlowRouter.go('/');  // Set the page to home
@@ -183,7 +163,7 @@ Template.main.events({
     'click .modal-card-head .delete, click .modal-background'(event){
         event.preventDefault();
         // When the closing button of a modal is clicked
-        Session.set('modal', null);  // Remove the modal
+        FlowRouter.go('/');  // Remove the modal by going back to the home page
     },
 
 

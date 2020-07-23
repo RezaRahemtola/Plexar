@@ -65,7 +65,7 @@ Template.productPage.onRendered(function(){
 
 
 Template.productPage.events({
-    'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .report, click .suggestChanges'(event){
+    'click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .report, click .suggestChanges'(event){
         // Prevent default action for all events
         event.preventDefault();
     },
@@ -132,8 +132,8 @@ Template.productPage.events({
     },
     'click .report'(event){
         if(!Meteor.user()){
-            // User isn't logged in
-            Session.set('modal', 'register');
+            // User isn't logged in, sending him to register modal
+            FlowRouter.go('/register');
         } else{
             // User is logged in, checking if the product is already in moderation
 
@@ -149,15 +149,15 @@ Template.productPage.events({
                     Session.set('message', {type:"header", headerContent:"Ce produit est déjà en modération, veuillez réessayer ultérieurement.", style:"is-warning"} );
                 } else{
                     // Product isn't already under moderation, we can display the report modal
-                    Session.set('modal', 'report');
+                    FlowRouter.go('/reportProduct/'+productId);
                 }
             });
         }
     },
     'click .suggestChanges'(event){
         if(!Meteor.user()){
-            // User isn't logged in
-            Session.set('modal', 'register');
+            // User isn't logged in, sending him to register modal
+            FlowRouter.go('/register');
         } else{
             // User is logged in, checking if the product is already in moderation
 
@@ -185,7 +185,7 @@ Template.productPage.helpers({
     displayProduct: function(){
         // Return the product that corresponds to the one to display
         if(Session.get('currentProduct')){
-            return [Session.get('currentProduct')];
+            return Session.get('currentProduct');
         }
     },
     productInFavorites: function(){

@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
 import './report.html';
@@ -12,10 +14,31 @@ import '../css/form.css';
 import { Moderation } from '../../databases/moderation.js';
 
 
+FlowRouter.route('/reportProduct/:_id', {
+    name: 'reportProduct',
+    action(params, queryParams){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentModal: 'report'});
+
+        // With the given id, we search for the product
+        const productId = params["_id"];
+        Meteor.call('findOneProductById', {productId: productId}, function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // Product was successfully returned, saving it in a Session variable
+                Session.set('currentProduct', result);
+            }
+        });
+    }
+});
+
+
 Template.report.events({
     'click #reportSubmit' (event){
         // Catching parameters for the report
-        const productId = document.querySelector('button.report').id;
+        const productId = Session.get('currentProduct')._id;
         const checkedOption = document.querySelector("input[type='radio'][name='reportReason']:checked").id;
 
         // Checking that the product isn't already under moderation
@@ -33,9 +56,9 @@ Template.report.events({
                         // There was an error
                         Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                     } else{
-                        // Product was successfully reported, removing the report modal and showing a success message
-                        Session.set('modal', null);
+                        // Product was successfully reported, showing a success message
                         Session.set('message', {type: "header", headerContent: "Signalement effectué avec succès !", style:"is-success"} );
+                        FlowRouter.go('/product/'+productId);  // Sending the user back to the product
                     }
                 });
             }

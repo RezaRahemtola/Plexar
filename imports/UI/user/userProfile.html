@@ -32,9 +32,9 @@
                 </li>
             </ul>
         </div>
-
+        {{> Template.dynamic template=currentUserPage}} <!-- Affichage du template dynamique -->
     {{else}}
         <!-- Displayed when the user is NOT logged in-->
+        {{> loginRequired}}
     {{/if}}
-    {{> Template.dynamic template=currentUserPage}} <!-- Affichage du template dynamique -->
 </template>

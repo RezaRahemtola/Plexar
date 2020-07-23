@@ -81,7 +81,7 @@ Template.contributions.helpers({
             }
         });
         // Returning it in an array to use {{#each}}
-        return [Session.get('levelProgressInformations')];
+        return Session.get('levelProgressInformations');
     },
     calculateProgressPercentage: function(){
         // Checking if progress bar informations were retrieved

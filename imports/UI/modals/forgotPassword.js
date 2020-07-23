@@ -2,9 +2,20 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
 import './forgotPassword.html';
+
+
+FlowRouter.route('/forgotPassword', {
+    name: 'forgotPassword',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentModal: 'forgotPassword'});
+    }
+});
 
 
 Template.forgotPassword.onRendered(function(){
@@ -42,7 +53,7 @@ Template.forgotPassword.events({
             } else{
                 // Forgot password email was sent successfully
                 Session.set('message', {type: "header", headerContent: "Un email pour réinitialiser votre mot de passe vous a été envoyé", style: "is-success"});  // Success message
-                Session.set('modal', null);  // Remove the modal
+                FlowRouter.go('/');  // Remove the modal by sending the user back to home page
             }
         });
     }

@@ -1,5 +1,5 @@
 <template name="productPage">
-    {{#each displayProduct}}
+    {{#with displayProduct}}
         <div class="card width-fit-content" style="margin: auto;">
             <header class="card-header">
 
@@ -114,5 +114,5 @@
                 </div>
             </div>
         </div>
-    {{/each}}
+    {{/with}}
 </template>

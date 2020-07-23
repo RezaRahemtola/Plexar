@@ -133,9 +133,9 @@
 
                     <div class="field has-animated-label">
                         <div class="control has-icons-left">
-                            {{#each displayWebsite}}
+                            {{#with displayWebsite}}
                                 <input type="text" class="input has-animated-label" name="originalWebsite" id="originalWebsite" placeholder=" " value={{this}} disabled>
-                            {{/each}}
+                            {{/with}}
                             <label for="name" class="label is-animated">Site web (original)</label>
                             <span class="icon is-left">
                                 <i class="fas fa-globe-americas"></i>
@@ -146,9 +146,9 @@
                     {{#if websiteDifference}}
                         <div class="field has-animated-label">
                             <div class="control has-icons-left">
-                                {{#each displayEditedWebsite}}
+                                {{#with displayEditedWebsite}}
                                     <input type="text" class="input has-animated-label" name="editedWebsite" id="editedWebsite" placeholder=" " value={{this}} disabled>
-                                {{/each}}
+                                {{/with}}
                                 <label for="name" class="label is-animated">Site web (modifié)</label>
                                 <span class="icon is-left">
                                     <i class="fas fa-globe-americas"></i>
@@ -170,11 +170,6 @@
             </div>
         </form>
     {{else}}
-        <p class="subtitle">
-            <span class="register link has-text-weight-semibold">Inscrivez-vous</span>
-            <span>ou</span>
-            <span class="login link has-text-weight-semibold">connectez-vous</span>
-            <span>pour continuer.</span>
-        </p>
+        {{> loginRequired}}
     {{/if}}
 </template>

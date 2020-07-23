@@ -1,12 +1,24 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
 import './resetPassword.html';
 
 // Initializing Session variable
 Session.set('resetPasswordToken', null);
+
+
+FlowRouter.route('/resetPassword', {
+    name: 'resetPassword',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentModal: 'resetPassword'});
+    }
+});
+
 
 Template.resetPassword.events({
     'click #resetPasswordSubmit'(event){
@@ -36,7 +48,7 @@ Template.resetPassword.events({
                         // Password was successfully reset, displaying a success message
                         Session.set('message', {type:"header", headerContent:"Mot de passe réinitialisé avec succès", style:"is-success"});
                         Session.set('resetPasswordToken', null);  // Token has been used, we can reset the Session variable
-                        Session.set('modal', null);  // Reset password completed, we can remove the modal
+                        FlowRouter.go('/');  // Reset password completed, we can remove the modal by sending the user to the home page
                     }
                 });
             }

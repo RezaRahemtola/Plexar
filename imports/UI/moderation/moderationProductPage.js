@@ -45,7 +45,7 @@ Template.moderationProductPage.helpers({
     displayProduct: function(){
         // Return the product that corresponds to the one to display
         if(Session.get('currentProduct')){
-            return [Session.get('currentProduct')];
+            return Session.get('currentProduct');
         }
     },
     displayProductImages: function(){

@@ -54,7 +54,7 @@ Template.collectiveModeration.helpers({
                 Session.set('moderationCounter', result);
             }
         });
-        return [Session.get('moderationCounter')];
+        return Session.get('moderationCounter');
     },
     userIsAdmin: function(){
         // Checking is user is admin

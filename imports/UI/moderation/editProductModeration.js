@@ -214,7 +214,7 @@ Template.editProductModeration.helpers({
         return Session.get('editProductModeration').editedProduct.categories;
     },
     displayWebsite: function(){
-        return [Session.get('editProductModeration').originalProduct.website];
+        return Session.get('editProductModeration').originalProduct.website;
     },
     websiteDifference: function(){
         // Catching websites
@@ -225,7 +225,7 @@ Template.editProductModeration.helpers({
         return areElementsDifferent;
     },
     displayEditedWebsite: function(){
-        return [Session.get('editProductModeration').editedProduct.website]
+        return Session.get('editProductModeration').editedProduct.website;
     }
 });
 
