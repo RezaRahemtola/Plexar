@@ -1,15 +1,26 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML imports
-import './searchResults.html';
+import './search.html';
 
 // Functions import
 import './functions/sortResults.js';
 
 
-Template.searchResults.onRendered(function(){
+FlowRouter.route('/search', {
+    name: 'search',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'search'});
+    }
+});
+
+
+Template.search.onRendered(function(){
     // Scrolling the window back to the top
     window.scrollTo(0, 0);
 
@@ -57,7 +68,7 @@ Template.searchResults.onRendered(function(){
 });
 
 
-Template.searchResults.helpers({
+Template.search.helpers({
     getSearchQuery: function(){
         // Return the text search query
         return Session.get('search').query;
@@ -111,7 +122,7 @@ Template.searchResults.helpers({
 });
 
 
-Template.searchResults.events({
+Template.search.events({
     'submit form#searchForm'(event){
         event.preventDefault();
         // Search form was submitted, catching the current search and updating it's query value

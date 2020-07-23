@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
 import './bestContributors.html';
@@ -8,6 +10,15 @@ import './bestContributors.html';
 // Initializing Session variables
 Session.set('userRank', 0);  // We don't know the user rank for the moment
 Session.set('bestContributors', []);
+
+
+FlowRouter.route('/bestContributors', {
+    name: 'bestContributors',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'bestContributors'});
+    }
+});
 
 
 Template.bestContributors.onRendered(function(){
@@ -56,8 +67,8 @@ Template.bestContributors.helpers({
         return false;
     },
     getMedalUrl: function(rank){
-        if(rank === 1){ return 'goldMedal.png'; }
-        else if(rank === 2){ return 'silverMedal.png'; }
-        else if(rank === 3){ return 'bronzeMedal.png'; }
+        if(rank === 1){ return '/goldMedal.png'; }
+        else if(rank === 2){ return '/silverMedal.png'; }
+        else if(rank === 3){ return '/bronzeMedal.png'; }
     }
 });

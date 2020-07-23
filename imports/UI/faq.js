@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
 import './faq.html';
@@ -10,6 +12,15 @@ import bulmaCollapsible from '@creativebulma/bulma-collapsible';
 
 // Initializing Session variable
 Session.set('displayedFaqQuestion', null);
+
+
+FlowRouter.route('/faq', {
+    name: 'faq',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'faq'});
+    }
+});
 
 
 Template.faq.onRendered(function(){
@@ -24,18 +35,6 @@ Template.faq.onRendered(function(){
     if(askedQuestion !== null){
         // There is an answer to display, we trigger a click on the corresponding answer link
         document.querySelector('a[href="#'+askedQuestion+'"]').click();
-    }
-});
-
-
-Template.faq.events({
-    'click a#bestContributors'(event){
-        event.preventDefault();
-        // Link to best contributors page was clicked
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
-        Session.set('page', 'bestContributors');
     }
 });
 

@@ -1,9 +1,20 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML imports
 import './contact.html';
+
+
+FlowRouter.route('/contact', {
+    name: 'contact',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'contact'});
+    }
+});
 
 
 Template.contact.onRendered(function(){
@@ -58,11 +69,7 @@ Template.contact.events({
                 // Email was successfully sent, displaying a confirmation email
                 $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
                 Session.set('message', {type:"header", headerContent:"Message envoyé, nous reviendrons vers vous dès que possible", style:"is-success"});
-                // Sending user to home page
-                var navigation = Session.get('navigation');  // Catching navigation history
-                navigation.push(Session.get('page'));  // Adding the current page
-                Session.set('navigation', navigation);  // Updating the value
-                Session.set('page', 'home');
+                FlowRouter.go('/');  // Sending user to home page
             }
         });
     }

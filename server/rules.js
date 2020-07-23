@@ -9,7 +9,7 @@ export const Rules = {
             minLength: 1,
             maxLength: 1,
             maxMbSize: 5,
-            defaultUrl: 'user.svg'
+            defaultUrl: '/user.svg'
         }
     },
     product: {
@@ -47,7 +47,7 @@ export const Rules = {
             dailyVotingLimit: 10,
             dailyContributionsLimit: 10,
             voteMultiplicator: 1,
-            icon: 'level1.png'
+            icon: '/level1.png'
         },
         {
             name: "2",
@@ -55,7 +55,7 @@ export const Rules = {
             dailyVotingLimit: 15,
             dailyContributionsLimit: 20,
             voteMultiplicator: 1,
-            icon: 'level2.png'
+            icon: '/level2.png'
         },
         {
             name: "3",
@@ -63,7 +63,7 @@ export const Rules = {
             dailyVotingLimit: 30,
             dailyContributionsLimit: 30,
             voteMultiplicator: 2,
-            icon: 'level3.png'
+            icon: '/level3.png'
         },
         {
             name: "4",
@@ -71,7 +71,7 @@ export const Rules = {
             dailyVotingLimit: 50,
             dailyContributionsLimit: 40,
             voteMultiplicator: 3,
-            icon: 'level4.png'
+            icon: '/level4.png'
         }
     ],
     points: {

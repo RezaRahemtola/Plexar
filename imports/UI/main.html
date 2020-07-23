@@ -1,10 +1,10 @@
-<body>
+<template name="main">
     <div id="content-wrap">
         <header>
             <nav class="navbar" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
-                    <a class="navbar-item" id="home">
-                        <img src="logo.png" style="width: 144px; height: 36px">
+                    <a class="navbar-item" href="/">
+                        <img src="/logo.png" style="width: 144px; height: 36px">
                     </a>
 
                     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
@@ -17,12 +17,12 @@
                 <div id="mainNavbar" class="navbar-menu">
                     <div class="navbar-start">
 
-                        <a class="navbar-item" id="search">
+                        <a class="navbar-item" href="/search">
                             <span class="icon"><i class="fas fa-search"></i></span>
                             <span>Rechercher</span>
                         </a>
 
-                        <a class="navbar-item" id="addProduct">
+                        <a class="navbar-item" href="/addProduct">
                             <span class="icon"><i class="fas fa-shopping-basket"></i></span>
                             <span>Ajouter un produit</span>
                         </a>
@@ -39,7 +39,7 @@
                             </div>
                         </div>
 
-                        <a class="navbar-item" id="collectiveModeration">
+                        <a class="navbar-item" href="/collectiveModeration">
                             <span class="icon"><i class="fas fa-tools"></i></span>
                             <span>Modération collective</span>
                         </a>
@@ -51,17 +51,17 @@
                             </a>
                             <div class="navbar-dropdown is-hidden-touch">
 
-                                <a class="navbar-item" id="about">
+                                <a class="navbar-item" href="/about">
                                     <span class="icon"><i class="fas fa-apple-alt"></i></span>
                                     <span>A propos de Plexar</span>
                                 </a>
 
-                                <a class="navbar-item" id="faq">
+                                <a class="navbar-item" href="/faq">
                                     <span class="icon"><i class="fas fa-question-circle"></i></span>
                                     <span>FAQ</span>
                                 </a>
 
-                                <a class="navbar-item" id="contact">
+                                <a class="navbar-item" href="/contact">
                                     <span class="icon"><i class="fas fa-edit"></i></span>
                                     <span>Contact</span>
                                 </a>
@@ -81,17 +81,17 @@
                                         </a>
                                         <!-- Dropdown menu -->
                                         <div class="navbar-dropdown is-right is-hidden-touch">
-                                            <a class="navbar-item" id="favorite">
+                                            <a class="navbar-item" href="/user/favorite">
                                                 <span class="icon"><i class="fas fa-bookmark"></i></span>
                                                 <span>Mes favoris</span>
                                             </a>
 
-                                            <a class="navbar-item" id="contributions">
+                                            <a class="navbar-item" href="/user/contributions">
                                                 <span class="icon"><i class="fas fa-list"></i></span>
                                                 <span>Mes contributions</span>
                                             </a>
 
-                                            <a class="navbar-item" id="informations">
+                                            <a class="navbar-item" href="/user/informations">
                                                 <span class="icon"><i class="fas fa-user"></i></span>
                                                 <span>Mes informations</span>
                                             </a>
@@ -120,7 +120,7 @@
                                         <a class="button is-primary register">
                                             <strong>S'inscrire</strong>
                                         </a>
-                                        <a class="button is-light login">Se connecter</a>
+                                        <a class="button login is-light">Se connecter</a>
                                     </div>
                                 {{/if}}
                         </div>
@@ -142,8 +142,16 @@
 
             <div class="column" style="background-color: #f3f3f3;">
                 <ul>
-                    <li class="link width-fit-content" id="about">A propos de Plexar</li>
-                    <li class="link width-fit-content" id="faq">Foire aux questions</li>
+                    <li class="link width-fit-content">
+                        <a href="/about" class="link" style="color: inherit;">
+                            A propos de Plexar
+                        </a>
+                    </li>
+                    <li class="link width-fit-content">
+                        <a href="/faq" class="link" style="color: inherit;">
+                            Foire aux questions
+                        </a>
+                    </li>
                 </ul>
             </div>
 
@@ -151,25 +159,33 @@
                 <p>Suivez nous sur</p>
 
                 <a class="icon is-medium" href="https://instagram.com/plexar.app/" title="Plexar sur Instagram" target="_blank">
-                    <img src="instagram.svg" alt="Instagram">
+                    <img src="/instagram.svg" alt="Instagram">
                 </a>
 
                 <a class="icon is-medium" href="https://twitter.com/PlexarApp" title="Plexar sur Twitter" target="_blank">
-                    <img src="twitter.svg" alt="Twitter">
+                    <img src="/twitter.svg" alt="Twitter">
                 </a>
 
                 <a class="icon is-medium" href="https://www.youtube.com/channel/UCVwdd6t8Y5IkRj2PY2CNr0A" title="Plexar sur YouTube" target="_blank">
-                    <img src="youtube.svg" alt="YouTube">
+                    <img src="/youtube.svg" alt="YouTube">
                 </a>
             </div>
 
             <div class="column" style="background-color: #f3f3f3;">
                 <ul>
-                    <li class="link width-fit-content" id="contact">Nous contacter</li>
-                    <li class="link width-fit-content" id="linkBestContributorsFooter">Meilleurs contributeurs</li>
+                    <li class="link width-fit-content" >
+                        <a href="/contact" class="link" style="color: inherit;">
+                            Nous contacter
+                        </a>
+                    </li>
+                    <li class="link width-fit-content">
+                        <a href="/bestContributors" class="link" style="color: inherit;">
+                            Meilleurs contributeurs
+                        </a>
+                    </li>
                 </ul>
             </div>
 
         </div>
     </footer>
-</body>
+</template>

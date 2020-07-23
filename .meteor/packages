@@ -24,3 +24,5 @@ email@1.2.3
 check
 ostrio:files
 underscore
+ostrio:flow-router-extra
+kadira:blaze-layout
