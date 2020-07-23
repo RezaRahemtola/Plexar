@@ -1,56 +1,56 @@
 <template name="contributions">
-
-    <div class="box width-fit-content" style="margin: 1.5rem auto;">
-        <div class="field has-addons">
-            <div class="control" style="margin: auto;">
-                <h4 class="title is-4 has-text-centered">Niveau {{displayUserLevel}}</h4>
-            </div>
-            <div class="control" id="infoPointsAndLevels" style="height: 100%; margin: auto 0 auto 0.5rem">
-                <img src='{{displayLevelIcon}}' class="image is-80x80" alt="Icône de niveau"/>
+    {{#if currentUser}}
+        <div class="box width-fit-content" style="margin: 1.5rem auto;">
+            <div class="field has-addons">
+                <div class="control" style="margin: auto;">
+                    <h4 class="title is-4 has-text-centered">Niveau {{displayUserLevel}}</h4>
+                </div>
+                <div class="control" id="infoPointsAndLevels" style="height: 100%; margin: auto 0 auto 0.5rem">
+                    <img src='{{displayLevelIcon}}' class="image is-80x80" alt="Icône de niveau"/>
+                </div>
             </div>
         </div>
-    </div>
 
-    {{#each displayLevelProgress}}
-        <div class="container">
-            <p class="has-text-centered is-family-code" style="font-size: 1.5rem;">
-                <span>{{calculateProgressPercentage}}</span>
-                <span>%</span>
-            </p>
+        {{#with displayLevelProgress}}
+            <div class="container">
+                <p class="has-text-centered is-family-code" style="font-size: 1.5rem;">
+                    <span>{{calculateProgressPercentage}}</span>
+                    <span>%</span>
+                </p>
 
-            <progress class="progress is-primary" value="{{this.progressValue}}" max="{{this.progressMaximum}}" style="width: 75%; margin: 0 auto;"></progress>
+                <progress class="progress is-primary" value="{{this.progressValue}}" max="{{this.progressMaximum}}" style="width: 75%; margin: 0 auto;"></progress>
 
-            <p class="has-text-centered">
-                <span class="is-family-code" style="font-size: 1.3rem;">{{displayPointsLeftUntilNextLevel}}</span>
-                <span style="font-size: 1.1rem;"> points nécessaires pour atteindre le prochain niveau</span>
-                <a class="icon has-text-primary" title="En savoir plus" id="infoPointsAndLevels">
-                    <i class="far fa-question-circle"></i>
-                </a>
-            </p>
-        </div>
-    {{/each}}
+                <p class="has-text-centered">
+                    <span class="is-family-code" style="font-size: 1.3rem;">{{displayPointsLeftUntilNextLevel}}</span>
+                    <span style="font-size: 1.1rem;"> points nécessaires pour atteindre le prochain niveau</span>
+                    <a class="icon has-text-primary" title="En savoir plus" id="infoPointsAndLevels">
+                        <i class="far fa-question-circle"></i>
+                    </a>
+                </p>
+            </div>
+        {{/with}}
 
-    <table class="table is-bordered is-striped is-hoverable" style="margin: 3rem auto;">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Élément concerné</th>
-                <th>Statut</th>
-                <th>Points</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each displayContributions}}
+        <table class="table is-bordered is-striped is-hoverable" style="margin: 3rem auto;">
+            <thead>
                 <tr>
-                    <td>{{date}}</td>
-                    <td>{{type}}</td>
-                    <td class="productBanner" id="{{elementId}}" style="cursor: pointer;">{{elementName}}</td>
-                    <td class="{{statusStyle}}">{{status}}</td>
-                    <td>{{points}}</td>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Élément concerné</th>
+                    <th>Statut</th>
+                    <th>Points</th>
                 </tr>
-            {{/each}}
-        </tbody>
-    </table>
-
+            </thead>
+            <tbody>
+                {{#each displayContributions}}
+                    <tr>
+                        <td>{{date}}</td>
+                        <td>{{type}}</td>
+                        <td class="productBanner" id="{{elementId}}" style="cursor: pointer;">{{elementName}}</td>
+                        <td class="{{statusStyle}}">{{status}}</td>
+                        <td>{{points}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    {{/if}}
 </template>

@@ -2,6 +2,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Database import
 import { Images } from '../../databases/images.js';
@@ -13,7 +15,19 @@ import './informations.html';
 import '../css/form.css';
 
 
+FlowRouter.route('/user/informations', {
+    name: 'userInformations',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'userProfile', currentUserPage: 'informations'});
+    }
+});
+
+
 Template.informations.onRendered(function(){
+
+    $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
+    $("li#informations").addClass("is-active");  // Set the current tab as the active one
 
     // Initializing Session variable
     Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
@@ -210,7 +224,7 @@ Template.informations.events({
                                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Set the error message with given error reason
                                 } else{
                                     // Profile picture was successfully changed, calling the body helepr to refesh the display
-                                    Template.body.__helpers.get('displayProfilePicture').call();
+                                    Template.main.__helpers.get('displayProfilePicture').call();
                                 }
                                 callbacksPending--;  // End of callback function
                             });
@@ -227,12 +241,9 @@ Template.informations.events({
         // Waiting for all callbacks to complete (to see if an error is raised)
         const intervalId = setInterval(function(){
             if(callbacksPending === 0 && formErrors === 0){
-                // All callbacks were completed without any error, displaying a success message
+                // All callbacks were completed without any error, displaying a success message and sending the user to home page
                 Session.set('message', {type: "header", headerContent: "Votre profil a été modifié avec succès !", style:"is-success"} );
-                var navigation = Session.get('navigation');  // Catching navigation history
-                navigation.push(Session.get('page'));  // Adding the current page
-                Session.set('navigation', navigation);  // Updating the value
-                Session.set('page', 'home');
+                FlowRouter.go('/');
                 clearInterval(intervalId);  // This interval is not required anymore, removing it
             }
         }, 200);

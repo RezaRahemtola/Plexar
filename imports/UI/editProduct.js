@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Database import
 import { Images } from '../databases/images.js';
@@ -14,6 +16,27 @@ import './css/form.css';
 // Initializing Session variables
 Session.set('editedCoverImageId', null);  // For the moment the user didn't proposed any modification to the cover image
 Session.set('editedOtherImagesId', []);  // For the moment the user didn't proposed any modification to the product's images
+
+
+FlowRouter.route('/editProduct/:_id', {
+    name: 'editProduct',
+    action(params, queryParams){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'editProduct'});
+
+        // With the given id, we search for the product
+        const productId = params["_id"];
+        Meteor.call('findOneProductById', {productId: productId}, function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // Product was successfully returned, saving it in a Session variable
+                Session.set('currentProduct', result);
+            }
+        });
+    }
+});
 
 
 Template.editProduct.onRendered(function(){
@@ -408,10 +431,7 @@ Template.editProduct.events({
                         } else{
                             // Product was inserted without any error, displaying a success message
                             Session.set('message', {type: "header", headerContent: "Proposition de modification effectuée", style:"is-success"} );
-                            var navigation = Session.get('navigation');  // Catching navigation history
-                            navigation.push(Session.get('page'));  // Adding the current page
-                            Session.set('navigation', navigation);  // Updating the value
-                            Session.set('page', 'productPage');
+                            FlowRouter.go('/product/'+productId);  // Sending the user to the product page
                         }
                     });
                 }

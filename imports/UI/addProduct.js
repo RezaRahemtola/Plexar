@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Database import
 import { Images } from '../databases/images.js';
@@ -10,6 +12,15 @@ import './addProduct.html';
 
 // CSS import
 import './css/form.css';
+
+
+FlowRouter.route('/addProduct', {
+    name: 'addProduct',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'addProduct'});
+    }
+});
 
 
 Template.addProduct.onRendered(function(){
@@ -282,10 +293,7 @@ Template.addProduct.events({
                 } else{
                     // Product was inserted without any error, displaying a success message
                     Session.set('message', {type: "header", headerContent: "Produit ajouté avec succès !", style:"is-success"} );
-                    var navigation = Session.get('navigation');  // Catching navigation history
-                    navigation.push(Session.get('page'));  // Adding the current page
-                    Session.set('navigation', navigation);  // Updating the value
-                    Session.set('page', 'home');  // Switching to home page
+                    FlowRouter.go('/');  // Switching to home page
                 }
             });
         }

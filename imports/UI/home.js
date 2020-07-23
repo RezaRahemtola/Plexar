@@ -52,10 +52,6 @@ Template.home.events({
         search.query = document.getElementById("searchBox").value;
         // Saving the search in a Session variable
         Session.set('search', search);
-        // Switching page
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
-        Session.set('page', 'searchResults');  // Sending the user to the search results page
+        FlowRouter.go('/search')  // Sending the user to the search results page
     }
 });

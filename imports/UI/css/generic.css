@@ -24,6 +24,7 @@
 /* Styling links */
 .link{
     cursor: pointer;  /* Default links cursor */
+    color: inherit; /* Same color as parent elements */
     -webkit-text-decoration: underline #e47312;  /* Safari */
             text-decoration: underline #e47312;
 

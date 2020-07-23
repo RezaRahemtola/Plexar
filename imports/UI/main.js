@@ -1,9 +1,11 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
-import './body.html';
+import './main.html';
 
 // CSS imports
 import './css/navbar.css';
@@ -18,12 +20,13 @@ import './addProduct.js';
 import './productPage.js';
 import './user/userProfile.js';
 import './moderation/collectiveModeration.js';
-import './searchResults.js';
+import './search.js';
 import './productBanner.js';
 import './editProduct.js';
 import './contact.js';
 import './faq.js';
 import './bestContributors.js';
+import './loginRequired';
 
 // Messages imports
 import './messages/header.js';
@@ -40,12 +43,22 @@ import './modals/resetPassword.js';
 // Databases imports
 import { Images } from '../databases/images.js';
 
+// Render layouts directly into the body
+BlazeLayout.setRoot('body');
 
-Template.body.onCreated(function(){
+
+FlowRouter.route('/', {
+    name: 'index',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'home'});
+    }
+});
+
+
+Template.main.onCreated(function(){
 
     // Initializing Session variables
-    Session.set('page', 'home');  // Site loads with home page
-    Session.set('navigation', []);  // Used to store page navigation history to use return button
     Session.set("searchedProducts", [] );  // No search for the moment
     Session.set('message', null);  // No message to display for the moment
     Session.set('search', {query: "", categories: [], sort: 'popularity'});
@@ -56,11 +69,6 @@ Template.body.onCreated(function(){
     Session.set('productCategories', []);
     Session.set('userIsAdmin', false);  // By default the current user isn't admin
     Session.set('userLevel', null);  // We don't need the user level for the moment
-
-    if(Session.get('modal') === undefined){
-        // No modal set (one could have been set by a function executed before the body creation, like Accounts.onResetPasswordLink)
-        Session.set('modal', null);  // No modal to display for the moment
-    }
 
     // Catching url of the default profile picture
     Meteor.call('getDefaultProfilePictureUrl', function(error, result){
@@ -79,16 +87,12 @@ Template.body.onCreated(function(){
 });
 
 
-Template.body.helpers({
-    currentPage: function(){
-        return Session.get('page');  // Return the page to display
-    },
+Template.main.helpers({
     currentMessage: function(){
-        // Catching current message & modal
+        // Catching current message
         const message = Session.get('message');
-        const modal = Session.get('modal');
-        if(message !== null && modal === null){
-            // There is a message to display and no modal is active
+        if(message !== null){
+            // There is a message to display
             return message.type;  // Return the message to display
         } else if(Meteor.user()){
             // User is logged in, checking if user's email is verified
@@ -99,13 +103,6 @@ Template.body.helpers({
             }
         }
     },
-    currentModal: function(){
-        // Return the modal to display if there's one
-        if(Session.get('modal') !== null){
-            // There is an active modal
-            return Session.get('modal');  // Return the modal to display
-        }
-    },
     displayProfilePicture: function(){
         // Checking if there's a profile picture to display
         Meteor.call('hasProfilePicture', function(error, result){
@@ -114,7 +111,7 @@ Template.body.helpers({
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
                 // The current user has a profile picture, imageId was returned
-                const profilePictureId = result  // Saving the result
+                const profilePictureId = result;  // Saving the result
                 const image = Images.findOne({_id: profilePictureId}).link();  // Find the url of this image
                 Session.set('profilePicture', image);
             } else{
@@ -140,49 +137,23 @@ Template.body.helpers({
     }
 });
 
-Template.body.events({
+Template.main.events({
     // Global events :
-    'click .register'(event){
-        event.preventDefault();
-        Session.set('modal', 'register');  // Display the register modal
-    },
-    'click .login'(event){
-        event.preventDefault();
-        Session.set('modal', 'login');  // Display the login modal
-    },
     'click .logout'(event){
         event.preventDefault();
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
-        Session.set('page', 'home');  // Set the page to default
+        FlowRouter.go('/');  // Set the page to home
         Meteor.logout();  // Log out the user
-    },
-    'click #return'(event){
-        event.preventDefault();
-        var navigation = Session.get('navigation');  // Catching navigation history
-        const lastPage = navigation[navigation.length-1];  // Catching the last page
-        navigation.pop();  // We will come back to the last page, so removing it from the navigation
-        Session.set('navigation', navigation);  // Updating value in Session
-        Session.set('page', lastPage)  // Sending user to the last visited page
     },
     'click .productBanner'(event){
         event.preventDefault();
         // When a product banner is clicked (like in search result or favorites)
-        Session.set('currentProduct', null);  // Reset the variable
-        Meteor.call('findOneProductById', {productId: event.currentTarget.id}, function(error, result){
-            if(error){
-                // There was an error
-                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-            } else if(result){
-                // Product was successfully returned, saving it in a Session variable
-                Session.set('currentProduct', result);
-                var navigation = Session.get('navigation');  // Catching navigation history
-                navigation.push(Session.get('page'));  // Adding the current page
-                Session.set('navigation', navigation);  // Updating the value
-                Session.set('page', 'productPage');  // Redirecting to product page
-            }
-        });
+        const productId = event.currentTarget.id;
+        FlowRouter.go('/product/'+productId);  // Redirecting to product page
+    },
+    'click #return'(event){
+        event.preventDefault();
+        // When a return button is clicked
+        window.history.back();  // Going back to the last page
     },
     'click div.message-header button.delete'(event){
         event.preventDefault();
@@ -192,97 +163,20 @@ Template.body.events({
     'click .modal-card-head .delete, click .modal-background'(event){
         event.preventDefault();
         // When the closing button of a modal is clicked
-        Session.set('modal', null);  // Remove the modal
+        FlowRouter.go('/');  // Remove the modal by going back to the home page
     },
 
 
     // Navbar events
-    'click a#home, click a#search, click a#addProduct, click a#contact, click a#faq, click a#about, click #categoriesDropdown .navbar-item, click a#collectiveModeration'(event){
-        event.preventDefault();
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
-    },
-    'click a#home'(event){
-        Session.set('page', 'home');  // Switch to home page
-    },
-    'click a#search'(event){
-        Session.set('page', 'searchResults');  // Switch to search results page
-    },
-    'click a#addProduct'(event){
-        Session.set('page', 'addProduct');  // Switch to add product form page
-    },
-    'click a#contact'(event){
-        Session.set('page', 'contact');  // Switch to contact page
-    },
-    'click a#faq'(event){
-        Session.set('page', 'faq');  // Switch to FAQ page
-    },
-    'click a#about'(event){
-        Session.set('page', 'about');  // Switch to about page
-    },
     'click #categoriesDropdown .navbar-item'(event){
+        event.preventDefault();
         // A category of the categories dropdown is clicked
         const selectedCategory = event.currentTarget.innerText;  // Catching the clicked category
         var search = Session.get('search');  // Catching the current search
         search.query = "";  // Resetting the text query so we will find all the products
         search.categories = [selectedCategory];  // Adding a filter with the selected category
         Session.set('search', search);  // Updating the Session value
-        Session.set('page', 'searchResults');  // Sending the user to the search results page
-    },
-    'click a#collectiveModeration'(event){
-        Session.set('page', 'collectiveModeration');  // Switch to collective moderation page
-    },
-
-
-    // Profile dropdown and user profile tabs events
-    'click #contributions, click #favorite, click #informations'(event){
-        event.preventDefault();
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
-    },
-    'click #contributions'(event){
-        // Switch to userProfile page in contributions tab
-        Session.set('page', 'userProfile');
-        Session.set('userPage', 'contributions');
-        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-        $("li#contributions").addClass("is-active");  // Set the current tab as the active one
-    },
-    'click #favorite'(event){
-        // Switch to userProfile page in favorite tab
-        Session.set('page', 'userProfile');
-        Session.set('userPage', 'favorite');
-        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-        $("li#favorite").addClass("is-active");  // Set the current tab as the active one
-    },
-    'click #informations'(event){
-        // Switch to userProfile page in informations tab
-        Session.set('page', 'userProfile');
-        Session.set('userPage', 'informations');
-        $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-        $("li#informations").addClass("is-active");  // Set the current tab as the active one
-    },
-
-
-    // Footer events
-    'click li#faq, click li#about, click li#contact, click li#linkBestContributorsFooter'(event){
-        event.preventDefault();
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
-    },
-    'click li#faq'(event){
-        Session.set('page', 'faq');  // Switch to FAQ page
-    },
-    'click li#about'(event){
-        Session.set('page', 'about');  // Switch to about page
-    },
-    'click li#contact'(event){
-        Session.set('page', 'contact');  // Switch to contact page
-    },
-    'click li#linkBestContributorsFooter'(event){
-        Session.set('page', 'bestContributors');  // Switch to contact page
+        FlowRouter.go('/search');  // Sending the user to the search results page
     }
 });
 

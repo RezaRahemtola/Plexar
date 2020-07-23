@@ -2,6 +2,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+
 
 // HTML import
 import './userProfile.html';
@@ -12,16 +15,16 @@ import './favorite.js';
 import './informations.js';
 
 
-Template.userProfile.onRendered(function(){
-    $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
-    $("li#"+Session.get('userPage')).addClass("is-active");  // Set the current tab as the active one
+FlowRouter.route('/user', {
+    name: 'user',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'userProfile'});
+    }
 });
 
 
 Template.userProfile.helpers({
-    currentUserPage: function(){
-        return Session.get('userPage');
-    },
     userIsAdmin: function(){
         // Checking is user is admin
         Meteor.call('userIsAdmin', function(error, result){
@@ -34,14 +37,5 @@ Template.userProfile.helpers({
             }
         });
         return Session.get('userIsAdmin');
-    }
-});
-
-
-Template.userProfile.events({
-    'click #informations, click #favorite, click #contributions'(event){
-        // Switching tabs
-        event.preventDefault();
-        Session.set('userPage', event.currentTarget.id);
     }
 });

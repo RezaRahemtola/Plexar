@@ -2,13 +2,29 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
-
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
 import './register.html';
 
 // CSS import
 import '../css/form.css';
+
+
+FlowRouter.route('/register', {
+    name: 'register',
+    action(){
+        // Render a template using Blaze
+        if(Meteor.userId()){
+            // User is already logged in, sending him back to home page
+            FlowRouter.go('/');
+        } else{
+            // User isn't logged in, we can render the register modal
+            BlazeLayout.render('main', {currentModal: 'register'});
+        }
+    }
+});
 
 
 Template.register.onRendered(function(){
@@ -107,7 +123,7 @@ Template.register.events({
                                 if(result){
                                     // User was successfully created and is logged in
                                     Session.set('message', {type:"header", headerContent:"Votre compte a bien été créé et un email de vérification vous a été envoyé, veuillez consulter votre boîte mail.", style:"is-success"});  // Display a success message
-                                    Session.set('modal', null);  // Remove the modal
+                                    FlowRouter.go('/');  // Remove the modal by sending the user to home page
                                 }
                             });
                         }

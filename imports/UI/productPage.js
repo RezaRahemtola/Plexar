@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML imports
 import './productPage.html';
@@ -13,6 +15,27 @@ import { Images } from '../databases/images.js';
 
 // Initializing Session variable
 Session.set('productInFavorites', null);
+
+
+FlowRouter.route('/product/:_id', {
+    name: 'product',
+    action(params, queryParams){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'productPage'});
+
+        // With the given id, we search for the product
+        const productId = params["_id"];
+        Meteor.call('findOneProductById', {productId: productId}, function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // Product was successfully returned, saving it in a Session variable
+                Session.set('currentProduct', result);
+            }
+        });
+    }
+});
 
 
 Template.productPage.onRendered(function(){
@@ -42,7 +65,7 @@ Template.productPage.onRendered(function(){
 
 
 Template.productPage.events({
-    'click #return, click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .report, click .suggestChanges'(event){
+    'click #addToFavoriteProducts, click #removeFromFavoriteProducts, click .report, click .suggestChanges'(event){
         // Prevent default action for all events
         event.preventDefault();
     },
@@ -109,8 +132,8 @@ Template.productPage.events({
     },
     'click .report'(event){
         if(!Meteor.user()){
-            // User isn't logged in
-            Session.set('modal', 'register');
+            // User isn't logged in, sending him to register modal
+            FlowRouter.go('/register');
         } else{
             // User is logged in, checking if the product is already in moderation
 
@@ -126,20 +149,20 @@ Template.productPage.events({
                     Session.set('message', {type:"header", headerContent:"Ce produit est déjà en modération, veuillez réessayer ultérieurement.", style:"is-warning"} );
                 } else{
                     // Product isn't already under moderation, we can display the report modal
-                    Session.set('modal', 'report');
+                    FlowRouter.go('/reportProduct/'+productId);
                 }
             });
         }
     },
     'click .suggestChanges'(event){
         if(!Meteor.user()){
-            // User isn't logged in
-            Session.set('modal', 'register');
+            // User isn't logged in, sending him to register modal
+            FlowRouter.go('/register');
         } else{
             // User is logged in, checking if the product is already in moderation
 
             // Catching productId for the call
-            const productId = Session.get('currentProduct')._id;
+            const productId = event.currentTarget.id;
 
             Meteor.call('checkIfProductInModeration', {productId: productId}, function(error, result){
                 if(error){
@@ -150,10 +173,7 @@ Template.productPage.events({
                     Session.set('message', {type:"header", headerContent:"Ce produit est déjà en modération, veuillez réessayer ultérieurement.", style:"is-warning"} );
                 } else{
                     // Product isn't already under moderation, we can send the user to the edit page
-                    var navigation = Session.get('navigation');  // Catching navigation history
-                    navigation.push(Session.get('page'));  // Adding the current page
-                    Session.set('navigation', navigation);  // Updating the value
-                    Session.set('page', 'editProduct');
+                    FlowRouter.go('/editProduct/'+productId);
                 }
             });
         }
@@ -165,7 +185,7 @@ Template.productPage.helpers({
     displayProduct: function(){
         // Return the product that corresponds to the one to display
         if(Session.get('currentProduct')){
-            return [Session.get('currentProduct')];
+            return Session.get('currentProduct');
         }
     },
     productInFavorites: function(){

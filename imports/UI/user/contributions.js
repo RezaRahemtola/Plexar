@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
 import './contributions.html';
@@ -11,11 +13,23 @@ Session.set('pointsLeftUntilNextLevel', 0);
 Session.set('levelIcon', '');
 
 
+FlowRouter.route('/user/contributions', {
+    name: 'userContributions',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'userProfile', currentUserPage: 'contributions'});
+    }
+});
+
+
 Template.contributions.onRendered(function(){
     if(Meteor.user()){
         // User is logged in, updating his points
         Meteor.call('updateAndGetUserPoints');
     }
+
+    $("li.is-active").removeClass("is-active");  // Remove class from the older active tab
+    $("li#contributions").addClass("is-active");  // Set the current tab as the active one
 });
 
 
@@ -67,7 +81,7 @@ Template.contributions.helpers({
             }
         });
         // Returning it in an array to use {{#each}}
-        return [Session.get('levelProgressInformations')];
+        return Session.get('levelProgressInformations');
     },
     calculateProgressPercentage: function(){
         // Checking if progress bar informations were retrieved
@@ -100,6 +114,6 @@ Template.contributions.events({
         event.preventDefault();
         // The "more informations" icon is clicked
         Session.set('displayedFaqQuestion', 'pointsAndLevels');  // Updating the value of the question to display
-        Session.set('page', 'faq');  // Sending the user to faq page
+        FlowRouter.go('/faq');  // Sending the user to faq page
     }
 });

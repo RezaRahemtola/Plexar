@@ -1,12 +1,29 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
 import './login.html';
 
 // CSS import
 import '../css/form.css';
+
+
+FlowRouter.route('/login', {
+    name: 'login',
+    action(){
+        // Render a template using Blaze
+        if(Meteor.userId()){
+            // User is already logged in, sending him back to home page
+            FlowRouter.go('/');
+        } else{
+            // User isn't logged in, we can render the login modal
+            BlazeLayout.render('main', {currentModal: 'login'});
+        }
+    }
+});
 
 
 Template.login.onRendered(function(){
@@ -42,13 +59,9 @@ Template.login.events({
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});
                 $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
             } else{
-                Session.set('modal', null)  // Remove the login modal
+                FlowRouter.go('/');  // Remove the login modal by sending the user to the home page
             }
         });
-    },
-    'click #forgotPassword' (event){
-        event.preventDefault();
-        Session.set('modal', 'forgotPassword');
     }
 });
 

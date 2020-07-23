@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Database import
 import { Images } from '../../databases/images.js';
@@ -13,6 +15,15 @@ import '../css/form.css';
 
 // Initializing Session variables
 Session.set('editProductModeration', null);
+
+
+FlowRouter.route('/collectiveModeration/editedProduct/:_id', {
+    name: 'collectiveModerationEditedProduct',
+    action(params, queryParams){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'editProductModeration'});
+    }
+});
 
 
 Template.editProductModeration.onRendered(function(){
@@ -203,7 +214,7 @@ Template.editProductModeration.helpers({
         return Session.get('editProductModeration').editedProduct.categories;
     },
     displayWebsite: function(){
-        return [Session.get('editProductModeration').originalProduct.website];
+        return Session.get('editProductModeration').originalProduct.website;
     },
     websiteDifference: function(){
         // Catching websites
@@ -214,7 +225,7 @@ Template.editProductModeration.helpers({
         return areElementsDifferent;
     },
     displayEditedWebsite: function(){
-        return [Session.get('editProductModeration').editedProduct.website]
+        return Session.get('editProductModeration').editedProduct.website;
     }
 });
 
@@ -229,10 +240,7 @@ Template.editProductModeration.events({
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
-                var navigation = Session.get('navigation');  // Catching navigation history
-                navigation.push(Session.get('page'));  // Adding the current page
-                Session.set('navigation', navigation);  // Updating the value
-                Session.set('page', 'collectiveModeration');
+                FlowRouter.go('/collectiveModeration');  // Switching to moderation page
             }
         });
     },
@@ -246,10 +254,7 @@ Template.editProductModeration.events({
                 // There is an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
-                var navigation = Session.get('navigation');  // Catching navigation history
-                navigation.push(Session.get('page'));  // Adding the current page
-                Session.set('navigation', navigation);  // Updating the value
-                Session.set('page', 'collectiveModeration');
+                FlowRouter.go('/collectiveModeration');  // Switching to collective moderation page
             }
         });
     }

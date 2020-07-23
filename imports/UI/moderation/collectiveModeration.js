@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML import
 import './collectiveModeration.html';
@@ -13,6 +15,15 @@ import './moderationProductPage.js';
 // Initializing Session variables
 Session.set('currentDailyVotes', 0);
 Session.set('currentDailyVotesLimit', 0);
+
+
+FlowRouter.route('/collectiveModeration', {
+    name: 'collectiveModeration',
+    action(){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'collectiveModeration'});
+    }
+});
 
 
 Template.collectiveModeration.onRendered(function(){
@@ -43,7 +54,7 @@ Template.collectiveModeration.helpers({
                 Session.set('moderationCounter', result);
             }
         });
-        return [Session.get('moderationCounter')];
+        return Session.get('moderationCounter');
     },
     userIsAdmin: function(){
         // Checking is user is admin
@@ -90,19 +101,8 @@ Template.collectiveModeration.helpers({
 Template.collectiveModeration.events({
     'click .moderationBanner'(event){
         // When a moderation banner is clicked
-        Session.set('currentProduct', null);  // Reset the variable
-        Meteor.call('findOneProductById', {productId: event.currentTarget.id}, function(error, result){
-            if(error){
-                // There is an error
-                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-            } else{
-                Session.set('currentProduct', result);
-            }
-        });
-        var navigation = Session.get('navigation');  // Catching navigation history
-        navigation.push(Session.get('page'));  // Adding the current page
-        Session.set('navigation', navigation);  // Updating the value
-        Session.set('page', 'moderationProductPage');
+        const productId = event.currentTarget.id;
+        FlowRouter.go('/moderationProduct/'+productId);
     },
     'click .moderationAccepted'(event){
         event.preventDefault();
@@ -210,10 +210,7 @@ Template.collectiveModeration.events({
                                 // Result is the original product, catching it and saving moderationId, editedProduct and originalProduct in a Session variable
                                 const originalProduct = result;
                                 Session.set('editProductModeration', {moderationId: moderationId, editedProduct: editedProduct, originalProduct: originalProduct});
-                                var navigation = Session.get('navigation');  // Catching navigation history
-                                navigation.push(Session.get('page'));  // Adding the current page
-                                Session.set('navigation', navigation);  // Updating the value
-                                Session.set('page', 'editProductModeration');
+                                FlowRouter.go('/collectiveModeration/editedProduct/'+productId);
                             }
                         });
                     }
@@ -225,6 +222,6 @@ Template.collectiveModeration.events({
         event.preventDefault();
         // More informations icon is clicked
         Session.set('displayedFaqQuestion', 'collectiveModeration');  // Updating the value of the question to display
-        Session.set('page', 'faq');  // Sending the user to faq page
+        FlowRouter.go('/faq');  // Sending the user to faq page
     }
 });

@@ -1,6 +1,8 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // HTML imports
 import './moderationProductPage.html';
@@ -12,9 +14,30 @@ import '../css/slideshow.css';
 import { Images } from '../../databases/images.js';
 
 
+FlowRouter.route('/moderationProduct/:_id', {
+    name: 'moderationProduct',
+    action(params, queryParams){
+        // Render a template using Blaze
+        BlazeLayout.render('main', {currentPage: 'moderationProductPage'});
+
+        // With the given id, we search for the product
+        const productId = params["_id"];
+        Meteor.call('findOneProductById', {productId: productId}, function(error, result){
+            if(error){
+                // There was an error
+                Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+            } else if(result){
+                // Product was successfully returned, saving it in a Session variable
+                Session.set('currentProduct', result);
+            }
+        });
+    }
+});
+
+
 Template.moderationProductPage.onRendered(function(){
     // Scrolling the window back to the top
-    window.scrollTo(0, 0);    
+    window.scrollTo(0, 0);
 });
 
 
@@ -22,7 +45,7 @@ Template.moderationProductPage.helpers({
     displayProduct: function(){
         // Return the product that corresponds to the one to display
         if(Session.get('currentProduct')){
-            return [Session.get('currentProduct')];
+            return Session.get('currentProduct');
         }
     },
     displayProductImages: function(){

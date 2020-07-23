@@ -21,5 +21,5 @@ Accounts.onEmailVerificationLink(function(token, done){
 Accounts.onResetPasswordLink(function(token, done){
     // When the reset password link is clicked, saving the token in a Session variable to be able to call Accounts.resetPassword with it
     Session.set('resetPasswordToken', token);
-    Session.set('modal', 'resetPassword');  // Display a modal to ask the new password
+    FlowRouter.go('/resetPassword');  // Display a modal to ask the new password
 });
