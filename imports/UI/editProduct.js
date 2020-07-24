@@ -413,25 +413,34 @@ Template.editProduct.events({
             // No cover image, showing an error message
             Session.set('message', {type: "header", headerContent: "Veuillez ajouter une image de couverture.", style:"is-danger"});
         } else{
-            // All mandatory field were filled, calling the server method
-
-            // Checking that the product isn't already under moderation
-            Meteor.call('checkIfProductInModeration', {productId: productId}, function(error, result){
+            // All mandatory field were filled, checking website input
+            Meteor.call('checkUrlInput', {url: website}, function(error, isValidUrl){
                 if(error){
-                    // There was an error
-                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                } else if(result){
-                    // Product is already in moderation, display an helping message
-                    Session.set('message', {type:"header", headerContent:"Ce produit est déjà en modération, veuillez réessayer ultérieurement.", style:"is-warning"} );
+                    // There was an error while checking the link
+                    Session.set('message', {type: "header", headerContent:error.reason, style:"is-danger"});
+                } else if(!isValidUrl && website !== ""){
+                    // URL isn't correct and the field was filled, display an error message
+                    Session.set('message', {type: "header", headerContent:"Veuillez entrer un lien valide pour le site web.", style:"is-danger"});
                 } else{
-                    // Product isn't already under moderation, we can create the edit proposition
-                    Meteor.call('addEditedProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website, productId: productId}, function(error, result){
+                    // Website field wasn't filled or was filled without error, we can continue and check that the product isn't already under moderation
+                    Meteor.call('checkIfProductInModeration', {productId: productId}, function(error, result){
                         if(error){
-                            Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+                            // There was an error
+                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                        } else if(result){
+                            // Product is already in moderation, display an helping message
+                            Session.set('message', {type:"header", headerContent:"Ce produit est déjà en modération, veuillez réessayer ultérieurement.", style:"is-warning"} );
                         } else{
-                            // Product was inserted without any error, displaying a success message
-                            Session.set('message', {type: "header", headerContent: "Proposition de modification effectuée", style:"is-success"} );
-                            FlowRouter.go('/product/'+productId);  // Sending the user to the product page
+                            // Product isn't already under moderation, we can create the edit proposition
+                            Meteor.call('addEditedProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website, productId: productId}, function(error, result){
+                                if(error){
+                                    Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+                                } else{
+                                    // Product was inserted without any error, displaying a success message
+                                    Session.set('message', {type: "header", headerContent: "Proposition de modification effectuée", style:"is-success"} );
+                                    FlowRouter.go('/product/'+productId);  // Sending the user to the product page
+                                }
+                            });
                         }
                     });
                 }

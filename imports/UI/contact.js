@@ -57,19 +57,31 @@ Template.contact.events({
         const subject = form.get('subject');
         const message = form.get('message');
 
-        // This call can take some time to complete, showing a waiting message
-        Session.set('message', {type:"header", headerContent:"Envoi du message en cours..."});
         $(event.target).addClass("is-loading");  // Adding a loading effect on the button
 
-        Meteor.call('sendContactMessage', {email: email, subject: subject, message: message}, function(error, result){
+        // Checking if the email address is correct
+        Meteor.call('checkEmailInput', {email: email}, function(error, result){
             if(error){
-                // There was an error
+                // Value isn't a valid email address, showing an error message
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});
-            } else if(result){
-                // Email was successfully sent, displaying a confirmation email
                 $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
-                Session.set('message', {type:"header", headerContent:"Message envoyé, nous reviendrons vers vous dès que possible", style:"is-success"});
-                FlowRouter.go('/');  // Sending user to home page
+            } else{
+                // Value is a valid email address, we can continue the process
+
+                // This call can take some time to complete, showing a waiting message
+                Session.set('message', {type:"header", headerContent:"Envoi du message en cours..."});
+
+                Meteor.call('sendContactMessage', {email: email, subject: subject, message: message}, function(error, result){
+                    if(error){
+                        // There was an error
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});
+                        $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
+                    } else{
+                        // Email was successfully sent, displaying a confirmation email
+                        Session.set('message', {type:"header", headerContent:"Message envoyé, nous reviendrons vers vous dès que possible.", style:"is-success"});
+                        FlowRouter.go('/');  // Sending user to home page
+                    }
+                });
             }
         });
     }

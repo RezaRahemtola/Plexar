@@ -7,8 +7,43 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // HTML imports
 import './search.html';
 
-// Functions import
-import './functions/sortResults.js';
+
+/**
+ * Function to sort the search results
+ * Original code from http://www.javascriptkit.com/javatutors/arraysort2.shtml
+ *
+ * Sort an array of products in a given order
+ * @param  {array}  arrayToSort
+ * @param  {string} order
+ */
+sortResults = function(arrayToSort, order){
+    arrayToSort.sort(function(a, b){
+        var nameA = a.name.toLowerCase();
+        var nameB = b.name.toLowerCase();
+        if(order === 'A-Z'){
+            // Sort in ascending order
+            if (nameA < nameB){
+                return -1;
+            } else if(nameA > nameB){
+                return 1;
+            }
+            return 0;  // default return value (no sorting)
+        } else if(order === 'Z-A'){
+            // Sort in descending order
+            if (nameA < nameB){
+                return 1;
+            } else if(nameA > nameB){
+                return -1;
+            }
+            return 0;  // default return value (no sorting)
+        } else if(order === 'random'){
+            // Code from https://javascript.info/task/shuffle
+            return Math.random() - 0.5;  // Return randomly a positive or negative number
+        } else if(order === 'popularity'){
+            return b.score - a.score;
+        }
+    });
+}
 
 
 FlowRouter.route('/search', {
