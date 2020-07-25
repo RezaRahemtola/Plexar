@@ -16,6 +16,7 @@ import './css/generic.css';
 // JS imports
 import './about.js';
 import './home.js';
+import './404NotFound.js';
 import './addProduct.js';
 import './productPage.js';
 import './user/userProfile.js';
@@ -81,6 +82,11 @@ Template.main.onCreated(function(){
             Session.set('profilePicture', result);  // Set user's profile picture url to default one
         }
     });
+
+    if(Session.get('resetPasswordToken') !== null){
+        // There's a token to reset the password that has been set
+        FlowRouter.go('/resetPassword');  // Display the reset password modal
+    }
 
     // Subscribing to allow operations on the Images database
     Meteor.subscribe('images');

@@ -177,6 +177,46 @@ Template.productPage.events({
                 }
             });
         }
+    },
+    'click #copyProductLink'(event){
+        event.preventDefault();
+
+        // Code to copy the link to clipboard, original code from https://stackoverflow.com/a/30810322/12171474
+
+        if(!navigator.clipboard){
+            // No navigator clipboard, creating a fake textarea element
+            var textArea = document.createElement("textarea");
+            // Set the text content to the link we want to copy to clipboard
+            textArea.value = window.location.href;
+
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+
+            // Adding the textarea to the page, focusing & selecting it to be able to copy
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try{
+                // Copy the text to clipboard
+                document.execCommand('copy');
+                // Try block wasn't stop so the text was succesfully copied, display a confirmation message
+                Session.set('message', {type:"header", headerContent:"Lien copié dans le presse-papier.", style:"is-success"});
+            } catch(error){
+                // An error occured while copying, showing a message
+                Session.set('message', {type:"header", headerContent:"Une erreur a eu lieu lors de la copie du lien : "+error, style:"is-danger"});
+            }
+
+            // Removing the textarea from the page
+            document.body.removeChild(textArea);
+
+        } else{
+            // There is a navigator clipboard, copying the link in it
+            navigator.clipboard.writeText(window.location.href);
+            Session.set('message', {type:"header", headerContent:"Lien copié dans le presse-papier.", style:"is-success"});
+        }
     }
 })
 
@@ -232,6 +272,22 @@ Template.productPage.helpers({
                 return [website];
             }
         }
+    },
+    getProductLink: function(){
+        // Get the current page link for social sharing
+        return window.location.href;
+    },
+    getEncodedProductLink: function(){
+        // Get the current page link for social sharing in URI format
+        return encodeURIComponent(window.location.href);
+    },
+    getFacebookShareLink: function(){
+        // Return the link for the Facebook sharing iframe
+
+        // Convert the link to URI format
+        const formattedLink = encodeURIComponent(window.location.href);
+        // Return the complete facebook link
+        return "https://www.facebook.com/plugins/share_button.php?href="+formattedLink+"&layout=button&size=small&width=81&height=20&appId";
     }
 });
 

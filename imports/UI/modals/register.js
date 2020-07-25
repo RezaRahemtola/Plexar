@@ -100,35 +100,46 @@ Template.register.events({
             if(error){
                 // There is an error in password field
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                $('#password, #confirmPassword').addClass("is-danger");
+                $('input#password, input#confirmPassword').addClass("is-danger");
                 $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
             } else if(result){
-                // No error in password fields, creating the new user
+                // No error in password fields, checking the email
 
-                // This call can take a few seconds to complete, showing a waiting message
-                Session.set('message', {type:"header", headerContent:"Création de votre compte en cours..."});
+                Meteor.call('checkEmailInput', {email: email}, function(error, result){
+                    if(error){
+                        // Email address isn't valid
+                        Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                        $('input#email').addClass("is-danger");
+                        $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
+                    } else{
+                        // Email address is valid, creating the new user
 
-                Accounts.createUser({
-                    username: username,
-                    email: email,
-                    password: password
-                }, function(error){
-                        if(error){
-                            // Registration failed for an unknown reason
-                            Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Output error if registration fails
-                            $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
-                        } else{
-                            // Account successfully created
-                            Meteor.call('createNewUser', {username: username, email: email, newsletterIsChecked: newsletterIsChecked}, function(error, result){
-                                if(result){
-                                    // User was successfully created and is logged in
-                                    Session.set('message', {type:"header", headerContent:"Votre compte a bien été créé et un email de vérification vous a été envoyé, veuillez consulter votre boîte mail.", style:"is-success"});  // Display a success message
-                                    FlowRouter.go('/');  // Remove the modal by sending the user to home page
+                        // This call can take a few seconds to complete, showing a waiting message
+                        Session.set('message', {type:"header", headerContent:"Création de votre compte en cours..."});
+
+                        Accounts.createUser({
+                            username: username,
+                            email: email,
+                            password: password
+                        }, function(error){
+                                if(error){
+                                    // Registration failed for an unknown reason
+                                    Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Output error if registration fails
+                                    $(event.target).removeClass("is-loading");  // Remove the loading effect of the button
+                                } else{
+                                    // Account successfully created
+                                    Meteor.call('createNewUser', {username: username, email: email, newsletterIsChecked: newsletterIsChecked}, function(error, result){
+                                        if(result){
+                                            // User was successfully created and is logged in
+                                            Session.set('message', {type:"header", headerContent:"Votre compte a bien été créé et un email de vérification vous a été envoyé, veuillez consulter votre boîte mail.", style:"is-success"});  // Display a success message
+                                            FlowRouter.go('/');  // Remove the modal by sending the user to home page
+                                        }
+                                    });
                                 }
-                            });
-                        }
+                            }
+                        );
                     }
-                );
+                });
             }
         });
     }

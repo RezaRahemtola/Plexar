@@ -285,15 +285,26 @@ Template.addProduct.events({
             // No cover image, showing an error message
             Session.set('message', {type: "header", headerContent: "Veuillez ajouter une image de couverture.", style:"is-danger"});
         } else{
-            // All mandatory field were filled, calling the server method
-            Meteor.call('addNewProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website}, function(error, result){
+            // All mandatory field were filled, checking website input
+            Meteor.call('checkUrlInput', {url: website}, function(error, isValidUrl){
                 if(error){
-                    // There was an error
-                    Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+                    // There was an error while checking the link
+                    Session.set('message', {type: "header", headerContent:error.reason, style:"is-danger"});
+                } else if(!isValidUrl && website !== ""){
+                    // URL isn't correct and the field was filled, display an error message
+                    Session.set('message', {type: "header", headerContent:"Veuillez entrer un lien valide pour le site web.", style:"is-danger"});
                 } else{
-                    // Product was inserted without any error, displaying a success message
-                    Session.set('message', {type: "header", headerContent: "Produit ajouté avec succès !", style:"is-success"} );
-                    FlowRouter.go('/');  // Switching to home page
+                    // Website field wasn't filled or was filled without error, we can continue and call the server method
+                    Meteor.call('addNewProduct', {productName: productName, productDescription: productDescription, coverImage: coverImage, otherImages: otherImages, categories: categories, website: website}, function(error, result){
+                        if(error){
+                            // There was an error
+                            Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
+                        } else{
+                            // Product was inserted without any error, displaying a success message
+                            Session.set('message', {type: "header", headerContent: "Produit ajouté avec succès !", style:"is-success"} );
+                            FlowRouter.go('/');  // Switching to home page
+                        }
+                    });
                 }
             });
         }
