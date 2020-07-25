@@ -21,10 +21,15 @@
             <p class="help is-danger"></p>
         </div>
 
+
         <div class="field has-animated-label">
-            <input type="text" class="input has-animated-label" name="subject" id="subject" placeholder=" " required >
-            <label for="name" class="label is-animated">Sujet <span class="has-text-danger">*</span></label>
-            <span id="subjectCharCounter" class="character-counter"></span>
+            <div class="control has-icons-left">
+                <input type="text" class="input has-animated-label" name="subject" id="subject" placeholder=" " required>
+                <label for="name" class="label is-animated">Sujet <span class="has-text-danger">*</span></label>
+                <span class="icon is-left">
+                    <i class="fas fa-comment-dots"></i>
+                </span>
+            </div>
         </div>
 
         <div class="field has-animated-label">
@@ -35,7 +40,6 @@
                     <i class="fas fa-file-alt"></i>
                 </span>
             </div>
-            <span id="messageCharCounter" class="character-counter"></span>
         </div>
     </form>
 
