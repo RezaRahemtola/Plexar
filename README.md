@@ -1,4 +1,4 @@
-![Plexar preview](https://plexar.herokuapp.com/designPreview.jpg "Plexar")
+![Plexar preview](https://raw.githubusercontent.com/RezaRahemtola/Plexar/master/public/designPreview.jpg "Plexar")
 
 
 Created as part of [Magic Makers' Tech For Good](https://info.magicmakers.fr/tech-entrepreneurs-for-good) curriculum and in partnership with École Polytechnique and HEC Paris, Plexar is a platform that aims to help people adopt more responsible consumption by discovering products with a positive social impact.
