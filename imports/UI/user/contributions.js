@@ -80,7 +80,6 @@ Template.contributions.helpers({
                 Session.set('levelProgressInformations', result);
             }
         });
-        // Returning it in an array to use {{#each}}
         return Session.get('levelProgressInformations');
     },
     calculateProgressPercentage: function(){

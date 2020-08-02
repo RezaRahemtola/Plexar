@@ -228,8 +228,8 @@ Template.addProduct.onRendered(function(){
 Template.addProduct.helpers({
     displayCoverImage: function(){
         if(Images.findOne({_id: Session.get('coverImageId')}) !== undefined){
-            // There is an uploaded cover image, returning it (in an array to use each)
-            return [ Images.findOne({_id: Session.get('coverImageId')}) ];
+            // There is an uploaded cover image, returning it
+            return Images.findOne({_id: Session.get('coverImageId')});
         }
     },
     displayOtherImages: function(){

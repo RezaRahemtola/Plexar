@@ -289,8 +289,8 @@ Template.editProduct.onRendered(function(){
 Template.editProduct.helpers({
     displayCoverImage: function(){
         if(Images.findOne({_id: Session.get('editedCoverImageId')}) !== undefined){
-            // Find and return the corresponding image in the database (in an array in order to use each)
-            return [ Images.findOne({_id: Session.get('editedCoverImageId')}) ];
+            // Find and return the corresponding image in the database
+            return Images.findOne({_id: Session.get('editedCoverImageId')});
         }
     },
     displayOtherImages: function(){

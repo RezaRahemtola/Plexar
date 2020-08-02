@@ -95,12 +95,12 @@
                         {{/each}}
                     </div>
 
-                    {{#each displayWebsite}}
+                    {{#with displayWebsite}}
                         <a class="button" href="{{this}}" target="_blank">
                             <span class="icon"><i class="fas fa-globe-americas"></i></span>
                             <span>Voir le site web</span>
                         </a>
-                    {{/each}}
+                    {{/with}}
 
                     <button class="button has-text-danger report" id="{{_id}}">
                         <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>

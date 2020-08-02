@@ -74,7 +74,7 @@ Template.moderationProductPage.helpers({
             const website = Session.get('currentProduct').website;
             if(website !== ""){
                 // If a website has been given we display it
-                return [website];
+                return website;
             }
         }
     }

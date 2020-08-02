@@ -113,7 +113,7 @@ Template.editProductModeration.helpers({
                 editedNameCharDisplay.innerText = editedName.value.length+" / "+editedName.maxLength;
             }
         });
-        return [editedProduct.name];
+        return editedProduct.name;
     },
     descriptionDifference: function(){
         const originalProduct = Session.get('editProductModeration').originalProduct;
@@ -149,7 +149,7 @@ Template.editProductModeration.helpers({
             }
         });
 
-        return [editedProduct.description];
+        return editedProduct.description;
     },
     coverImageDifference: function(){
         const originalCoverImage = Session.get('editProductModeration').originalProduct.images[0];
