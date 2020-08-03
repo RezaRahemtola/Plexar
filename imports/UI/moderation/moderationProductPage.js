@@ -17,9 +17,6 @@ import { Images } from '../../databases/images.js';
 FlowRouter.route('/moderationProduct/:_id', {
     name: 'moderationProduct',
     action(params, queryParams){
-        // Render a template using Blaze
-        BlazeLayout.render('main', {currentPage: 'moderationProductPage'});
-
         // With the given id, we search for the product
         const productId = params["_id"];
         Meteor.call('findOneProductById', {productId: productId}, function(error, result){
@@ -29,6 +26,8 @@ FlowRouter.route('/moderationProduct/:_id', {
             } else if(result){
                 // Product was successfully returned, saving it in a Session variable
                 Session.set('currentProduct', result);
+                // Render a template using Blaze
+                BlazeLayout.render('main', {currentPage: 'moderationProductPage'});
             }
         });
     }
@@ -77,5 +76,9 @@ Template.moderationProductPage.helpers({
                 return website;
             }
         }
+    },
+    imagesLoading: function(){
+        // Check if the Images collection is ready to receive our requests
+        return !Meteor.subscribe('images').ready();
     }
 });

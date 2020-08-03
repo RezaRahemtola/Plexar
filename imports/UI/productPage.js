@@ -20,9 +20,6 @@ Session.set('productInFavorites', null);
 FlowRouter.route('/product/:_id', {
     name: 'product',
     action(params, queryParams){
-        // Render a template using Blaze
-        BlazeLayout.render('main', {currentPage: 'productPage'});
-
         // With the given id, we search for the product
         const productId = params["_id"];
         Meteor.call('findOneProductById', {productId: productId}, function(error, result){
@@ -32,6 +29,8 @@ FlowRouter.route('/product/:_id', {
             } else if(result){
                 // Product was successfully returned, saving it in a Session variable
                 Session.set('currentProduct', result);
+                // Render a template using Blaze
+                BlazeLayout.render('main', {currentPage: 'productPage'});
             }
         });
     }
@@ -241,6 +240,10 @@ Template.productPage.helpers({
             }
         });
         return Session.get('productInFavorites');
+    },
+    imagesLoading: function(){
+        // Check if the Images collection is ready to receive our requests
+        return !Meteor.subscribe('images').ready();
     },
     displayProductImages: function(){
         if(Session.get('currentProduct')){
