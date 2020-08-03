@@ -217,11 +217,5 @@ Template.collectiveModeration.events({
                 });
             }
         });
-    },
-    'click #infoCollectiveModeration'(event){
-        event.preventDefault();
-        // More informations icon is clicked
-        Session.set('displayedFaqQuestion', 'collectiveModeration');  // Updating the value of the question to display
-        FlowRouter.go('/faq');  // Sending the user to faq page
     }
 });
