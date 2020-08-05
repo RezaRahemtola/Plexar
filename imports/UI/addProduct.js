@@ -61,7 +61,7 @@ Template.addProduct.onRendered(function(){
                     descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
                     // Auto expand the field to display the text correctly
                     // Sending mandatory informations only to preserve server resources
-                    fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
+                    const fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
                     Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
                         if(error){
                             // There was an error
