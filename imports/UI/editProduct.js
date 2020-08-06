@@ -23,6 +23,8 @@ FlowRouter.route('/editProduct/:_id', {
     action(params, queryParams){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'editProduct'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
 
         // With the given id, we search for the product
         const productId = params["_id"];
@@ -30,6 +32,8 @@ FlowRouter.route('/editProduct/:_id', {
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                // Sending user back to home page to avoid a blank page displayed
+                FlowRouter.go('/');
             } else if(result){
                 // Product was successfully returned, saving it in a Session variable
                 Session.set('currentProduct', result);
@@ -40,9 +44,6 @@ FlowRouter.route('/editProduct/:_id', {
 
 
 Template.editProduct.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-
     // Filling the fields with product's informations :
 
     // Catching product's informations

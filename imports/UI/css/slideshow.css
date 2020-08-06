@@ -1,7 +1,5 @@
 /* Slideshow container */
-.slideshow{
-    max-width: 100%;
-}
+.slideshow{max-width: 100%;}
 
 .slideshow .image{
     display: none;
@@ -32,6 +30,4 @@
 }
 
 /* Position the previous button to the left */
-.previous{
-    left: 0;
-}
+.previous{ left: 0;}

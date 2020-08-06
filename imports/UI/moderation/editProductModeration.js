@@ -22,14 +22,13 @@ FlowRouter.route('/collectiveModeration/editedProduct/:_id', {
     action(params, queryParams){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'editProductModeration'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
 });
 
 
 Template.editProductModeration.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-
     // Filling fields
     const originalProduct = Session.get('editProductModeration').originalProduct;
 

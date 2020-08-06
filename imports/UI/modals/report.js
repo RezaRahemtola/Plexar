@@ -26,6 +26,8 @@ FlowRouter.route('/reportProduct/:_id', {
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                // Sending user back to home page to avoid a blank page displayed
+                FlowRouter.go('/');
             } else if(result){
                 // Product was successfully returned, saving it in a Session variable
                 Session.set('currentProduct', result);

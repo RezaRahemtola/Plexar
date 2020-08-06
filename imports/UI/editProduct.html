@@ -76,9 +76,9 @@
                                 <span class="images file-name">Aucun fichier sélectionné</span>
                             </label>
                         </div>
-                        {{#each displayOtherImages}}
-                            <div id="{{_id}}" class="other-image width-fit-content" style="position: relative; display: inline-block;">
-                                <img src="{{this.link}}" alt="{{this.name}}" class="image is-128x128">
+                        {{#each image in displayOtherImages}}
+                            <div id="{{image._id}}" class="other-image width-fit-content" style="position: relative; display: inline-block;">
+                                <img src="{{image.link}}" alt="{{image.name}}" class="image is-128x128">
                                 <button class="delete" style="position: absolute; top: 0; right: 0;"></button>
                             </div>
                         {{/each}}
@@ -93,17 +93,17 @@
                     <div class="select width-fit-content" style="margin: 0 auto; display: block;">
                         <select id="categories">
                             <option value="add" selected disabled hidden>Ajouter une catégorie</option>
-                            {{#each displayCategories}}
-                                <option value="{{this}}">{{this}}</option>
+                            {{#each category in displayCategories}}
+                                <option value="{{category}}">{{category}}</option>
                             {{/each}}
                         </select>
                     </div>
                     <br>
                     <div class="field is-grouped is-grouped-multiline width-fit-content" id="categoryTags" style="margin: 1rem auto;">
-                        {{#each displaySelectedCategories}}
+                        {{#each category in displaySelectedCategories}}
                             <div class="control">
                                 <div class="tags has-addons">
-                                    <a class="tag is-link">{{this}}</a>
+                                    <a class="tag is-link">{{category}}</a>
                                     <a class="tag is-delete"></a>
                                 </div>
                             </div>

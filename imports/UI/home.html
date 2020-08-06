@@ -148,8 +148,8 @@
             <div class="hero-body">
                 <h2 class="title is-2 has-text-centered is-family-monospace">Les plus populaires</h2>
 
-                {{#each displayBestProducts}}
-                    {{> productBanner}}
+                {{#each product in displayBestProducts}}
+                    {{> productBanner product=product}}
                 {{/each}}
             </div>
         </div>

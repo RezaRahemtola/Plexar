@@ -1,23 +1,23 @@
 <template name="productBanner">
     <article class="message is-info">
-        <div class="productBanner" id="{{_id}}">
+        <a class="productBanner" href="/product/{{product._id}}" style="text-decoration: none;">
             <div class="message-header">
-                <p>{{name}}</p>
-                <p class="is-family-code" style="font-size: 1.8rem;">{{score}} <i class="fas fa-heart" style="font-size: 1.5rem;"></i></p>
+                <p>{{product.name}}</p>
+                <p class="is-family-code" style="font-size: 1.8rem;">{{product.score}} <i class="fas fa-heart" style="font-size: 1.5rem;"></i></p>
             </div>
 
             <div class="message-body">
                 <div class="field has-addons">
-                    <img src="{{displayProductFirstImage images}}" alt="Image du produit" class="image is-150x150"/>
-                    <p id="description">{{description}}</p>
+                    <img src="{{displayProductFirstImage product.images}}" alt="Image du produit" class="image is-150x150"/>
+                    <p id="description">{{product.description}}</p>
                 </div>
 
                 <div class="tags">
-                    {{#each categories}}
-                        <span class="tag is-link">{{this}}</span>
+                    {{#each category in product.categories}}
+                        <span class="tag is-link">{{category}}</span>
                     {{/each}}
                 </div>
             </div>
-        </div>
+        </a>
     </article>
 </template>

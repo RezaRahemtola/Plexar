@@ -1,18 +1,13 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-// HTML imports
+// HTML import
 import './home.html';
 
-// Initializing Session variables
+// Initializing Session variable
 Session.set('bestProducts', []);  // We don't know which products are the most popular for the moment
-
-
-Template.home.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-});
 
 
 Template.home.helpers({

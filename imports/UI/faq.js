@@ -16,6 +16,8 @@ FlowRouter.route('/faq/:question', {
     action(params, queryParams){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'faq'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
         // Checking if there is a question to open
         if(params.hasOwnProperty('question')){
             // There is an answer to display, we catch the question & trigger a click on the corresponding answer link
@@ -27,9 +29,6 @@ FlowRouter.route('/faq/:question', {
 
 
 Template.faq.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-
     // Return an array of bulmaCollapsible instances (empty if no DOM node found)
     const bulmaCollapsibleInstances = bulmaCollapsible.attach('.is-collapsible');
 });

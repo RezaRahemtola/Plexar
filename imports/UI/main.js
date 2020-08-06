@@ -53,6 +53,8 @@ FlowRouter.route('/', {
     action(){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'home'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
 });
 
@@ -149,12 +151,6 @@ Template.main.events({
         event.preventDefault();
         FlowRouter.go('/');  // Set the page to home
         Meteor.logout();  // Log out the user
-    },
-    'click .productBanner'(event){
-        event.preventDefault();
-        // When a product banner is clicked (like in search result or favorites)
-        const productId = event.currentTarget.id;
-        FlowRouter.go('/product/'+productId);  // Redirecting to product page
     },
     'click #return'(event){
         event.preventDefault();

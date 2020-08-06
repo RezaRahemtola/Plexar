@@ -1,5 +1,5 @@
 /* Disable text selection */
-.label, .navbar-item {
+.label, .navbar-item{
   -webkit-touch-callout: none;  /* iOS Safari */
     -webkit-user-select: none;  /* Safari */
      -khtml-user-select: none;  /* Konqueror HTML */
@@ -10,13 +10,13 @@
 }
 
 
-.width-fit-content {
+.width-fit-content{
     width: -moz-fit-content;  /* Firefox */
          width: fit-content;  /* Non-prefixed version, currently supported by Chrome */
 }
 
 /* Styling icons in buttons */
-.button .icon:first-child:last-child {
+.button .icon:first-child:last-child{
     margin-right: 0;
 }
 

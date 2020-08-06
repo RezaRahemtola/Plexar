@@ -23,20 +23,18 @@ FlowRouter.route('/moderationProduct/:_id', {
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                // Sending user back to home page to avoid a blank page displayed
+                FlowRouter.go('/');
             } else if(result){
                 // Product was successfully returned, saving it in a Session variable
                 Session.set('currentProduct', result);
                 // Render a template using Blaze
                 BlazeLayout.render('main', {currentPage: 'moderationProductPage'});
+                // Scrolling the window back to the top
+                window.scrollTo(0, 0);
             }
         });
     }
-});
-
-
-Template.moderationProductPage.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
 });
 
 
