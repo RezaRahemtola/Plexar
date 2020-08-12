@@ -19,43 +19,49 @@
             <br>
             <div class="card-image">
                 <div class="slideshow">
-                    {{#each displayProductImages}}
-                        <img src="{{this.link}}" alt="Image du produit - {{this.name}}" class="image"/>
-                    {{/each}}
-                    {{#if moreThanOneImage}}
-                        <!--At least 2 images, displaying next and previous image buttons-->
-                        <a class="previous is-unselectable" onclick="changeImage(-1)">&#10094;</a>
-                        <a class="next is-unselectable" onclick="changeImage(1)">&#10095;</a>
+                    {{#if imagesLoading}}
+                        <!-- Waiting for the Images collection to be reachable -->
+                        <p>Chargement...</p>
+                    {{else}}
+                        <!-- Images collection is reachable, displaying product images-->
+                        {{#each displayProductImages}}
+                            <img src="{{this.link}}" alt="Image du produit - {{this.name}}" class="image"/>
+                        {{/each}}
+                        {{#if moreThanOneImage}}
+                            <!--At least 2 images, displaying next and previous image buttons-->
+                            <a class="previous is-unselectable" onclick="changeImage(-1)">&#10094;</a>
+                            <a class="next is-unselectable" onclick="changeImage(1)">&#10095;</a>
+                        {{/if}}
+                        <script>
+                            // Slideshow script
+
+                            // Showing the first image by default
+                            var imageIndex = 1;
+                            showImage(imageIndex);
+
+                            function changeImage(number){
+                                // If number is 1 it will show next slide, if it's -1 it will show the previous
+                                showImage(imageIndex += number);
+                            }
+
+                            function showImage(number) {
+                                var images = document.querySelectorAll(".slideshow .image");
+                                if(number > images.length){
+                                    // User pressed next button in last slide, comming back to the first slide)
+                                    imageIndex = 1;
+                                } else if(number < 1){
+                                    // User pressed previous button in first slide, going to the last slide
+                                    imageIndex = images.length;
+                                }
+                                for(var i = 0; i < images.length; i++){
+                                    // Hide all the slides
+                                    images[i].style.display = "none";
+                                }
+                                // Showing the desired slide (index starts at 0 so it's the index-1 slide)
+                                images[imageIndex-1].style.display = "block";
+                            }
+                        </script>
                     {{/if}}
-                    <script>
-                        // Slideshow script
-
-                        // Showing the first image by default
-                        var imageIndex = 1;
-                        showImage(imageIndex);
-
-                        function changeImage(number){
-                            // If number is 1 it will show next slide, if it's -1 it will show the previous
-                            showImage(imageIndex += number);
-                        }
-
-                        function showImage(number) {
-                            var images = document.querySelectorAll(".slideshow .image");
-                            if(number > images.length){
-                                // User pressed next button in last slide, comming back to the first slide)
-                                imageIndex = 1;
-                            } else if(number < 1){
-                                // User pressed previous button in first slide, going to the last slide
-                                imageIndex = images.length;
-                            }
-                            for(var i = 0; i < images.length; i++){
-                                // Hide all the slides
-                                images[i].style.display = "none";
-                            }
-                            // Showing the desired slide (index starts at 0 so it's the index-1 slide)
-                            images[imageIndex-1].style.display = "block";
-                        }
-                    </script>
                 </div>
             </div>
             <div class="card-content">
@@ -86,12 +92,12 @@
                         {{/each}}
                     </div>
 
-                    {{#each displayWebsite}}
+                    {{#with displayWebsite}}
                         <a class="button" href="{{this}}" target="_blank">
                             <span class="icon"><i class="fas fa-globe-americas"></i></span>
                             <span>Voir le site web</span>
                         </a>
-                    {{/each}}
+                    {{/with}}
 
                     <button class="button has-text-danger report" disabled>
                         <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>

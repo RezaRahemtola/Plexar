@@ -13,11 +13,7 @@ FlowRouter.route('/about', {
     action(){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'about'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
 });
-
-
-Template.about.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-})

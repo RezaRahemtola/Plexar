@@ -1,6 +1,6 @@
 <template name="moderationBanner">
     <article class="message is-info">
-        <div class="moderationBanner" id="{{product._id}}">
+        <a class="moderationBanner" href="/moderationProduct/{{product._id}}" style="text-decoration: none;">
             <div class="message-header">
                 <p>{{product.name}}</p>
             </div>
@@ -18,7 +18,7 @@
                 </div>
 
             </div>
-        </div>
+        </a>
 
         {{#if editModeration moderation.reason}}
             <div class="has-text-centered">

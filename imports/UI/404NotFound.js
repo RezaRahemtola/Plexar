@@ -13,5 +13,7 @@ FlowRouter.route('*', {
     action(){
         // Show 404 error page
         BlazeLayout.render('main', {currentPage: '404NotFound'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
 });

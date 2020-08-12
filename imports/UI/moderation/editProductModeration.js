@@ -22,14 +22,13 @@ FlowRouter.route('/collectiveModeration/editedProduct/:_id', {
     action(params, queryParams){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'editProductModeration'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
 });
 
 
 Template.editProductModeration.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-
     // Filling fields
     const originalProduct = Session.get('editProductModeration').originalProduct;
 
@@ -113,7 +112,7 @@ Template.editProductModeration.helpers({
                 editedNameCharDisplay.innerText = editedName.value.length+" / "+editedName.maxLength;
             }
         });
-        return [editedProduct.name];
+        return editedProduct.name;
     },
     descriptionDifference: function(){
         const originalProduct = Session.get('editProductModeration').originalProduct;
@@ -149,7 +148,7 @@ Template.editProductModeration.helpers({
             }
         });
 
-        return [editedProduct.description];
+        return editedProduct.description;
     },
     coverImageDifference: function(){
         const originalCoverImage = Session.get('editProductModeration').originalProduct.images[0];

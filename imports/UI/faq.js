@@ -10,36 +10,25 @@ import './faq.html';
 // Collapsible bulma extension import
 import bulmaCollapsible from '@creativebulma/bulma-collapsible';
 
-// Initializing Session variable
-Session.set('displayedFaqQuestion', null);
 
-
-FlowRouter.route('/faq', {
+FlowRouter.route('/faq/:question', {
     name: 'faq',
-    action(){
+    action(params, queryParams){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'faq'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
+        // Checking if there is a question to open
+        if(params.hasOwnProperty('question')){
+            // There is an answer to display, we catch the question & trigger a click on the corresponding answer link
+            const askedQuestion = params['question'];
+            document.querySelector('a[href="#'+askedQuestion+'"]').click();
+        }
     }
 });
 
 
 Template.faq.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-
     // Return an array of bulmaCollapsible instances (empty if no DOM node found)
     const bulmaCollapsibleInstances = bulmaCollapsible.attach('.is-collapsible');
-
-    // Checking if there is a question to open
-    const askedQuestion = Session.get('displayedFaqQuestion');
-    if(askedQuestion !== null){
-        // There is an answer to display, we trigger a click on the corresponding answer link
-        document.querySelector('a[href="#'+askedQuestion+'"]').click();
-    }
-});
-
-
-Template.faq.onDestroyed(function(){
-    // Reset the displayed question
-    Session.set('displayedFaqQuestion', null);
 });

@@ -8,11 +8,9 @@ We believe in the power of the collective: on Plexar, each user can propose to a
 
 ## Installation:
 
-After cloning this repository, you need to install the required modules before using the app locally.
-
-To do this you can use the following command :
+After cloning this repository, you need to install the required modules with
 ```
-npm install bulma bulma-checkradio bulma-steps bulma-switch dropbox jquery node-fetch node-sass request @creativebulma/bulma-collapsible @sendgrid/mail
+npm install
 ```
 
 You also need to create a `settings.json` file (to set up email sending & admin list) with the following content :

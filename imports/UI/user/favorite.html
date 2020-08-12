@@ -8,8 +8,8 @@
             </h5>
         {{/if}}
 
-        {{#each displayFavoriteProducts}}
-            {{> productBanner}}
+        {{#each product in displayFavoriteProducts}}
+            {{> productBanner product=product}}
         {{/each}}
     {{/if}}
 </template>

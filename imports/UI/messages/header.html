@@ -1,10 +1,12 @@
 <template name="header">
     {{#if messageToDisplay}}
-        <article class="message {{style}}" style="margin-bottom: 0;">
-            <div class="message-header">
-                <p>{{headerContent}}</p>
-                <button class="delete" aria-label="delete"></button>
-            </div>
-        </article>
+        {{#let message=messageToDisplay}}
+            <article class="message {{message.style}}" style="margin-bottom: 0;">
+                <div class="message-header">
+                    <p>{{message.headerContent}}</p>
+                    <button class="delete" aria-label="delete"></button>
+                </div>
+            </article>
+        {{/let}}
     {{/if}}
 </template>

@@ -17,27 +17,24 @@ import { Images } from '../../databases/images.js';
 FlowRouter.route('/moderationProduct/:_id', {
     name: 'moderationProduct',
     action(params, queryParams){
-        // Render a template using Blaze
-        BlazeLayout.render('main', {currentPage: 'moderationProductPage'});
-
         // With the given id, we search for the product
         const productId = params["_id"];
         Meteor.call('findOneProductById', {productId: productId}, function(error, result){
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                // Sending user back to home page to avoid a blank page displayed
+                FlowRouter.go('/');
             } else if(result){
                 // Product was successfully returned, saving it in a Session variable
                 Session.set('currentProduct', result);
+                // Render a template using Blaze
+                BlazeLayout.render('main', {currentPage: 'moderationProductPage'});
+                // Scrolling the window back to the top
+                window.scrollTo(0, 0);
             }
         });
     }
-});
-
-
-Template.moderationProductPage.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
 });
 
 
@@ -74,8 +71,12 @@ Template.moderationProductPage.helpers({
             const website = Session.get('currentProduct').website;
             if(website !== ""){
                 // If a website has been given we display it
-                return [website];
+                return website;
             }
         }
+    },
+    imagesLoading: function(){
+        // Check if the Images collection is ready to receive our requests
+        return !Meteor.subscribe('images').ready();
     }
 });

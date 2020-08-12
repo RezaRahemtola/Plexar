@@ -4,7 +4,7 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
-// HTML imports
+// HTML import
 import './search.html';
 
 
@@ -51,14 +51,13 @@ FlowRouter.route('/search', {
     action(){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'search'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
 });
 
 
 Template.search.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-
     Session.set("searchedProducts", []);
     // Catch sorting select changes to filter results
     const sortResults = document.querySelector("select#sortResults");
@@ -146,13 +145,8 @@ Template.search.helpers({
     noResults: function(){
         // Catching results and checking if there's one or more result
         const results = Session.get('searchedProducts');
-        if(results.length > 0){
-            // There is at least one result
-            return false;
-        } else{
-            // There's no result for this search
-            return true;
-        }
+        // Return true if there's no results
+        return (results.length === 0) ? true : false;
     }
 });
 

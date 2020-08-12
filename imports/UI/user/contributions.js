@@ -80,7 +80,6 @@ Template.contributions.helpers({
                 Session.set('levelProgressInformations', result);
             }
         });
-        // Returning it in an array to use {{#each}}
         return Session.get('levelProgressInformations');
     },
     calculateProgressPercentage: function(){
@@ -105,15 +104,5 @@ Template.contributions.helpers({
             }
         });
         return Session.get('pointsLeftUntilNextLevel');
-    }
-});
-
-
-Template.contributions.events({
-    'click #infoPointsAndLevels'(event){
-        event.preventDefault();
-        // The "more informations" icon is clicked
-        Session.set('displayedFaqQuestion', 'pointsAndLevels');  // Updating the value of the question to display
-        FlowRouter.go('/faq');  // Sending the user to faq page
     }
 });

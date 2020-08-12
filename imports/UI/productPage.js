@@ -20,18 +20,21 @@ Session.set('productInFavorites', null);
 FlowRouter.route('/product/:_id', {
     name: 'product',
     action(params, queryParams){
-        // Render a template using Blaze
-        BlazeLayout.render('main', {currentPage: 'productPage'});
-
         // With the given id, we search for the product
         const productId = params["_id"];
         Meteor.call('findOneProductById', {productId: productId}, function(error, result){
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
+                // Sending user back to home page to avoid a blank page displayed
+                FlowRouter.go('/');
             } else if(result){
                 // Product was successfully returned, saving it in a Session variable
                 Session.set('currentProduct', result);
+                // Render a template using Blaze
+                BlazeLayout.render('main', {currentPage: 'productPage'});
+                // Scrolling the window back to the top
+                window.scrollTo(0, 0);
             }
         });
     }
@@ -39,9 +42,6 @@ FlowRouter.route('/product/:_id', {
 
 
 Template.productPage.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-
     if(Meteor.user() && Session.get('currentProduct')){
         // Catching current productId for the call
         const productId = Session.get('currentProduct')._id;
@@ -242,6 +242,10 @@ Template.productPage.helpers({
         });
         return Session.get('productInFavorites');
     },
+    imagesLoading: function(){
+        // Check if the Images collection is ready to receive our requests
+        return !Meteor.subscribe('images').ready();
+    },
     displayProductImages: function(){
         if(Session.get('currentProduct')){
             // There is a product to display
@@ -255,12 +259,10 @@ Template.productPage.helpers({
         }
     },
     moreThanOneImage: function(){
+        // Check if the product has more than one image (to show the slideshow buttons)
         if(Session.get('currentProduct')){
             const productImagesId = Session.get('currentProduct').images;  // Return an array with IDs of the product images
-            if(productImagesId.length > 1){
-                return true;
-            }
-            return false;
+            return (productImagesId.length > 1) ? true : false;
         }
     },
     displayWebsite: function(){
@@ -269,7 +271,7 @@ Template.productPage.helpers({
             const website = Session.get('currentProduct').website;
             if(website !== ""){
                 // If a website has been given we display it
-                return [website];
+                return website;
             }
         }
     },

@@ -16,9 +16,9 @@
 
                     {{#if nameDifference}}
                         <div class="field has-animated-label">
-                            {{#each displayEditedName}}
+                            {{#with displayEditedName}}
                                 <input type="text" class="input has-animated-label" name="name" id="editedName" value="{{this}}" disabled>
-                            {{/each}}
+                            {{/with}}
                             <label for="name" class="label is-animated">Nom du produit (modifié)</label>
                             <span id="editedNameCharCounter" class="character-counter"></span>
                         </div>
@@ -40,9 +40,9 @@
                     {{#if descriptionDifference}}
                         <div class="field has-animated-label">
                             <div class="control has-icons-left">
-                                {{#each displayEditedDescription}}
+                                {{#with displayEditedDescription}}
                                     <textarea class="textarea has-animated-label" name="description" id="editedDescription" value="{{this}}" disabled></textarea>
-                                {{/each}}
+                                {{/with}}
                                 <label for="description" class="label is-animated">Description du produit (modifiée)</label>
                                 <span class="icon is-left">
                                     <i class="fas fa-file-alt"></i>

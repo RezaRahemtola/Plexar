@@ -10,7 +10,7 @@
         </header>
         <form id="newProduct" class="container" style="border: ridge grey 0.1rem; padding: 0.8rem;">
 
-            <!-- Prevent form submission with enter key by adding an hidden submit button (https://stackoverflow.com/a/51507806/12171474) -->
+            <!-- Prevent form submission with enter key by adding a hidden submit button (https://stackoverflow.com/a/51507806/12171474) -->
             <button type="submit" disabled style="display: none" aria-hidden="true"></button>
 
             <section class="section">
@@ -54,12 +54,12 @@
                                 <span class="coverImage file-name">Aucun fichier sélectionné</span>
                             </label>
                         </div>
-                        {{#each displayCoverImage}}
+                        {{#with displayCoverImage}}
                             <div id="{{this._id}}" class="cover-image width-fit-content" style="position: relative; display: inline-block;">
                                 <img src="{{this.link}}" alt="Image de couverture - {{this.name}}" class="image is-128x128"/>
                                 <button class="delete" style="position: absolute; top: 0; right: 0;"></button>
                             </div>
-                        {{/each}}
+                        {{/with}}
                     </div>
 
                     <div class="column field has-text-centered">

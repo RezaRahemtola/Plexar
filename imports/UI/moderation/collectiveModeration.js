@@ -22,13 +22,9 @@ FlowRouter.route('/collectiveModeration', {
     action(){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'collectiveModeration'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
-});
-
-
-Template.collectiveModeration.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
 });
 
 
@@ -99,11 +95,6 @@ Template.collectiveModeration.helpers({
 
 
 Template.collectiveModeration.events({
-    'click .moderationBanner'(event){
-        // When a moderation banner is clicked
-        const productId = event.currentTarget.id;
-        FlowRouter.go('/moderationProduct/'+productId);
-    },
     'click .moderationAccepted'(event){
         event.preventDefault();
         // Catching moderationId for the call
@@ -217,11 +208,5 @@ Template.collectiveModeration.events({
                 });
             }
         });
-    },
-    'click #infoCollectiveModeration'(event){
-        event.preventDefault();
-        // More informations icon is clicked
-        Session.set('displayedFaqQuestion', 'collectiveModeration');  // Updating the value of the question to display
-        FlowRouter.go('/faq');  // Sending the user to faq page
     }
 });

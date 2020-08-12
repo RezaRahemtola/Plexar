@@ -17,13 +17,9 @@ FlowRouter.route('/bestContributors', {
     action(){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'bestContributors'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
-});
-
-
-Template.bestContributors.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
 });
 
 
@@ -53,18 +49,12 @@ Template.bestContributors.helpers({
         return Session.get('bestContributors');
     },
     contributorInPodium: function(rank){
-        // Checking if the given rank is in the podium
-        if(rank === 1 || rank === 2 || rank === 3){
-            // This contributor is in the podium
-            return true;
-        }
-        return false;
+        // Checking if the given rank is in the podium (top 3)
+        return (rank >= 1 && rank <= 3) ? true : false;
     },
     firstPlace: function(rank){
-        if(rank === 1){
-            return true;
-        }
-        return false;
+        // Check if the given rank is the first one
+        return (rank === 1) ? true : false;
     },
     getMedalUrl: function(rank){
         if(rank === 1){ return '/goldMedal.png'; }

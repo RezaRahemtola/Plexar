@@ -32,7 +32,7 @@ Meteor.methods({
         check(imageId, String);
 
         // TODO: check if file in dropbox before removing
-        Images.remove(imageId);
+        Images.remove({_id: imageId});
     },
     'findOneProductById'({productId}){
         // Type check to prevent malicious calls

@@ -19,14 +19,13 @@ FlowRouter.route('/addProduct', {
     action(){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'addProduct'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
 });
 
 
 Template.addProduct.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-
     if(Meteor.user()){
         // User is logged in, creating all dynamic functions
 
@@ -61,7 +60,7 @@ Template.addProduct.onRendered(function(){
                     descriptionCharDisplay.innerText = productDescriptionInput.value.length+" / "+productDescriptionInput.maxLength;
                     // Auto expand the field to display the text correctly
                     // Sending mandatory informations only to preserve server resources
-                    fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
+                    const fieldForServer = {value: productDescriptionInput.value, scrollHeight: productDescriptionInput.scrollHeight};
                     Meteor.call('autoExpand', {field:fieldForServer}, function(error, result){
                         if(error){
                             // There was an error
@@ -228,8 +227,8 @@ Template.addProduct.onRendered(function(){
 Template.addProduct.helpers({
     displayCoverImage: function(){
         if(Images.findOne({_id: Session.get('coverImageId')}) !== undefined){
-            // There is an uploaded cover image, returning it (in an array to use each)
-            return [ Images.findOne({_id: Session.get('coverImageId')}) ];
+            // There is an uploaded cover image, returning it
+            return Images.findOne({_id: Session.get('coverImageId')});
         }
     },
     displayOtherImages: function(){

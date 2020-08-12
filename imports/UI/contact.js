@@ -13,14 +13,13 @@ FlowRouter.route('/contact', {
     action(){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'contact'});
+        // Scrolling the window back to the top
+        window.scrollTo(0, 0);
     }
 });
 
 
 Template.contact.onRendered(function(){
-    // Scrolling the window back to the top
-    window.scrollTo(0, 0);
-
     if(Meteor.userId()){
         // User is logged in, we can fill the email field with their email
         const emailInput = document.querySelector('input#email');
