@@ -20,7 +20,7 @@ FlowRouter.route('/contact', {
 
 
 Template.contact.onRendered(function(){
-    if(Meteor.userId()){
+    if(Meteor.userId() && Meteor.user()){
         // User is logged in, we can fill the email field with their email
         const emailInput = document.querySelector('input#email');
         const userEmail = Meteor.user().emails[0].address;
