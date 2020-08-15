@@ -10,19 +10,13 @@ import './faq.html';
 import bulmaCollapsible from '@creativebulma/bulma-collapsible';
 
 
-FlowRouter.route('/faq/:question', {
+FlowRouter.route('/faq', {
     name: 'faq',
-    action(params, queryParams){
+    action(){
         // Render a template using Blaze
         BlazeLayout.render('main', {currentPage: 'faq'});
         // Scrolling the window back to the top
         window.scrollTo(0, 0);
-        // Checking if there is a question to open
-        if(params.hasOwnProperty('question')){
-            // There is an answer to display, we catch the question & trigger a click on the corresponding answer link
-            const askedQuestion = params['question'];
-            document.querySelector('a[href="#'+askedQuestion+'"]').click();
-        }
     }
 });
 
@@ -30,4 +24,11 @@ FlowRouter.route('/faq/:question', {
 Template.faq.onRendered(function(){
     // Return an array of bulmaCollapsible instances (empty if no DOM node found)
     const bulmaCollapsibleInstances = bulmaCollapsible.attach('.is-collapsible');
+
+    // Checking if a question was selected
+    const askedQuestion = FlowRouter.getQueryParam('question');
+    if(askedQuestion !== undefined){
+        // Open the corresponding answer
+        document.querySelector('a[href="#'+askedQuestion+'"]').click();
+    }
 });
