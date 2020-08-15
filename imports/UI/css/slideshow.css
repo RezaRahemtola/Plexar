@@ -24,10 +24,10 @@
 }
 
 /* Position the next button to the right */
-.next {
+.next{
     right: 0;
     border-radius: 3px 0 0 3px;
 }
 
 /* Position the previous button to the left */
-.previous{ left: 0;}
+.previous{left: 0;}

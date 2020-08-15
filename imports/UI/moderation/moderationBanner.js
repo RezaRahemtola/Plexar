@@ -1,5 +1,4 @@
 // Useful imports
-import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 // HTML imports
@@ -18,10 +17,7 @@ Template.moderationBanner.helpers({
         return Images.findOne({_id: images[0]}).link();  // Return the url of the image
     },
     editModeration: function(moderationReason){
-        if(moderationReason === 'editProduct'){
-            // It's an edit suggestion, display a button to see edits
-            return true;
-        }
-        return false;
+        // Check if it's an edit suggestion to display a button to see edits
+        return moderationReason === 'editProduct';
     }
 });

@@ -16,9 +16,7 @@
 }
 
 /* Styling icons in buttons */
-.button .icon:first-child:last-child{
-    margin-right: 0;
-}
+.button .icon:first-child:last-child{margin-right: 0;}
 
 
 /* Styling links */

@@ -1,7 +1,7 @@
-div.field.has-animated-label {position:relative;}
+div.field.has-animated-label{position:relative;}
 
 input.has-animated-label,
-textarea.has-animated-label {
+textarea.has-animated-label{
     padding: 25px 12px 6px 40px !important;
     height: 45px;
     border:none !important;
@@ -12,7 +12,7 @@ textarea.has-animated-label {
     max-height: none !important;  /* No max-height so we can expand the file indefinitely */
 }
 
-label.is-animated {
+label.is-animated{
     cursor: text;  /* Display the same cursor than an input */
     color: #909090;
     position: absolute;
@@ -27,7 +27,7 @@ label.is-animated {
 
 /* Display as upper label when input is focused or when input isn't empty (so when the placeholder isn't shown) */
 input:focus + label.is-animated, input.has-animated-label:not(:placeholder-shown) + label.is-animated,
-textarea:focus + label.is-animated, textarea.has-animated-label:not(:placeholder-shown) + label.is-animated {
+textarea:focus + label.is-animated, textarea.has-animated-label:not(:placeholder-shown) + label.is-animated{
     color: #51A2DA;
     font-weight: 700 !important;
     font-size: 12px;
@@ -35,15 +35,9 @@ textarea:focus + label.is-animated, textarea.has-animated-label:not(:placeholder
             transform: translate3d(0, -10px, 0);
 }
 
-.character-counter{
-    float: right;
-}
+.character-counter{float: right;}
 
-.file-name{
-    text-align: center;
-}
+.file-name{text-align: center;}
 
 /* Remove the scollbar */
-.textarea::-webkit-scrollbar{
-    display: none;
-}
+.textarea::-webkit-scrollbar{display: none;}
