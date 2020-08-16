@@ -8,9 +8,6 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // HTML import
 import './register.html';
 
-// CSS import
-import '../css/form.css';
-
 
 FlowRouter.route('/register', {
     name: 'register',

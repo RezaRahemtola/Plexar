@@ -10,9 +10,6 @@ import { Images } from '../../databases/images.js';
 // HTML import
 import './editProductModeration.html';
 
-// CSS import
-import '../css/form.css';
-
 // Initializing Session variables
 Session.set('editProductModeration', null);
 

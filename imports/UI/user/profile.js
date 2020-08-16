@@ -4,14 +4,8 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
-
 // HTML import
-import './userProfile.html';
-
-// JS imports
-import './contributions.js';
-import './favorite.js';
-import './informations.js';
+import './profile.html';
 
 
 FlowRouter.route('/user', {

@@ -1,15 +1,11 @@
-// Useful imports
+// Useful import
 import { Template } from 'meteor/templating';
 
 // HTML import
-import './productBanner.html';
-
-// CSS imports
-import './css/image.css';
-import './css/banners.css';
+import './banner.html';
 
 // Database imports
-import { Images } from '../databases/images.js';
+import { Images } from '../../databases/images.js';
 
 
 Template.productBanner.helpers({

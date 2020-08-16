@@ -7,39 +7,25 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // HTML import
 import './main.html';
 
-// CSS imports
-import './css/navbar.css';
-import './css/image.css';
-import './css/footer.css';
-import './css/generic.css';
+// CSS import
+import './css/_all.js';
 
 // JS imports
 import './about.js';
 import './home.js';
 import './404NotFound.js';
-import './addProduct.js';
-import './productPage.js';
-import './user/userProfile.js';
+import './product/_all.js';
+import './user/_all.js';
 import './moderation/collectiveModeration.js';
 import './search.js';
-import './productBanner.js';
-import './editProduct.js';
 import './contact.js';
 import './faq.js';
 import './bestContributors.js';
-import './loginRequired';
 
 // Messages imports
 import './messages/header.js';
 import './messages/full.js';
 import './messages/verifyEmail.js';
-
-// Modals imports
-import './modals/register.js';
-import './modals/login.js';
-import './modals/forgotPassword.js';
-import './modals/report.js';
-import './modals/resetPassword.js';
 
 // Databases imports
 import { Images } from '../databases/images.js';

@@ -11,9 +11,6 @@ import { Images } from '../../databases/images.js';
 // HTML import
 import './informations.html';
 
-// CSS import
-import '../css/form.css';
-
 
 FlowRouter.route('/user/informations', {
     name: 'userInformations',

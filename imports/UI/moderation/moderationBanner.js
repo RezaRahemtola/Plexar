@@ -1,12 +1,8 @@
-// Useful imports
+// Useful import
 import { Template } from 'meteor/templating';
 
-// HTML imports
+// HTML import
 import './moderationBanner.html';
-
-// CSS imports
-import '../css/image.css';
-import '../css/banners.css';
 
 // Database imports
 import { Images } from '../../databases/images.js';

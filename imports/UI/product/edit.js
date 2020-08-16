@@ -5,13 +5,10 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Database import
-import { Images } from '../databases/images.js';
+import { Images } from '../../databases/images.js';
 
 // HTML import
-import './editProduct.html';
-
-// CSS import
-import './css/form.css';
+import './edit.html';
 
 // Initializing Session variables
 Session.set('editedCoverImageId', null);  // For the moment the user didn't proposed any modification to the cover image

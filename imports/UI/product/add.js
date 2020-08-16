@@ -5,13 +5,10 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Database import
-import { Images } from '../databases/images.js';
+import { Images } from '../../databases/images.js';
 
 // HTML import
-import './addProduct.html';
-
-// CSS import
-import './css/form.css';
+import './add.html';
 
 
 FlowRouter.route('/addProduct', {
