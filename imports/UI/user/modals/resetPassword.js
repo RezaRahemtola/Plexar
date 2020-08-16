@@ -15,7 +15,7 @@ FlowRouter.route('/resetPassword', {
     name: 'resetPassword',
     action(){
         // Render a template using Blaze
-        BlazeLayout.render('main', {currentModal: 'resetPassword'});
+        BlazeLayout.render('main', {currentPage: 'home', currentModal: 'resetPassword'});
     }
 });
 

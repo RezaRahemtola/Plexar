@@ -13,7 +13,7 @@ FlowRouter.route('/forgotPassword', {
     name: 'forgotPassword',
     action(){
         // Render a template using Blaze
-        BlazeLayout.render('main', {currentModal: 'forgotPassword'});
+        BlazeLayout.render('main', {currentPage: 'home', currentModal: 'forgotPassword'});
     }
 });
 

@@ -18,7 +18,7 @@ FlowRouter.route('/register', {
             FlowRouter.go('/');
         } else{
             // User isn't logged in, we can render the register modal
-            BlazeLayout.render('main', {currentModal: 'register'});
+            BlazeLayout.render('main', {currentPage: 'home', currentModal: 'register'});
         }
     }
 });
