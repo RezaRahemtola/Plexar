@@ -1,6 +1,5 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
-import { Accounts } from 'meteor/accounts-base';
 
 // Importing databases
 import { Products } from '../../imports/databases/products.js';
@@ -31,19 +30,20 @@ Meteor.methods({
         // Type check to prevent malicious calls
         check(imageId, String);
 
+        // TODO: check if image really exists
         // TODO: check if file in dropbox before removing
         Images.remove({_id: imageId});
     },
     'findOneProductById'({productId}){
         // Type check to prevent malicious calls
         check(productId, String);
-
+        // TODO: check if product really exists
         return Products.findOne({_id : productId});
     },
     'findOneEditedProductById'({editedProductId}){
         // Type check to prevent malicious calls
         check(editedProductId, String);
-
+        // TODO: check if product really exists
         return EditedProducts.findOne({_id: editedProductId});
     },
     'getVoteValue'({productId}){
@@ -88,7 +88,7 @@ Meteor.methods({
                 // Email is verified, catching useful informations for the update
 
                 const product = Products.findOne({_id: productId});
-                const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
+                // TODO: check if product really exists
                 var userVotes = UsersInformations.findOne({userId: Meteor.userId()}).votes;
                 var currentScore = product.score;
 
@@ -135,7 +135,7 @@ Meteor.methods({
                 Products.update(productId, { $set: { score: newScore } } );
 
                 // Updating the database with the new votes object
-                UsersInformations.update(userInformationsId, { $set: { votes: userVotes } } );
+                UsersInformations.update({userId: Meteor.userId()}, { $set: { votes: userVotes } } );
 
                 return returnValue;
             }
@@ -281,7 +281,7 @@ Meteor.methods({
                                                     if(error){
                                                         // There was an error while adding the moderation
                                                         throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
-                                                        Products.remove(addedProductId);  // Removing the product from the db
+                                                        Products.remove({_id: addedProductId});  // Removing the product from the db
                                                     } else{
                                                         // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
                                                         // Catching the points earned :
@@ -297,12 +297,11 @@ Meteor.methods({
                                                         }, function(error, addedContributionId){
                                                             if(error){
                                                                 // There was an error while adding the contribution
-                                                                Products.remove(addedProductId);  // Removing the product from the db
-                                                                Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                                                Products.remove({_id: addedProductId});  // Removing the product from the db
+                                                                Moderation.remove({_id: addedModerationId});  // Removing the moderation from the db
                                                                 throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                             } else{
                                                                 // Adding this contribution to the count of daily contributions
-                                                                const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
                                                                 var dailyContributions = UsersInformations.findOne({userId: Meteor.userId()}).dailyContributions;
 
                                                                 // Catching the current date
@@ -323,13 +322,13 @@ Meteor.methods({
                                                                     dailyContributions[currentDate] = 1;
                                                                 }
                                                                 // Updating daily contributions value in the database
-                                                                UsersInformations.update(userInformationsId, { $set: { dailyContributions: dailyContributions } },
+                                                                UsersInformations.update({userId: Meteor.userId()}, { $set: { dailyContributions: dailyContributions } },
                                                                     function(error, result){
                                                                         if(error){
                                                                             // There was an error while updating daily contributions
-                                                                            Products.remove(addedProductId);  // Removing the product from the database
-                                                                            Moderation.remove(addedModerationId);  // Removing the moderation from the database
-                                                                            Contributions.remove(addedContributionId);  // Removing the contribution from the database
+                                                                            Products.remove({_id: addedProductId});  // Removing the product from the database
+                                                                            Moderation.remove({_id: addedModerationId});  // Removing the moderation from the database
+                                                                            Contributions.remove({_id: addedContributionId});  // Removing the contribution from the database
                                                                             throw new Meteor.Error('dailyContributionsUpdateError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                         } else{
                                                                             // Everything was successfully executed, now we check if the user is admin to instant validate his proposition
@@ -526,7 +525,7 @@ Meteor.methods({
                                                                 }, function(error, addedModerationId){
                                                                     if(error){
                                                                         // There was an error while adding the moderation
-                                                                        EditedProducts.remove(addedProductId);  // Removing the product from the db
+                                                                        EditedProducts.remove({_id: addedProductId});  // Removing the product from the db
                                                                         throw new Meteor.Error('moderationInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                     } else{
                                                                         // The new product was successfully inserted in moderation, adding the corresponding contribution to the user
@@ -545,12 +544,11 @@ Meteor.methods({
                                                                         }, function(error, addedContributionId){
                                                                             if(error){
                                                                                 // There was an error while adding the contribution
-                                                                                EditedProducts.remove(addedProductId);  // Removing the product from the database
-                                                                                Moderation.remove(addedModerationId);  // Removing the moderation from the database
+                                                                                EditedProducts.remove({_id: addedProductId});  // Removing the product from the database
+                                                                                Moderation.remove({_id:addedModerationId});  // Removing the moderation from the database
                                                                                 throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                             } else{
                                                                                 // Adding this contribution to the count of daily contributions
-                                                                                const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
                                                                                 var dailyContributions = UsersInformations.findOne({userId: Meteor.userId()}).dailyContributions;
 
                                                                                 // Catching the current date
@@ -571,13 +569,13 @@ Meteor.methods({
                                                                                     dailyContributions[currentDate] = 1;
                                                                                 }
                                                                                 // Updating daily contributions value in the database
-                                                                                UsersInformations.update(userInformationsId, { $set: { dailyContributions: dailyContributions } },
+                                                                                UsersInformations.update({userId: Meteor.userId()}, { $set: { dailyContributions: dailyContributions } },
                                                                                     function(error, result){
                                                                                         if(error){
                                                                                             // There was an error while updating daily contributions
-                                                                                            EditedProducts.remove(addedProductId);  // Removing the product from the db
-                                                                                            Moderation.remove(addedModerationId);  // Removing the moderation from the db
-                                                                                            Contributions.remove(addedContributionId);  // Removing the contribution from the database
+                                                                                            EditedProducts.remove({_id: addedProductId});  // Removing the product from the db
+                                                                                            Moderation.remove({_id: addedModerationId});  // Removing the moderation from the db
+                                                                                            Contributions.remove({_id: addedContributionId});  // Removing the contribution from the database
                                                                                             throw new Meteor.Error('dailyContributionsUpdateError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                                                         } else{
                                                                                             // Everything was executed successfully, checking if user is admin to instant validate the proposition
@@ -621,11 +619,10 @@ Meteor.methods({
         } else{
             // User is logged in, retrieving his favorite products in the database
             var userFavorite = Favorites.findOne({userId: Meteor.userId()}).products;
-            const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Catching lineId (needed to modify data)
             userFavorite.push(productId);  // Adding the product to the array
-
+            // TODO: check if product really exists
             // Updating the database with the modified array
-            Favorites.update(favoriteId, { $set: { products: userFavorite } } );
+            Favorites.update({userId: Meteor.userId()}, { $set: { products: userFavorite } } );
         }
     },
     'removeProductFromFavorite'({productId}){
@@ -638,11 +635,10 @@ Meteor.methods({
         } else{
             // User is logged in, retrieving his favorite products to remove the asked product
             var userFavorite = Favorites.findOne({userId: Meteor.userId()}).products;  // Getting favorite products of the current user in the db
-            const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
             userFavorite.pop(productId);  // Removing the product from the array
 
             // Updating the database with the modified array
-            Favorites.update(favoriteId, { $set: { products: userFavorite } } );
+            Favorites.update({userId: Meteor.userId()}, { $set: { products: userFavorite } } );
         }
     },
     'productInFavorites'({productId}){
@@ -744,11 +740,10 @@ Meteor.methods({
                                 }, function(error, addedContributionId){
                                     if(error){
                                         // There was an error while adding the contribution
-                                        Moderation.remove(addedModerationId);  // Removing the moderation from the db
+                                        Moderation.remove({_id: addedModerationId});  // Removing the moderation from the db
                                         throw new Meteor.Error('contributionInsertionError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                     } else{
                                         // Adding this contribution to the count of daily contributions
-                                        const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()})._id;
                                         var dailyContributions = UsersInformations.findOne({userId: Meteor.userId()}).dailyContributions;
 
                                         // Catching the current date
@@ -769,12 +764,12 @@ Meteor.methods({
                                             dailyContributions[currentDate] = 1;
                                         }
                                         // Updating daily contributions value in the database
-                                        UsersInformations.update(userInformationsId, { $set: { dailyContributions: dailyContributions } },
+                                        UsersInformations.update({userId: Meteor.userId()}, { $set: { dailyContributions: dailyContributions } },
                                             function(error, result){
                                                 if(error){
                                                     // There was an error while updating daily contributions
-                                                    Moderation.remove(addedModerationId);  // Removing the moderation from the database
-                                                    Contributions.remove(addedContributionId);  // Removing the contribution from the database
+                                                    Moderation.remove({_id: addedModerationId});  // Removing the moderation from the database
+                                                    Contributions.remove({_id: addedContributionId});  // Removing the contribution from the database
                                                     throw new Meteor.Error('dailyContributionsUpdateError', "Erreur lors de l'ajout de produit, veuillez réessayer.");
                                                 } else{
                                                     // Everything executed successfully, checking if the user is an admin to instant validate the report
