@@ -8,9 +8,6 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // HTML import
 import './register.html';
 
-// CSS import
-import '../css/form.css';
-
 
 FlowRouter.route('/register', {
     name: 'register',
@@ -21,7 +18,7 @@ FlowRouter.route('/register', {
             FlowRouter.go('/');
         } else{
             // User isn't logged in, we can render the register modal
-            BlazeLayout.render('main', {currentModal: 'register'});
+            BlazeLayout.render('main', {currentPage: 'home', currentModal: 'register'});
         }
     }
 });

@@ -7,12 +7,6 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // HTML import
 import './report.html';
 
-// CSS import
-import '../css/form.css';
-
-// Database imports
-import { Moderation } from '../../databases/moderation.js';
-
 
 FlowRouter.route('/reportProduct/:_id', {
     name: 'reportProduct',

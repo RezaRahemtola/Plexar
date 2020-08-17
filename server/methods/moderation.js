@@ -1,6 +1,5 @@
 // Useful imports
 import { Meteor } from 'meteor/meteor';
-import { Accounts } from 'meteor/accounts-base';
 
 // Importing databases
 import { Products } from '../../imports/databases/products.js';
@@ -27,13 +26,8 @@ Meteor.methods({
         } else{
             // No moderation found, checking edits propositions (because elementId field of moderation contains editedProductId for edit propositions)
             const isUnderEdit = EditedProducts.findOne({originalId: productId});
-            if(isUnderEdit){
-                // This product is under edit
-                return true;
-            } else{
-                // Product isn't under moderation and isn't under edit, we can return false
-                return false;
-            }
+            // Return true if it's under edit, else (not under moderation or edit) return false
+            return isUnderEdit ? true : false;
         }
 
     },
@@ -83,6 +77,7 @@ Meteor.methods({
         // Type check to prevent malicious calls
         check(moderationId, String);
 
+        // TODO: check if moderation really exists
         return Moderation.findOne({_id: moderationId}).elementId;
     },
     'moderationCounter'(){
@@ -197,11 +192,10 @@ Meteor.methods({
                         }
 
                         // And we add the moderation + the product to the returned array
-                        elementsToReturn.push( {
+                        elementsToReturn.push({
                                                 product: product,
                                                 moderation: moderation
-                                                }
-                                            );
+                                                });
                     }
 
                 }
@@ -456,6 +450,7 @@ Meteor.methods({
         // Type check to prevent malicious calls
         check(moderationId, String);
 
+        // TODO: check if the moderation really exists
         // Catching the moderation
         const currentModeration = Moderation.findOne({_id: moderationId});
         // Catching rules about the score needed to approve or reject
@@ -491,7 +486,7 @@ Meteor.methods({
 
                     const productId = editedProduct.originalId;
                     const originalProduct = Products.findOne({_id: productId});
-                    Products.update(productId, { $set: {
+                    Products.update({_id: productId}, { $set: {
                         name: editedProduct.name,
                         description: editedProduct.description,
                         images: editedProduct.images,
@@ -508,21 +503,19 @@ Meteor.methods({
                             for(var imageId of oldImages){
                                 if(!newImages.includes(imageId)){
                                     // This image isn't used in the product anymore, we can delete it
-                                    Images.remove(imageId);
+                                    Images.remove({_id: imageId});
                                 }
                             }
                             // Deleting the edited product
-                            EditedProducts.remove(editedProductId);
+                            EditedProducts.remove({_id: editedProductId});
                         }
                     });
                     break;
             }
-            // Now let's catch the correponding contribution to update it's status
-            const contributionId = Contributions.findOne({moderationId: moderationId})._id;
             // Updating the status
-            Contributions.update(contributionId, { $set: { status: 'accepted' } } );
+            Contributions.update({moderationId: moderationId}, { $set: { status: 'accepted' } } );
             // Removing the moderation
-            Moderation.remove(moderationId);
+            Moderation.remove({_id: moderationId});
 
         } else if(currentModeration.score <= votesToReject){
             // Moderation was rejected, checking the reason to execute the corresponding action
@@ -530,14 +523,14 @@ Meteor.methods({
                 case 'newProduct':
                     // New product rejected, removing it from the database
                     const productImages = Products.findOne({_id: currentModeration.elementId}).images;  // Catching the product images
-                    Products.remove(currentModeration.elementId, function(error, result){
+                    Products.remove({_id: currentModeration.elementId}, function(error, result){
                         if(error){
                             // There was an error while removing the product
                             throw new Meteor.Error('removeProductFailed', 'La suppression du produit a échoué, veuillez réessayer.');
                         } else{
                             // The product was successfully removed, we can now delete it's images
-                            for(var image of productImages){
-                                Images.remove(image);
+                            for(var imageId of productImages){
+                                Images.remove({_id: imageId});
                             }
                         }
                     });
@@ -548,10 +541,9 @@ Meteor.methods({
                     break;
                 case 'editProduct':
                     // Edit product rejected, catching the product to delete
-                    const editedProductId = currentModeration.elementId;
-                    const editedProduct = EditedProducts.findOne({_id: editedProductId});
+                    const editedProduct = EditedProducts.findOne({_id: currentModeration.elementId});
                     // Edit proposition was rejected, we delete it from the database
-                    EditedProducts.remove(editedProductId, function(error, result){
+                    EditedProducts.remove({_id: editedProduct._id}, function(error, result){
                         if(error){
                             // There was an error while removing the edit proposition
                             throw new Meteor.Error('removeProductFailed', 'La suppression du produit a échoué, veuillez réessayer.');
@@ -562,19 +554,17 @@ Meteor.methods({
                             for(var imageId of editedProductImages){
                                 if(!productImages.includes(imageId)){
                                     // Image isn't in the product's ones, we can delete it safely delete it
-                                    Images.remove(imageId);
+                                    Images.remove({_id: imageId});
                                 }
                             }
                         }
                     });
                     break;
             }
-            // Now let's catch the correponding contribution to update it's status
-            const contributionId = Contributions.findOne({moderationId: moderationId})._id;
             // Updating the status
-            Contributions.update(contributionId, { $set: { status: 'rejected' } } );
+            Contributions.update({moderationId: moderationId}, { $set: { status: 'rejected' } } );
             // Removing the moderation
-            Moderation.remove(moderationId);
+            Moderation.remove({_id: moderationId});
         }
     }
 });

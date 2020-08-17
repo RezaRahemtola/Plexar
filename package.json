@@ -13,6 +13,7 @@
     "dependencies": {
         "@babel/runtime": "^7.11.2",
         "@creativebulma/bulma-collapsible": "^1.0.4",
+        "@fortawesome/fontawesome-free": "^5.14.0",
         "@sendgrid/mail": "^7.2.3",
         "bcrypt": "^4.0.1",
         "bulma-checkradio": "^1.1.1",

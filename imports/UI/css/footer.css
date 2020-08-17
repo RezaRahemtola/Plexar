@@ -3,9 +3,8 @@ body{
   min-height: 100vh;  /* Body takes full viewport height */
 }
 
-#content-wrap{
-  padding-bottom: 10rem;  /* Leave space for footer */
-}
+/* Leaving space for footer */
+#content-wrap{padding-bottom: 10rem;}
 
 .footer{
     position: absolute;
@@ -14,4 +13,4 @@ body{
     height: 9rem;  /* Height of padding-bottom */
 }
 
-.footer li.link{ margin: auto; }
+.footer li.link{margin: auto;}

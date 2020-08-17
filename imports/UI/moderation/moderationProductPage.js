@@ -4,11 +4,8 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
-// HTML imports
+// HTML import
 import './moderationProductPage.html';
-
-// CSS import
-import '../css/slideshow.css';
 
 // Database import
 import { Images } from '../../databases/images.js';

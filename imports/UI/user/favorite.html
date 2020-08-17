@@ -1,15 +1,14 @@
 <template name="favorite">
     {{#if currentUser}}
-        {{#if noFavorite}}
+        {{#each product in displayFavoriteProducts}}
+            {{> productBanner product=product}}
+        {{else}}
+        <!-- No favorite product -->
             <h5 class="title is-5 has-text-centered">
                 <span>Vous n'avez pas encore enregistré de favoris, vous pouvez utiliser l'icône</span>
                 <span class="icon"><i class="far fa-bookmark"></i></span>
                 <span>située en haut à droite de la page d'un produit pour l'ajouter à vos favoris.</span>
             </h5>
-        {{/if}}
-
-        {{#each product in displayFavoriteProducts}}
-            {{> productBanner product=product}}
         {{/each}}
     {{/if}}
 </template>

@@ -50,13 +50,8 @@ Meteor.methods({
         } else{
             // Catching user email address :
             const userEmail = Meteor.user().emails[0].address;
-            if(!Meteor.settings.admin.list.includes(userEmail)){
-                // User isn't in the admin list
-                return false;
-            } else{
-                // User is in the admin list
-                return true;
-            }
+            // Return true if the user is in the admin list, else return false
+            return Meteor.settings.admin.list.includes(userEmail);
         }
     },
     'hasProfilePicture'(){
@@ -93,9 +88,8 @@ Meteor.methods({
                 userPoints += dailyVotes * collectiveModerationPoints;
             }
 
-            // Now let's update the points in the database
-            const userInformationsId = UsersInformations.findOne({userId: Meteor.userId()});
-            UsersInformations.update(userInformationsId, { $set: { points: userPoints } }, function(error, result){
+            // Updating the points in the database
+            UsersInformations.update({userId: Meteor.userId()}, { $set: { points: userPoints } }, function(error, result){
                 if(error){
                     // There was an error while updating the points
                     throw new Meteor.Error('pointsUpdateError', "Une erreur est survenue lors de la mise à jour de vos points, veuillez réessayer.")
@@ -187,7 +181,7 @@ Meteor.methods({
                 }
             }
             // Updating the level in the database
-            UsersInformations.update(userInformations._id, { $set: { level: currentLevel } }, function(error, result){
+            UsersInformations.update({userId: Meteor.userId()}, { $set: { level: currentLevel } }, function(error, result){
                 if(error){
                     // There was an error wgile updating the level
                     throw new Meteor.Error('levelUpdateError', "Une erreur est survenue lors de la mise à jour de votre niveau, veuillez réessayer.")
@@ -268,7 +262,7 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // User is logged in
+            // User is logged in, we can change his username
             Accounts.setUsername(Meteor.userId(), newUsername);
         }
     },
@@ -410,7 +404,6 @@ Meteor.methods({
         } else{
             // User is logged in, catching favorites informations
             var favoriteProductsId = Favorites.findOne({userId: Meteor.userId()}).products;  // Return an array with IDs of the products database
-            const favoriteId = Favorites.findOne({userId: Meteor.userId()})._id;  // Getting line ID (needed to modify data)
             var favoriteProducts = [];  // Creating an empty array of the products
             for(var productId of favoriteProductsId){
                 // Filling the array with the products
@@ -418,7 +411,7 @@ Meteor.methods({
                     // This product is in favorites but doesn't exist in the products db (maybe deleted), we remove it from favorites
                     favoriteProductsId.pop(productId);  // Removing the product from the array
                     // Updating the database with the modified array
-                    Favorites.update(favoriteId, { $set: { products: favoriteProductsId } } );
+                    Favorites.update({userId: Meteor.userId()}, { $set: { products: favoriteProductsId } } );
                 } else{
                     // Product exists, adding it to the array
                     favoriteProducts.push(Products.findOne({_id : productId}));
@@ -448,11 +441,8 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // User is logged in, catching his informations
-            const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
-
-            // Updating non-sensitive informations in our database
-            UsersInformations.update(userInformations._id, { $set: {
+            // User is logged in, updating non-sensitive informations in our database
+            UsersInformations.update({userId: Meteor.userId()}, { $set: {
                 firstName: firstName,
                 lastName: lastName,
                 newsletter: newsletter
@@ -467,7 +457,7 @@ Meteor.methods({
                         throw new Meteor.Error(error.error, error.reason);
                     } else{
                         // Username was changed successfully, updating value in our database
-                        UsersInformations.update(userInformations._id, { $set: { username: username } } );
+                        UsersInformations.update({userId: Meteor.userId()}, { $set: { username: username } } );
                     }
                 });
             }
@@ -483,18 +473,18 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // Catching current user's informations
-            const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
-            const currentProfilePicture = userInformations.profilePicture;
-            UsersInformations.update(userInformations._id, { $set: { profilePicture: imageId }},
+            // Catching current user's profile picture
+            const currentProfilePicture = UsersInformations.findOne({userId: Meteor.userId()}).profilePicture;
+            // Updating the database
+            UsersInformations.update({userId: Meteor.userId()}, { $set: { profilePicture: imageId }},
                 function(error, result){
                     if(error){
                         // There was an error while linking the image with user's informations
-                        Images.remove(imageId);  // Removing the new picture
+                        Images.remove({_id: imageId});  // Removing the new picture
                         throw new Meteor.Error('linkingProfilePictureWithUserInfoFailed', "Le changement de l'image de profil a échoué, veuillez réessayer.");
                     } else{
                         // Image was successfully linked, we can now remove the old profile picture
-                        Images.remove(currentProfilePicture);
+                        Images.remove({_id: currentProfilePicture});
                     }
                 }
             );

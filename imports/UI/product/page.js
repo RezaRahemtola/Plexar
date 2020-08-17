@@ -4,14 +4,11 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
-// HTML imports
-import './productPage.html';
-
-// CSS import
-import './css/slideshow.css';
+// HTML import
+import './page.html';
 
 // Database import
-import { Images } from '../databases/images.js';
+import { Images } from '../../databases/images.js';
 
 // Initializing Session variable
 Session.set('productInFavorites', null);

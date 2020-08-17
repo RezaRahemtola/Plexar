@@ -33,7 +33,7 @@ You also need to create a `settings.json` file (to set up email sending & admin 
 }
 ```
 
-If you fork this project, we strongly recommand to add this file in a `.gitignore` as it contains sensitive data.
+If you fork this project, we strongly recommend to add this file in a `.gitignore` as it contains sensitive data.
 
 The app can then be run with those settings like that :
 ```

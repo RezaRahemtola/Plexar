@@ -36,18 +36,6 @@ Template.favorite.helpers({
                 Session.set('favoriteProducts', result);
             }
         });
-
         return Session.get('favoriteProducts');
-    },
-    noFavorite: function(){
-        // Catching favorite results
-        const favorite = Session.get('favoriteProducts');
-        if(favorite.length > 0){
-            // There is at least one favorite
-            return false;
-        } else{
-            // User doesn't have any favorite for the moment
-            return true;
-        }
     }
 });

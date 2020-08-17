@@ -7,9 +7,6 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // HTML import
 import './login.html';
 
-// CSS import
-import '../css/form.css';
-
 
 FlowRouter.route('/login', {
     name: 'login',
@@ -20,7 +17,7 @@ FlowRouter.route('/login', {
             FlowRouter.go('/');
         } else{
             // User isn't logged in, we can render the login modal
-            BlazeLayout.render('main', {currentModal: 'login'});
+            BlazeLayout.render('main', {currentPage: 'home', currentModal: 'login'});
         }
     }
 });
