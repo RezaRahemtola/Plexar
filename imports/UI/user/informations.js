@@ -29,33 +29,17 @@ Template.informations.onRendered(function(){
     // Initializing Session variable
     Session.set('currentProfilePicture', Session.get('defaultProfilePicture'));
 
-    Meteor.call('getUserInformations', function(error, result){
+    Meteor.call('getUserInformations', function(error, userInformations){
         if(error){
             // There was an error while catching user's informations
             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
         } else{
-            // Catching the result to auto fill fields
-            const userInformations = result;
+            // Filling the fields
             document.getElementById('username').value = Meteor.user().username;
             document.getElementById('email').value = Meteor.user().emails[0].address;
             document.getElementById('firstName').value = userInformations.firstName;
             document.getElementById('lastName').value = userInformations.lastName;
             document.getElementById('newsletter').checked = userInformations.newsletter;
-
-            // Live username verification
-            const usernameInput = document.querySelector('input#username');  // Saving input in a variable
-            usernameInput.oninput = function(){
-                // When value of the input change, call a server method
-                Meteor.call('checkIfUsernameIsTaken', {username: usernameInput.value}, function(error, result){
-                    if(result){
-                        // Username already exist
-                        $('input#username').addClass("is-danger");
-                    } else{
-                        // Username doesn't exists
-                        $('input#username').removeClass("is-danger");
-                    }
-                });
-            }
 
             Meteor.call('hasProfilePicture', function(error, result){
                 if(error){
@@ -151,8 +135,6 @@ Template.informations.helpers({
 Template.informations.events({
     'click button[type="submit"]'(event){
         event.preventDefault();
-        var formErrors = 0;  // No error for the moment
-        var callbacksPending = 0;  // No callback is pending for the moment
 
         // Catching the form element and saving inputs in variables
         const form = new FormData(document.getElementById('editProfileForm'));
@@ -161,11 +143,13 @@ Template.informations.events({
         const newsletter = document.querySelector('input#newsletter').checked;
         const username = form.get('username');
 
-        callbacksPending++;  // Starting a call with a callback function
+        // Password & profile picture weren't updated yet
+        var passwordCompleted = false;
+        var profilePictureCompleted = false;
+
         Meteor.call('changeUserInformations', {firstName: firstName, lastName: lastName, newsletter: newsletter, username: username}, function(error, result){
             if(error){
                 // There was an error
-                formErrors++;
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else{
                 // Name, newsletter and username updated successfully
@@ -177,43 +161,39 @@ Template.informations.events({
                 // Checking if user has filled change password fields
                 if(oldPassword.length > 0 && newPassword.length > 0 && confirmNewPassword.length > 0){
                     // Password fields were filled
-                    callbacksPending++;  // Starting a call with a callback function
                     Meteor.call('checkPasswordsInput', {password: newPassword, confirmPassword: confirmNewPassword}, function(error, result){
                         if(error){
                             // There is an error in password fields
-                            formErrors++;
                             Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-                            $('input#newPassword, input#confirmNewPassword').addClass("is-danger");  // Adding a red border to those fields
                         } else{
                             // New passwords match all criteria, changing the current password to the new one
-                            callbacksPending++;  // Starting a call with a callback function
                             Accounts.changePassword(oldPassword, newPassword, function(error){
                                 if(error){
                                     // There was an error while changing the password
-                                    formErrors++;
                                     Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"});  // Set the error message with given error reason
+                                } else{
+                                    // Password changed successfully
+                                    passwordCompleted = true;
                                 }
-                                callbacksPending--;  // End of callback function
                             });
                         }
-                        callbacksPending--;  // End of callback function
                     });
+                } else{
+                    // Password fields weren't filled, we're done with it
+                    passwordCompleted = true;
                 }
 
                 // Updating profile picture
                 const selectedProfilePicture = Session.get('currentProfilePicture');  // Catching id of the wanted picture
-                callbacksPending++;  // Starting a call with a callback function
                 Meteor.call('getUserInformations', function(error, result){
                     if(error){
-                        // There is an error
-                        formErrors++;
+                        // There was an error
                         Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
                     } else{
                         // Catching profile picture
                         const profilePicture = result.profilePicture;
                         if(selectedProfilePicture !== Session.get('defaultProfilePicture') && selectedProfilePicture !== profilePicture){
                             // Selected picture isn't the default and isn't the current profile picture, we change the value
-                            callbacksPending++;  // Starting a call with a callback function
                             Meteor.call('changeProfilePictureInUserInformations', {imageId: selectedProfilePicture}, function(error, result){
                                 if(error){
                                     // There was an error
@@ -222,22 +202,22 @@ Template.informations.events({
                                 } else{
                                     // Profile picture was successfully changed, calling the body helepr to refesh the display
                                     Template.main.__helpers.get('displayProfilePicture').call();
+                                    profilePictureCompleted = true;
                                 }
-                                callbacksPending--;  // End of callback function
                             });
+                        } else{
+                            // We don't need to update the profile picture
+                            profilePictureCompleted = true;
                         }
-                        // TODO: sinon si l'user veut user.svg, faire un call pour delete la current profile picture
                     }
-                    callbacksPending--;  // End of callback function
                 });
             }
-            callbacksPending--;  // End of callback function
         });
 
 
-        // Waiting for all callbacks to complete (to see if an error is raised)
+        // Waiting for all concurrent callbacks to complete
         const intervalId = setInterval(function(){
-            if(callbacksPending === 0 && formErrors === 0){
+            if(passwordCompleted && profilePictureCompleted){
                 // All callbacks were completed without any error, displaying a success message and sending the user to home page
                 Session.set('message', {type: "header", headerContent: "Votre profil a été modifié avec succès !", style:"is-success"} );
                 FlowRouter.go('/');

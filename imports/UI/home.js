@@ -24,13 +24,13 @@ Template.home.helpers({
         return Session.get('productsCounter');
     },
     displayBestProducts: function(){
-        Meteor.call('getBestProducts', function(error, result){
+        Meteor.call('getBestProducts', function(error, bestProducts){
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
             } else if(result){
                 // Array of 3 best products was returned, saving it in a Session variable
-                Session.set('bestProducts', result);
+                Session.set('bestProducts', bestProducts);
             }
         });
         return Session.get('bestProducts');
