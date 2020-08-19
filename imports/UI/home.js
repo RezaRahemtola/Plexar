@@ -28,7 +28,7 @@ Template.home.helpers({
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-            } else if(result){
+            } else if(bestProducts){
                 // Array of 3 best products was returned, saving it in a Session variable
                 Session.set('bestProducts', bestProducts);
             }
