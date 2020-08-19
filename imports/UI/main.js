@@ -27,7 +27,7 @@ import './messages/header.js';
 import './messages/full.js';
 import './messages/verifyEmail.js';
 
-// Databases imports
+// Database import
 import { Images } from '../databases/images.js';
 
 // Render layouts directly into the body
@@ -118,13 +118,13 @@ Template.main.helpers({
     },
     displayCategories: function(){
         // Display available categories
-        Meteor.call('getCategories', function(error, result){
+        Meteor.call('getCategories', function(error, categories){
             if(error){
                 // There was an error while retrieving the categories
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
             } else{
                 // Available categories were successfully returned, saving them in a Session variable
-                Session.set('productCategories', result);
+                Session.set('productCategories', categories);
             }
         });
         return Session.get('productCategories');
