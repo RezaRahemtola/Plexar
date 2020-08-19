@@ -1,4 +1,0 @@
-This is a Brave Rewards publisher verification file.
-
-Domain: plexar.herokuapp.com
-Token: 7632b1d6a8c59819a7e5e35126e40f455bb90c2771201978ca461449a64e17a5
