@@ -17,19 +17,12 @@ Meteor.methods({
         // Type check to prevent malicious calls
         check(productId, String);
 
-        // Checking if the given productId corresponds to the elementId field of the moderation database
+        // Checking if the given productId corresponds to the elementId field of the moderation database or to the originalId of an edit product suggestion
         const isUnderModeration = Moderation.findOne({elementId: productId});
+        const isUnderEdit = EditedProducts.findOne({originalId: productId});
 
-        if(isUnderModeration){
-            // A moderation was found, returning true
-            return true;
-        } else{
-            // No moderation found, checking edits propositions (because elementId field of moderation contains editedProductId for edit propositions)
-            const isUnderEdit = EditedProducts.findOne({originalId: productId});
-            // Return true if it's under edit, else (not under moderation or edit) return false
-            return isUnderEdit ? true : false;
-        }
-
+        // Return true if the product is under moderation or edit
+        return isUnderModeration || isUnderEdit;
     },
     'displayCurrentDailyVotes'(){
 
@@ -48,13 +41,8 @@ Meteor.methods({
             if(month < 10){ month = '0' + month; }
             const currentDate = date+ '/' +month+ '/' +year;
 
-            if(dailyVotes[currentDate] !== undefined){
-                // User has already voted in collective moderation today, returning number of participations
-                return dailyVotes[currentDate];
-            } else{
-                // User hasn't voted in collective moderation today, returning 0
-                return 0;
-            }
+            // Returning number of participations if the user has already voted today, or 0 otherwise
+            return (dailyVotes[currentDate] !== undefined) ? dailyVotes[currentDate] : 0;
         }
     },
     'displayCurrentDailyVotesLimit'(){
@@ -88,6 +76,7 @@ Meteor.methods({
             // User isn't in the admin list
             throw new Meteor.Error('userNotAdmin', 'Accès refusé, cette action est réservée aux administrateurs.')
         } else{
+            // User is in the admin list, catching the moderation stats
             const total = Moderation.find().count().toLocaleString();  // toLocaleString() make a space where needed (1000 will be 1 000)
             const newProducts = Moderation.find({reason : 'newProduct'}).count().toLocaleString();
             const editedProducts = Moderation.find({reason : 'editProduct'}).count().toLocaleString();
@@ -144,13 +133,11 @@ Meteor.methods({
 
                 // Catching array of moderation on which the user has already vote
                 const votedModeration = CollectiveModeration.findOne({userId: Meteor.userId()}).alreadyVoted;
-
-                var moderationElements = Moderation.find({}, {sort: { createdAt: 1 }});  // Return moderation sorted by date (most older first)
-
-                var elementsToReturn = []
-                for(var moderation of moderationElements){
+                var moderationElements = [];
+                // Catching moderation sorted by date (most older first)
+                Moderation.find({}, {sort: { createdAt: 1 }}).forEach(function(moderation){
                     // For each moderation, we add a text for the buttons depending on the reason
-                    if(elementsToReturn.length < maxDailyVotes && !votedModeration.includes(moderation._id) && moderation.userId !== Meteor.userId()){
+                    if(moderationElements.length < maxDailyVotes && !votedModeration.includes(moderation._id) && moderation.userId !== Meteor.userId()){
                         // We will only return the number of elements that the user can vote, on which he hasn't already vote and those not created by him
                         switch(moderation.reason){
                             case 'newProduct':
@@ -192,14 +179,10 @@ Meteor.methods({
                         }
 
                         // And we add the moderation + the product to the returned array
-                        elementsToReturn.push({
-                                                product: product,
-                                                moderation: moderation
-                                                });
+                        moderationElements.push({product: product, moderation: moderation});
                     }
-
-                }
-                return elementsToReturn;
+                });
+                return moderationElements;
             }
         }
     },

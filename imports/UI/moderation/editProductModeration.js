@@ -84,12 +84,10 @@ Template.editProductModeration.onRendered(function(){
 
 Template.editProductModeration.helpers({
     nameDifference: function(){
+        // Check if the name is different in original & edited product and return a boolean
         const originalProduct = Session.get('editProductModeration').originalProduct;
         const editedProduct = Session.get('editProductModeration').editedProduct;
-        if(originalProduct.name !== editedProduct.name){
-            return true;
-        }
-        return false;
+        return (originalProduct.name !== editedProduct.name) ? true : false;
     },
     displayEditedName: function(){
         const editedProduct = Session.get('editProductModeration').editedProduct;
@@ -112,12 +110,10 @@ Template.editProductModeration.helpers({
         return editedProduct.name;
     },
     descriptionDifference: function(){
+        // Check if the description is different in original & edited product and return a boolean
         const originalProduct = Session.get('editProductModeration').originalProduct;
         const editedProduct = Session.get('editProductModeration').editedProduct;
-        if(originalProduct.description !== editedProduct.description){
-            return true;
-        }
-        return false;
+        return (originalProduct.description !== editedProduct.description) ? true : false;
     },
     displayEditedDescription: function(){
         const editedProduct = Session.get('editProductModeration').editedProduct;
@@ -148,12 +144,10 @@ Template.editProductModeration.helpers({
         return editedProduct.description;
     },
     coverImageDifference: function(){
+        // Check if the cover image is different in original & edited product and return a boolean
         const originalCoverImage = Session.get('editProductModeration').originalProduct.images[0];
         const editedCoverImage = Session.get('editProductModeration').editedProduct.images[0];
-        if(originalCoverImage !== editedCoverImage){
-            return true;
-        }
-        return false;
+        return (originalCoverImage !== editedCoverImage) ? true : false;
     },
     displayEditedCoverImage: function(){
         const editedCoverImage = Session.get('editProductModeration').editedProduct.images[0];

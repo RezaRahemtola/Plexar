@@ -2,8 +2,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 
-// Importing databases
-import { Products } from '../../imports/databases/products.js';
+// Importing database
 import { Rules } from '../rules.js';
 
 
@@ -16,10 +15,6 @@ Meteor.methods({
     },
     'getProductDescriptionRules'(){
         return Rules.product.description;
-    },
-    'productsCounter'(){
-        // Return the number of available products
-        return Products.find().count().toLocaleString();  // toLocaleString() make a space where needed (1000 will be 1 000)
     },
     'getCategories'(){
         // Return all the available categories

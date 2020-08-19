@@ -26,6 +26,10 @@ Meteor.publish('images', function(){
 
 
 Meteor.methods({
+    'productsCounter'(){
+        // Return the number of available products
+        return Products.find().count().toLocaleString();  // toLocaleString() make a space where needed (1000 will be 1 000)
+    },
     'removeImage'({imageId}){
         // Type check to prevent malicious calls
         check(imageId, String);
@@ -60,15 +64,15 @@ Meteor.methods({
         }
     },
     'getBestProducts'(){
-        // Find the top 3 products with the best score
-        const bestProducts = Products.find({}, {sort: { score: -1 }, limit: 3});
-        var arrayOfBestProducts = [];  // Creating an array to fill with the products
-        for(var product of bestProducts){
-            // For each products, we add the product in the array to return
-            arrayOfBestProducts.push(product);
-        }
+        var bestProducts = [];  // Creating an array to fill with the products
+        // Find the 3 products with the best score
+        Products.find({}, {sort: { score: -1 }, limit: 3}).forEach(function(product){
+            // Adding the product to the array to return
+            bestProducts.push(product);
+        });
+
         // Returning the array with the products
-        return arrayOfBestProducts;
+        return bestProducts;
     },
     'updateProductScore'({productId, vote}){
         // Type check to prevent malicious calls
@@ -676,9 +680,8 @@ Meteor.methods({
                 if(!Meteor.settings.admin.list.includes(userEmail)){
                     // User isn't in the admin list, so he will have a limit of daily contributions that corresponds to his level
                     const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
-                    const levels = Rules.levels;  // Catching array of available levels with their properties
-                    // Retrieving the level that corresponds to the user one
-                    const userLevel = levels.find(function(level){
+                    // Retrieving the level that corresponds to the user one in the list of available levels
+                    const userLevel = Rules.levels.find(function(level){
                         return level.name === userLevelName;
                     });
                     // Catching the contributions limit

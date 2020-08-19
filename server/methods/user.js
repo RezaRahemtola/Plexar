@@ -19,12 +19,11 @@ Meteor.methods({
         return Rules.user.profilePicture.defaultUrl;
     },
     'deleteUnverifiedUsers'(){
-        // Catching all the users with unverified email address
-        const unverifiedUsers = Meteor.users.find({"emails.verified": false});
         var deletedUsers = 0;  // We haven't delete any user for the moment
-        // Catching the current time
-        const currentTime = new Date();
-        for(var user of unverifiedUsers){
+        const currentTime = new Date();  // Catching the current time
+
+        // Catching all the users with unverified email address
+        Meteor.users.find({"emails.verified": false}).forEach(function(user){
             // For each user, checking if the account was created more than 30 days ago
             const timeElapsed = currentTime - user.createdAt;
             // The result is in milliseconds, converting it in days
@@ -38,7 +37,8 @@ Meteor.methods({
                 // Incrementing the number of deleted users
                 deletedUsers++;
             }
-        }
+        });
+
         // Returning the number of deleted users
         return deletedUsers;
     },
@@ -58,34 +58,29 @@ Meteor.methods({
         if(Meteor.userId() && UsersInformations.findOne({userId: Meteor.userId()}) && UsersInformations.findOne({userId: Meteor.userId()}).profilePicture !== null){
             // User is logged in and has a profile picture, return the profile picture id
             return UsersInformations.findOne({userId: Meteor.userId()}).profilePicture;
-        } else{
-            // User isn't logged in or doesn't have a profile picture
-            return false;
         }
+        // User isn't logged in or doesn't have a profile picture
+        return false;
     },
     'updateAndGetUserPoints'(){
-
         if(!Meteor.userId()){
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            // User is logged in, catching user's accepted contributions
-            const acceptedUserContributions = Contributions.find({userId: Meteor.userId(), status: 'accepted'});
-            // Initializing points
+            // User is logged in, initializing points
             var userPoints = 0;
-
-            for(var contribution of acceptedUserContributions){
+            // Catching user's accepted contributions
+            Contributions.find({userId: Meteor.userId(), status: 'accepted'}).forEach(function(contribution){
                 // For each accepted contribution, we add the corresponding points
                 userPoints += contribution.points;
-            }
+            });
 
-            // Now we catch daily votes in collective moderation and the points it should give
+            // Now we catch daily votes in collective moderation
             const userDailyVotes = CollectiveModeration.findOne({userId: Meteor.userId()}).dailyVotes;
-            const collectiveModerationPoints = Rules.points.collectiveModerationVote;
 
             for(dailyVotes of Object.values(userDailyVotes)){
                 // For each day we add the number of votes this day multiplied by the number of points it should give
-                userPoints += dailyVotes * collectiveModerationPoints;
+                userPoints += dailyVotes * Rules.points.collectiveModerationVote;
             }
 
             // Updating the points in the database
@@ -110,20 +105,13 @@ Meteor.methods({
             const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
             const userPoints = UsersInformations.findOne({userId: Meteor.userId()}).points;
 
-            // Catching the possibles levels
-            const levels = Rules.levels;
+            // Catching index of the current level
+            const index = Rules.levels.findIndex(function(level){
+                return level.name === userLevelName;
+            });
 
-            var nextLevelIndex = 0;  // For the moment we don't know the index of the next level
-            for(const [index, level] of levels.entries()){
-                // For each level checking if it's the user's one
-                if(level.name === userLevelName){
-                    // This level is the user's one
-                    nextLevelIndex = index + 1;  // The indext of the next level is this one + 1
-                    break;
-                }
-            }
-            // The points left until next level correspond to the points needed for next level less current points
-            return levels[nextLevelIndex].pointsNeeded - userPoints;
+            // The points left until next level correspond to the points needed for next level (that's why we add 1) less current points
+            return Rules.levels[index+1].pointsNeeded - userPoints;
         }
     },
     'getLevelProgressInformations'(){
@@ -136,22 +124,14 @@ Meteor.methods({
             const userLevelName = UsersInformations.findOne({userId: Meteor.userId()}).level;
             const userPoints = UsersInformations.findOne({userId: Meteor.userId()}).points;
 
-            // Catching the possibles levels
-            const levels = Rules.levels;
+            // Catching index of the current level
+            const index = Rules.levels.findIndex(function(level){
+                return level.name === userLevelName;
+            });
+            const userLevel = Rules.levels[index];
 
-            var nextLevelIndex = 0;  // For the moment we don't know the index of the next level
-            var userLevel = {};  // For the moment we don't know the propoerties of the current level
-            for(const [index, level] of levels.entries()){
-                // For each level checking if it's the user's one
-                if(level.name === userLevelName){
-                    // This level is the user's one
-                    userLevel = level;  // Saving this level as the user's one
-                    nextLevelIndex = index + 1;  // The indext of the next level is this one + 1
-                    break;
-                }
-            }
-            // The maximum of the progress corresponds to the points needed of the next level less the same property of the current level
-            const progressMaximum = levels[nextLevelIndex].pointsNeeded - userLevel.pointsNeeded;
+            // The maximum of the progress corresponds to the points needed of the next level (that's why we add 1) less the same property of the current level
+            const progressMaximum = Rules.levels[index+1].pointsNeeded - userLevel.pointsNeeded;
             // The value of the progress is the user's points less the points needed of the current level
             const progressValue = userPoints - userLevel.pointsNeeded;
 
@@ -167,19 +147,18 @@ Meteor.methods({
         } else{
             // Catching user's informations to calculate the level based on the points
             const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
-            // Catching the possibles levels
-            const levels = Rules.levels;
             var currentLevel = userInformations.level;
-            for(var level of levels){
+            // Catching the possibles levels
+            Rules.levels.forEach(function(level){
                 // For each existing level, checking if the user has enough points to reach it
-                if(userInformations.points >= level.pointsNeeded){
-                    // User has enough points for this level, updating current level
-                    currentLevel = level.name;
-                } else{
-                    // We've reached the level available for the user, ending the loop
-                    break;
+                if(userInformations.points < level.pointsNeeded){
+                    // We've reached the level available for the user, exit the function
+                    return;
                 }
-            }
+                // User has enough points for this level, updating current level & checking the next one
+                currentLevel = level.name;
+            });
+
             // Updating the level in the database
             UsersInformations.update({userId: Meteor.userId()}, { $set: { level: currentLevel } }, function(error, result){
                 if(error){
@@ -211,27 +190,23 @@ Meteor.methods({
     },
     'getBestContributors'(){
 
-        // Returning 5 users sorted by points in descending order
-        const bestContributors = UsersInformations.find({}, {sort: { points: -1 }, limit: 10});
-        var contributorsToReturn = [];  // Creating an array in which we'll add informations we need to return
+        var bestContributors = [];  // Creating an array in which we'll add informations we need to return
         var rank = 1;  // Rank variable to return
-        for(var contributor of bestContributors){
-            if(contributor.profilePicture === null){
-                // User doesn't have a profile picture, returning the default one
-                var profilePicture = Rules.user.profilePicture.defaultUrl;
-            } else{
-                // User has a profile picture, finding the url in the Images database
-                var profilePicture = Images.findOne({_id: contributor.profilePicture}).link();
-            }
-            contributorsToReturn.push({
+        // Returning 5 users sorted by points in descending order
+        UsersInformations.find({}, {sort: { points: -1 }, limit: 10}).forEach(function(contributor){
+            // Catching user's profile picture (default one or one in the images database)
+            const profilePicture = (contributor.profilePicture === null) ? Rules.user.profilePicture.defaultUrl : Images.findOne({_id: contributor.profilePicture}).link();
+
+            bestContributors.push({
                 username: contributor.username,
                 points: contributor.points,
                 profilePicture: profilePicture,
                 rank: rank
             });
             rank++;  // Incrementing the rank for the next contributor
-        }
-        return contributorsToReturn;
+        });
+
+        return bestContributors;
     },
     'getUserRank'(){
 
@@ -240,18 +215,18 @@ Meteor.methods({
             return 0;
         } else{
             // User is logged in, catching the contributors sorted by points in descending order
-            const contributors = UsersInformations.find({}, {sort: { points: -1 }});
             var userRank = 1;
-            for(var contributor of contributors){
+            UsersInformations.find({}, {sort: { points: -1 }}).forEach(function(contributor){
                 // Checking if this contributor is the user
-                if(contributor.userId !== Meteor.userId()){
-                    // This contributor isn't the current user, incrementing the rank
-                    userRank++;
-                } else{
-                    // This contributor is the current user, returning the rank
-                    return userRank;
+                if(contributor.userId === Meteor.userId()){
+                    // This contributor is the current user, exit the function to return the rank
+                    return;
                 }
-            }
+                // Incrementing the rank until we find the current user
+                userRank++;
+            });
+
+            return userRank;
         }
     },
     'changeUsername'({newUsername}){
@@ -349,9 +324,10 @@ Meteor.methods({
             // User isn't logged in
             throw new Meteor.Error('userNotLoggedIn', 'Utilisateur non-connecté, veuillez vous connecter et réessayer.');
         } else{
-            var contributionsCursor = Contributions.find({userId: Meteor.userId()}, {sort: { createdAt: -1 }});  // Return user's contributions sorted by date (most recent first)
-            var userContributions = [];  // Creating an array to push the formatted contributions
-            contributionsCursor.forEach(function(doc){
+            // User is logged in, creating an array to push the formatted contributions
+            var userContributions = [];
+            // Return user's contributions sorted by date (most recent first)
+            Contributions.find({userId: Meteor.userId()}, {sort: { createdAt: -1 }}).forEach(function(doc){
                 // Browsing the documents
                 var createdAtFormatted = new Date(doc.createdAt);  // Converting the creation date to a classic format
                 var year = createdAtFormatted.getFullYear();  // Catching the year
@@ -391,7 +367,7 @@ Meteor.methods({
                                        status: status,
                                        statusStyle: statusStyle,
                                        points: doc.points
-               });
+                                   });
             });
             return userContributions;
         }
