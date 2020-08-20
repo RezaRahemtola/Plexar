@@ -15,7 +15,7 @@
         "@creativebulma/bulma-collapsible": "^1.0.4",
         "@fortawesome/fontawesome-free": "^5.14.0",
         "@sendgrid/mail": "^7.2.4",
-        "bcrypt": "^4.0.1",
+        "bcrypt": "^5.0.0",
         "bulma-checkradio": "^1.1.1",
         "bulma-steps": "^2.2.1",
         "bulma-switch": "^2.0.0",
