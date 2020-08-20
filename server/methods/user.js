@@ -149,15 +149,16 @@ Meteor.methods({
             const userInformations = UsersInformations.findOne({userId: Meteor.userId()});
             var currentLevel = userInformations.level;
             // Catching the possibles levels
-            Rules.levels.forEach(function(level){
+            for(var level of Rules.levels){
                 // For each existing level, checking if the user has enough points to reach it
-                if(userInformations.points < level.pointsNeeded){
-                    // We've reached the level available for the user, exit the function
-                    return;
+                if(userInformations.points >= level.pointsNeeded){
+                    // User has enough points for this level, updating current level
+                    currentLevel = level.name;
+                } else{
+                    // We've reached the level available for the user, ending the loop
+                    break;
                 }
-                // User has enough points for this level, updating current level & checking the next one
-                currentLevel = level.name;
-            });
+            }
 
             // Updating the level in the database
             UsersInformations.update({userId: Meteor.userId()}, { $set: { level: currentLevel } }, function(error, result){
@@ -191,9 +192,8 @@ Meteor.methods({
     'getBestContributors'(){
 
         var bestContributors = [];  // Creating an array in which we'll add informations we need to return
-        var rank = 1;  // Rank variable to return
-        // Returning 5 users sorted by points in descending order
-        UsersInformations.find({}, {sort: { points: -1 }, limit: 10}).forEach(function(contributor){
+        // Returning 10 users sorted by points in descending order
+        UsersInformations.find({}, {sort: { points: -1 }, limit: 10}).forEach(function(contributor, index){
             // Catching user's profile picture (default one or one in the images database)
             const profilePicture = (contributor.profilePicture === null) ? Rules.user.profilePicture.defaultUrl : Images.findOne({_id: contributor.profilePicture}).link();
 
@@ -201,9 +201,8 @@ Meteor.methods({
                 username: contributor.username,
                 points: contributor.points,
                 profilePicture: profilePicture,
-                rank: rank
+                rank: index+1  // Index starts at 0, so we need to add 1 to have a correct rank
             });
-            rank++;  // Incrementing the rank for the next contributor
         });
 
         return bestContributors;
@@ -215,18 +214,17 @@ Meteor.methods({
             return 0;
         } else{
             // User is logged in, catching the contributors sorted by points in descending order
+            const contributors = UsersInformations.find({}, {sort: { points: -1 }});
             var userRank = 1;
-            UsersInformations.find({}, {sort: { points: -1 }}).forEach(function(contributor){
-                // Checking if this contributor is the user
-                if(contributor.userId === Meteor.userId()){
-                    // This contributor is the current user, exit the function to return the rank
-                    return;
+            for(var contributor of contributors){
+                if(contributor.userId !== Meteor.userId()){
+                    // This contributor isn't the current user, incrementing the rank
+                    userRank++;
+                } else{
+                    // This contributor is the current user, returning the rank
+                    return userRank;
                 }
-                // Incrementing the rank until we find the current user
-                userRank++;
-            });
-
-            return userRank;
+            }
         }
     },
     'changeUsername'({newUsername}){
