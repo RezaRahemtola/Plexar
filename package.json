@@ -1,12 +1,8 @@
 {
     "name": "Plexar",
     "private": true,
-    "main": "sass/mystyles.scss",
     "scripts": {
         "start": "npm run css-watch",
-        "test": "meteor test --once --driver-package meteortesting:mocha",
-        "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
-        "visualize": "meteor --production --extra-packages bundle-visualizer",
         "css-build": "node-sass --omit-source-map-url sass/mystyles.scss client/main.css",
         "css-watch": "npm run css-build -- --watch"
     },

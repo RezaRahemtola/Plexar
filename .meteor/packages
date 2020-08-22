@@ -17,12 +17,12 @@ es5-shim@4.8.0                # ECMAScript 5 compatibility for older browsers
 ecmascript@0.14.3              # Enable ECMAScript2015+ syntax in app code
 shell-server@0.5.0            # Server-side component of the `meteor shell` command
 
-accounts-password@1.6.0
+accounts-password@1.6.2
 session@1.2.0
 jquery
-email@1.2.3
-check
+email@2.0.0
+check@1.3.1
 ostrio:files
-underscore
+underscore@1.0.10
 ostrio:flow-router-extra
 kadira:blaze-layout
