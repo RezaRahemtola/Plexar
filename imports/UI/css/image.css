@@ -4,3 +4,15 @@
 }
 
 .image.is-150x150{min-width: 150px;}
+
+/* Monotone an Image */
+img.filtered{
+    -webkit-filter: grayscale(100%);
+            filter: grayscale(100%);
+}
+
+/* Monotone image is replaced with the real image on hover */
+.filtered:hover{
+    -webkit-filter: grayscale(0%);
+            filter: grayscale(0%);
+}
