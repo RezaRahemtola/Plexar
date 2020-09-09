@@ -10,7 +10,7 @@
         "@babel/runtime": "^7.11.2",
         "@creativebulma/bulma-collapsible": "^1.0.4",
         "@fortawesome/fontawesome-free": "^5.14.0",
-        "@sendgrid/mail": "^7.2.4",
+        "@sendgrid/mail": "^7.2.5",
         "bcrypt": "^5.0.0",
         "bulma-checkradio": "^1.1.1",
         "bulma-steps": "^2.2.1",
@@ -18,7 +18,7 @@
         "dropbox": "^5.2.1",
         "jquery": "^3.5.1",
         "meteor-node-stubs": "^1.0.1",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^2.6.1",
         "request": "^2.88.2"
     },
     "meteor": {
