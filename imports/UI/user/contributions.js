@@ -46,13 +46,13 @@ Template.contributions.helpers({
         return Session.get('userContributions');
     },
     displayUserLevel: function(){
-        Meteor.call('getUserLevel', function(error, result){
+        Meteor.call('getUserLevel', function(error, userLevel){
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-            } else if(result){
+            } else if(userLevel){
                 // User level was successfully retrieved, saving it in a Session variable
-                Session.set('userLevel', result);
+                Session.set('userLevel', userLevel);
             }
         });
         return Session.get('userLevel');
