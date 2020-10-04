@@ -50,11 +50,11 @@ Template.bestContributors.helpers({
     },
     contributorInPodium: function(rank){
         // Checking if the given rank is in the podium (top 3)
-        return (rank >= 1 && rank <= 3) ? true : false;
+        return (rank >= 1 && rank <= 3);
     },
     firstPlace: function(rank){
         // Check if the given rank is the first one
-        return (rank === 1) ? true : false;
+        return (rank === 1);
     },
     getMedalUrl: function(rank){
         if(rank === 1){ return '/goldMedal.png'; }

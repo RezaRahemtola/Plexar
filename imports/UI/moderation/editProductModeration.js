@@ -87,7 +87,7 @@ Template.editProductModeration.helpers({
         // Check if the name is different in original & edited product and return a boolean
         const originalProduct = Session.get('editProductModeration').originalProduct;
         const editedProduct = Session.get('editProductModeration').editedProduct;
-        return (originalProduct.name !== editedProduct.name) ? true : false;
+        return (originalProduct.name !== editedProduct.name);
     },
     displayEditedName: function(){
         const editedProduct = Session.get('editProductModeration').editedProduct;
@@ -113,7 +113,7 @@ Template.editProductModeration.helpers({
         // Check if the description is different in original & edited product and return a boolean
         const originalProduct = Session.get('editProductModeration').originalProduct;
         const editedProduct = Session.get('editProductModeration').editedProduct;
-        return (originalProduct.description !== editedProduct.description) ? true : false;
+        return (originalProduct.description !== editedProduct.description);
     },
     displayEditedDescription: function(){
         const editedProduct = Session.get('editProductModeration').editedProduct;
@@ -147,7 +147,7 @@ Template.editProductModeration.helpers({
         // Check if the cover image is different in original & edited product and return a boolean
         const originalCoverImage = Session.get('editProductModeration').originalProduct.images[0];
         const editedCoverImage = Session.get('editProductModeration').editedProduct.images[0];
-        return (originalCoverImage !== editedCoverImage) ? true : false;
+        return (originalCoverImage !== editedCoverImage);
     },
     displayEditedCoverImage: function(){
         const editedCoverImage = Session.get('editProductModeration').editedProduct.images[0];

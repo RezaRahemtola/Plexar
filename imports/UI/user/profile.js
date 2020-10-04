@@ -20,13 +20,13 @@ FlowRouter.route('/user', {
 Template.userProfile.helpers({
     userIsAdmin: function(){
         // Checking is user is admin
-        Meteor.call('userIsAdmin', function(error, result){
+        Meteor.call('userIsAdmin', function(error, isAdmin){
             if(error){
                 // There was an error
                 Session.set('message', {type:'header', headerContent:error.reason, style:"is-danger"});
-            } else if(result === true || result === false){
+            } else if(typeof(isAdmin) === 'boolean'){
                 // Method successfully executed, saving the result
-                Session.set('userIsAdmin', result);
+                Session.set('userIsAdmin', isAdmin);
             }
         });
         return Session.get('userIsAdmin');

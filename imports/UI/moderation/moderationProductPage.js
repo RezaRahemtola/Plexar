@@ -57,7 +57,7 @@ Template.moderationProductPage.helpers({
         // Check if there's more than one image and return a boolean
         if(Session.get('currentProduct')){
             const productImagesId = Session.get('currentProduct').images;  // Return an array with IDs of the product images
-            return (productImagesId.length > 1) ? true : false;
+            return (productImagesId.length > 1);
         }
     },
     displayWebsite: function(){

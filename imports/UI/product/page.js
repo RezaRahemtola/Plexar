@@ -228,13 +228,13 @@ Template.productPage.helpers({
     productInFavorites: function(){
         // Check if the product is in the favorite products of the user
         const productId = Session.get('currentProduct')._id;
-        Meteor.call('productInFavorites', {productId: productId}, function(error, result){
+        Meteor.call('productInFavorites', {productId: productId}, function(error, isInFavorites){
             if(error){
                 // There was an error
                 Session.set('message', {type:"header", headerContent:error.reason, style:"is-danger"} );  // Display an error message
-            } else if(result === true || result === false){
-                // No error
-                Session.set('productInFavorites', result);
+            } else if(typeof(isInFavorites) === 'boolean'){
+                // No error, a boolean was returned, saving it in a Session variable
+                Session.set('productInFavorites', isInFavorites);
             }
         });
         return Session.get('productInFavorites');
@@ -259,7 +259,7 @@ Template.productPage.helpers({
         // Check if the product has more than one image (to show the slideshow buttons)
         if(Session.get('currentProduct')){
             const productImagesId = Session.get('currentProduct').images;  // Return an array with IDs of the product images
-            return (productImagesId.length > 1) ? true : false;
+            return (productImagesId.length > 1);
         }
     },
     displayWebsite: function(){
