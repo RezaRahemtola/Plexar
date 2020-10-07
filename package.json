@@ -9,7 +9,7 @@
     "dependencies": {
         "@babel/runtime": "^7.11.2",
         "@creativebulma/bulma-collapsible": "^1.0.4",
-        "@fortawesome/fontawesome-free": "^5.15.0",
+        "@fortawesome/fontawesome-free": "^5.15.1",
         "@sendgrid/mail": "^7.2.6",
         "bcrypt": "^5.0.0",
         "bulma-checkradio": "^1.1.1",
