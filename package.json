@@ -7,7 +7,7 @@
         "css-watch": "npm run css-build -- --watch"
     },
     "dependencies": {
-        "@babel/runtime": "^7.12.1",
+        "@babel/runtime": "^7.12.5",
         "@creativebulma/bulma-collapsible": "^1.0.4",
         "@fortawesome/fontawesome-free": "^5.15.1",
         "@sendgrid/mail": "^7.3.0",
