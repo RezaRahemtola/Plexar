@@ -10,7 +10,7 @@
         "@babel/runtime": "^7.12.5",
         "@creativebulma/bulma-collapsible": "^1.0.4",
         "@fortawesome/fontawesome-free": "^5.15.1",
-        "@sendgrid/mail": "^7.3.0",
+        "@sendgrid/mail": "^7.4.0",
         "bcrypt": "^5.0.0",
         "bulma-checkradio": "^1.1.1",
         "bulma-steps": "^2.2.1",
