@@ -7,10 +7,10 @@
         "css-watch": "npm run css-build -- --watch"
     },
     "dependencies": {
-        "@babel/runtime": "^7.14.5",
+        "@babel/runtime": "^7.14.6",
         "@creativebulma/bulma-collapsible": "^1.0.4",
         "@fortawesome/fontawesome-free": "^5.15.3",
-        "@sendgrid/mail": "^7.4.4",
+        "@sendgrid/mail": "^7.4.5",
         "bcrypt": "^5.0.1",
         "bulma-checkradio": "^1.1.1",
         "bulma-steps": "^2.2.1",
@@ -28,7 +28,7 @@
         }
     },
     "devDependencies": {
-        "bulma": "^0.9.2",
+        "bulma": "^0.9.3",
         "node-sass": "^4.14.1"
     }
 }
