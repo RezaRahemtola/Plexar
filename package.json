@@ -7,10 +7,10 @@
         "css-watch": "npm run css-build -- --watch"
     },
     "dependencies": {
-        "@babel/runtime": "^7.15.3",
+        "@babel/runtime": "^7.15.4",
         "@creativebulma/bulma-collapsible": "^1.0.4",
         "@fortawesome/fontawesome-free": "^5.15.4",
-        "@sendgrid/mail": "^7.4.6",
+        "@sendgrid/mail": "^7.4.7",
         "bcrypt": "^5.0.1",
         "bulma-checkradio": "^1.1.1",
         "bulma-steps": "^2.2.1",
@@ -18,7 +18,7 @@
         "dropbox": "^5.2.1",
         "jquery": "^3.6.0",
         "meteor-node-stubs": "^1.1.0",
-        "node-fetch": "^2.6.1",
+        "node-fetch": "^2.6.5",
         "request": "^2.88.2"
     },
     "meteor": {
